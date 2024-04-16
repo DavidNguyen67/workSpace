@@ -112,6 +112,7 @@ const RegisterForm = () => {
             <Spinner
               animation="border"
               size="sm"
+              color="white"
             />
           ) : (
             'Register'

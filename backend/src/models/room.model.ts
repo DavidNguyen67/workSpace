@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 
 const roomSchema = new Schema(
   {
-    members: Array,
+    id: { type: String, require: true },
+    members: { type: Array, require: true },
   },
   { timestamps: true }
 );

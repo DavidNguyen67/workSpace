@@ -21,6 +21,7 @@ export const createRoomService = async (
     }
 
     const newRoom = new RoomModel({
+      id: payload.id,
       members: [payload.firstUserId, payload.secondUserId],
     });
     await newRoom.save();

@@ -83,6 +83,7 @@ const Login = () => {
             <Spinner
               animation="border"
               size="sm"
+              color="white"
             />
           ) : (
             'Login'

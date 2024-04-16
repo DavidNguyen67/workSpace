@@ -7,15 +7,15 @@ import {
 
 export const createRoom = async (req: any, res: any) => {
   try {
-    const { firstUserId, secondUserId } = req?.body;
-    if (!firstUserId || !secondUserId) {
+    const { firstUserId, secondUserId, id } = req?.body;
+    if (!firstUserId || !secondUserId || !id) {
       return res.json({
-        message: 'Missing firstUserId or secondUserId',
+        message: 'Missing firstUserId or secondUserId or id',
         statusCode: StatusCodes.BAD_REQUEST,
       });
     }
 
-    return res.json(await createRoomService({ firstUserId, secondUserId }));
+    return res.json(await createRoomService({ firstUserId, secondUserId, id }));
   } catch (error: any) {
     console.log('Error', error.message);
   }

@@ -30,7 +30,6 @@ export const registerUserService = async (
 
     const newUser = new UserModel({
       ...payload,
-      id: v4(),
       password: await bcrypt.hash(payload.password, saltRounds),
     });
 

@@ -1,4 +1,5 @@
 type Message = {
   id: string;
-  message: string;
+  senderId: string;
+  text: string;
 };

@@ -17,7 +17,8 @@ export const userSlice = createSlice({
   reducers: {
     login: (state, action: PayloadAction<{ token: string }>) => {
       state.userToken = action.payload?.token;
-      state.userId = jwtDecode(action.payload?.token);
+      const data: any = jwtDecode(action.payload?.token);
+      state.userId = data.id;
     },
     logout: (state) => {
       state = initialState;
