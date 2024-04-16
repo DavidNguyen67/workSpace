@@ -11,6 +11,7 @@ export const createMessageService = async (
       id: payload.id,
       senderId: payload.senderId,
       text: payload.text,
+      roomId: payload.roomId,
     });
 
     await newMessage.save();
@@ -29,10 +30,10 @@ export const createMessageService = async (
 };
 
 export const getMessageService = async (
-  messageId: string
+  roomId: string
 ): Promise<GlobalResponse> => {
   try {
-    const messages = await MessageModel.find({ id: messageId });
+    const messages = await MessageModel.find({ roomId });
     if (messages.length > 0)
       return {
         message: 'This is your messages',

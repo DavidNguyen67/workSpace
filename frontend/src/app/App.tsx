@@ -3,11 +3,11 @@ import { useAppSelector } from '../utilities/hooks/reduxHook';
 import { getUsers } from '../utilities/services/user.service';
 import { Spinner } from 'react-bootstrap';
 import Room from '../components/Room';
-import * as Icon from 'react-bootstrap-icons';
 import './../index.css';
 import { createRoom } from '../utilities/services/room.service';
 import toast from 'react-hot-toast';
-import { v4 } from 'uuid';
+import _ from 'lodash';
+import { Dot, PersonCircle } from 'react-bootstrap-icons';
 
 const App = () => {
   const { userId } = useAppSelector((state) => state.user);
@@ -15,6 +15,8 @@ const App = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [recipientId, setRecipientId] = useState<string>('');
   const [isCreatingRoom, setIsCreatingRoom] = useState<boolean>(false);
+  const [isDisableCreateRoom, setIsDisableCreateRoom] =
+    useState<boolean>(false);
 
   const handleGetUsers = useCallback(async () => {
     const response: User[] = await getUsers();
@@ -25,10 +27,18 @@ const App = () => {
     if (userId && recipientId) {
       setIsCreatingRoom(true);
       await createRoom({
-        id: v4(),
+        id: _.join(
+          _.orderBy(
+            [userId, recipientId],
+            [(userId) => userId.toLowerCase()],
+            ['desc']
+          ),
+          '_'
+        ),
         firstUserId: userId || '',
         secondUserId: recipientId,
       });
+      setIsDisableCreateRoom(true);
       setIsCreatingRoom(false);
       return;
     }
@@ -42,18 +52,18 @@ const App = () => {
 
   return (
     <div className="row mt-4">
-      <div className="col-12 col-sm-6 col-md-3">
+      <div className="col-12 col-sm-6 col-md-5 col-lg-4">
         <div className="item">
           <button
             className="btn btn-primary w-100"
             onClick={handleCreateRoom}
-            disabled={isCreatingRoom}
+            disabled={isDisableCreateRoom || isCreatingRoom}
           >
             {isCreatingRoom ? (
               <Spinner
                 animation="border"
                 size="sm"
-                color="white"
+                variant="light"
               />
             ) : (
               'Create Chat'
@@ -65,7 +75,7 @@ const App = () => {
             <Spinner
               animation="border"
               size="sm"
-              color="white"
+              variant="light"
             />
           ) : (
             users?.length > 0 &&
@@ -87,7 +97,7 @@ const App = () => {
                     }}
                   >
                     <div className="d-flex align-items-center ">
-                      <Icon.PersonCircle
+                      <PersonCircle
                         className="me-2"
                         color="white"
                         size={40}
@@ -99,7 +109,7 @@ const App = () => {
                         <small>{item.name}</small>
                       </div>
                     </div>
-                    <Icon.Dot
+                    <Dot
                       className="ms-auto"
                       color="green"
                       size={40}
@@ -110,10 +120,10 @@ const App = () => {
           )}
         </div>
       </div>
-      <div className="col-12 col-sm-6 col-md-9">
+      <div className="col-12 col-sm-6 col-md-7 col-lg-8">
         <Room
           recipientId={recipientId}
-          senderId={userId || ''}
+          setIsDisableCreateRoom={setIsDisableCreateRoom}
         />
       </div>
     </div>

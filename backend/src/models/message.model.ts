@@ -7,6 +7,7 @@ const messageSchema = new Schema(
     id: { type: String, require: true },
     senderId: { type: String, require: true },
     text: { type: String, require: true },
+    roomId: { type: String, require: true },
   },
   { timestamps: true }
 );

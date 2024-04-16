@@ -5,6 +5,6 @@ import { cookieJwtAuth } from '../middlewares/cookieJwtAuth';
 const router = express.Router();
 
 router.post('/', cookieJwtAuth, createMessage);
-router.get('/:messageId', cookieJwtAuth, getMessage);
+router.get('/:roomId', cookieJwtAuth, getMessage);
 
 export default router;

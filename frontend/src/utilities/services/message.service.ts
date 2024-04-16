@@ -6,7 +6,7 @@ import {
 } from '../constants/constants-statusCode';
 import { MESSAGE_PREFIX } from '../constants/constant-api';
 
-export const getMessages = async (messageId: string) => {
+export const getMessages = async (messageId: string): Promise<any> => {
   try {
     const response: GlobalResponse = await instance.get(
       `${MESSAGE_PREFIX}/${messageId}`
