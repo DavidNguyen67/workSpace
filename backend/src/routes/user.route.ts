@@ -5,12 +5,13 @@ import {
   loginUser,
   registerUser,
 } from '../controllers/user.controller';
+import { cookieJwtAuth } from '../middlewares/cookieJwtAuth';
 
 const router = express.Router();
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
-router.get('/find/:id', findUser);
-router.get('/', findUsers);
+router.get('/find/:id', cookieJwtAuth, findUser);
+router.get('/', cookieJwtAuth, findUsers);
 
 export default router;

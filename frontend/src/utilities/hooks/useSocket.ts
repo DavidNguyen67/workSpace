@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import toast from 'react-hot-toast';
 import { io } from 'socket.io-client';
 import { v4 } from 'uuid';
 import {
@@ -43,22 +42,6 @@ const useSocket = () => {
       socket.off(SOCKET_ACTION.finish, onFinish);
     };
   }, [socket]);
-
-  useEffect(() => {
-    if (!isConnected) {
-      toast.error(`The connection isn't established`, {
-        id: toastId,
-      });
-      return;
-    }
-    if (isConnected) {
-      toast.remove(toastId);
-      toast.success(`The connection is established`, {
-        id: toastId,
-      });
-      return;
-    }
-  }, [isConnected, toastId]);
 
   const changeNameSpace = useCallback(
     (nameSpace: string) => {

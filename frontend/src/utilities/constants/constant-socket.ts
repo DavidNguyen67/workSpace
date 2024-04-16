@@ -1,5 +1,6 @@
 export const SOCKET_ACTION = {
   sendMessage: 'sendMessage',
+  receiveMessage: 'receiveMessage',
   finish: 'finish',
 };
 

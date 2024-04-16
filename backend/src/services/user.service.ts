@@ -8,7 +8,9 @@ import type { User, UserFindById, UserLogin } from '../utilities/types/user';
 import type { GlobalResponse } from '../utilities/types/global';
 import { v4 } from 'uuid';
 
-const registerUserService = async (payload: User): Promise<GlobalResponse> => {
+export const registerUserService = async (
+  payload: User
+): Promise<GlobalResponse> => {
   try {
     const user = await UserModel.findOne({ email: payload.email });
 
@@ -50,7 +52,7 @@ const registerUserService = async (payload: User): Promise<GlobalResponse> => {
   }
 };
 
-const loginUserService = async (
+export const loginUserService = async (
   payload: UserLogin
 ): Promise<GlobalResponse> => {
   try {
@@ -86,7 +88,7 @@ const loginUserService = async (
   }
 };
 
-const findUserService = async (
+export const findUserService = async (
   payload: UserFindById
 ): Promise<GlobalResponse> => {
   try {
@@ -113,7 +115,7 @@ const findUserService = async (
   }
 };
 
-const findUsersService = async (): Promise<GlobalResponse> => {
+export const findUsersService = async (): Promise<GlobalResponse> => {
   try {
     const users = await UserModel.find({});
 
@@ -136,11 +138,4 @@ const findUsersService = async (): Promise<GlobalResponse> => {
       message: error.message,
     };
   }
-};
-
-export {
-  registerUserService,
-  loginUserService,
-  findUserService,
-  findUsersService,
 };

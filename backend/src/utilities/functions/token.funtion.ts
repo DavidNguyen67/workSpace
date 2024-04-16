@@ -2,21 +2,26 @@ import jwt from 'jsonwebtoken';
 import { env } from 'process';
 import { TOKEN_EXP } from '../constants/token.constant';
 
-const generateToken = (id: string) => {
+export const generateToken = (id: string) => {
   return jwt.sign({ id }, env.JWT_SECRET || '', {
     expiresIn: TOKEN_EXP,
   });
 };
 
-const verifyToken = (token: string): boolean => {
+export const verifyToken = (req: any): boolean => {
   try {
-    jwt.verify(token, env.JWT_SECRET || '');
+    jwt.verify(fromHeaderOrQueryString(req), env.JWT_SECRET || '');
     return true;
   } catch (error: any) {
-    // error
     console.log(error.message);
     return false;
   }
 };
 
-export { generateToken, verifyToken };
+const fromHeaderOrQueryString = (req: any) => {
+  const { token } = req.cookies;
+  if (token && token.split(' ')[0] === 'Bearer') return token.split(' ')[1];
+  else if (req.query && req.query.token) return req.query.token;
+  if (token) return token;
+  return null;
+};

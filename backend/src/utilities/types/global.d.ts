@@ -1,5 +1,5 @@
 export type GlobalResponse = {
-  statusCode: StatusCodes;
+  statusCode: number;
   message: string;
   data?: any;
 };
