@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useAppSelector } from '../utilities/hooks/reduxHook';
+import { useAppDispatch, useAppSelector } from '../utilities/hooks/reduxHook';
 import { getUsers } from '../utilities/services/user.service';
 import { Spinner } from 'react-bootstrap';
 import Room from '../components/Room';
@@ -8,9 +8,19 @@ import { createRoom } from '../utilities/services/room.service';
 import toast from 'react-hot-toast';
 import _ from 'lodash';
 import { Dot, PersonCircle } from 'react-bootstrap-icons';
+import { io } from 'socket.io-client';
+import socketConfig from '../utilities/config/socket.config';
+import {
+  connectToServer,
+  disconnectToServer,
+  handleSetOnline,
+} from '../redux/slices/socket.slice';
+import { SOCKET_ACTION } from '../utilities/constants/constant-socket';
 
 const App = () => {
   const { userId } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const { isOnline, socket } = useAppSelector((state) => state.socket);
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [recipientId, setRecipientId] = useState<string>('');
@@ -49,6 +59,31 @@ const App = () => {
   useEffect(() => {
     handleGetUsers();
   }, [handleGetUsers]);
+  useEffect(() => {
+    dispatch(connectToServer(io('http://localhost:8080/', socketConfig)));
+
+    return () => {
+      dispatch(disconnectToServer());
+    };
+  }, []);
+  useEffect(() => {
+    if (!socket || !userId) return;
+
+    const handleGetOnlineUsersId = (payload: OnlineUser[]) => {
+      dispatch(handleSetOnline(payload));
+    };
+
+    socket.emit(SOCKET_ACTION.ADD_NEW_USER, userId);
+
+    socket.on(SOCKET_ACTION.RECEIVE_ONLINE_USERS, handleGetOnlineUsersId);
+
+    return () => {
+      if (socket) {
+        socket.off(SOCKET_ACTION.RECEIVE_ONLINE_USERS, handleGetOnlineUsersId);
+        dispatch(disconnectToServer());
+      }
+    };
+  }, [dispatch, socket]);
 
   return (
     <div className="row mt-4">
@@ -111,7 +146,7 @@ const App = () => {
                     </div>
                     <Dot
                       className="ms-auto"
-                      color="green"
+                      color={isOnline ? 'green' : 'red'}
                       size={40}
                     />
                   </div>

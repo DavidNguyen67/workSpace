@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { USER_SLICE } from '../../utilities/constants/constant-slice';
-import { MessageState } from '../../utilities/interfaces/interface.slice';
+import { MessageState } from '../../utilities/interfaces/message.interface';
 import { jwtDecode } from 'jwt-decode';
 
 // Define the initial state using that type

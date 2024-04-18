@@ -16,6 +16,7 @@ import { useAppSelector } from '../utilities/hooks/reduxHook';
 import { v4 } from 'uuid';
 import toast from 'react-hot-toast';
 import _ from 'lodash';
+import { SOCKET_ACTION } from '../utilities/constants/constant-socket';
 
 export default function ChatBox(props: {
   recipientId: string;
@@ -31,6 +32,7 @@ export default function ChatBox(props: {
     roomId,
   });
   const [messages, setMessages] = useState<Message[]>([]);
+  const { isOnline, socket } = useAppSelector((state) => state.socket);
 
   const handleChangeTextArea = (event: any) => {
     setNewMessage((prev) => ({
@@ -57,21 +59,32 @@ export default function ChatBox(props: {
   }, [recipientId, userId]);
   const handleSendMessage = useCallback(async () => {
     setIsLoading(true);
-    if (newMessage.text) {
-      const response = await sendMessage(newMessage);
-      if (response) {
-        setNewMessage({ id: v4(), senderId: userId || '', text: '', roomId });
-        handleGetMessage();
-      }
+    if (newMessage.text && socket) {
+      socket.emit(SOCKET_ACTION.SEND_MESSAGE, newMessage);
     } else {
       toast.error("Message can't be empty");
     }
     setIsLoading(false);
-  }, [handleGetMessage, newMessage, roomId, userId]);
+  }, [newMessage, socket]);
 
   useEffect(() => {
     handleGetMessage();
   }, [handleGetMessage]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleGetMessage = (payload: Message) => {
+      console.log(payload);
+    };
+    socket.on(SOCKET_ACTION.RECEIVE_MESSAGES, handleGetMessage);
+
+    return () => {
+      if (socket) {
+        socket.off(SOCKET_ACTION.RECEIVE_MESSAGES);
+      }
+    };
+  }, [socket]);
 
   return (
     <MDBCard

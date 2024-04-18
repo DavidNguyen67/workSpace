@@ -41,7 +41,7 @@ const RegisterForm = () => {
         <div className="mb-3">
           <label
             htmlFor="name"
-            className="form-label"
+            className="form-label text-white"
           >
             Name
           </label>
@@ -58,7 +58,7 @@ const RegisterForm = () => {
         <div className="mb-3">
           <label
             htmlFor="exampleInputEmail1"
-            className="form-label"
+            className="form-label text-white"
           >
             Email address
           </label>
@@ -75,7 +75,7 @@ const RegisterForm = () => {
         <div className="mb-3">
           <label
             htmlFor="password"
-            className="form-label"
+            className="form-label text-white "
           >
             Password
           </label>
@@ -91,7 +91,7 @@ const RegisterForm = () => {
         <div className="mb-3">
           <label
             htmlFor="reEnterPassword"
-            className="form-label"
+            className="form-label text-white "
           >
             Re Enter Password
           </label>

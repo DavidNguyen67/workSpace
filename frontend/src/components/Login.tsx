@@ -44,7 +44,7 @@ const Login = () => {
         <div className="mb-3">
           <label
             htmlFor="exampleInputEmail1"
-            className="form-label"
+            className="form-label text-white"
           >
             Email address
           </label>
@@ -61,7 +61,7 @@ const Login = () => {
         <div className="mb-3">
           <label
             htmlFor="password"
-            className="form-label"
+            className="form-label text-white"
           >
             Password
           </label>
