@@ -1,34 +1,25 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import {
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { USER_EVENT } from 'src/utilities/constants/constants.action';
+import { LoginUserDto } from './dto/login-user.dto';
+import { Server } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: '*',
+})
 export class UserGateway {
   constructor(private readonly userService: UserService) {}
 
-  @SubscribeMessage('createUser')
-  create(@MessageBody() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
+  @WebSocketServer()
+  server: Server;
 
-  @SubscribeMessage('findAllUser')
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @SubscribeMessage('findOneUser')
-  findOne(@MessageBody() id: number) {
-    return this.userService.findOne(id);
-  }
-
-  @SubscribeMessage('updateUser')
-  update(@MessageBody() updateUserDto: UpdateUserDto) {
-    return this.userService.update(updateUserDto.id, updateUserDto);
-  }
-
-  @SubscribeMessage('removeUser')
-  remove(@MessageBody() id: number) {
-    return this.userService.remove(id);
+  @SubscribeMessage(USER_EVENT.ACTION.LOGIN)
+  login(@MessageBody() loginUserDto: LoginUserDto) {
+    console.log(this.userService.login(loginUserDto));
   }
 }
