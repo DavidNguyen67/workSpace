@@ -1,10 +1,7 @@
 import {
-  BadRequestException,
-  ConflictException,
   HttpStatus,
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -12,18 +9,25 @@ import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 export const saltRounds = 10;
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private jwtService: JwtService,
+  ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<CommonResponse> {
     try {
       const isExistEmail = await this.findByEmail(createUserDto.email);
       if (isExistEmail) {
-        return new ConflictException('Your email is exist').getResponse();
+        return {
+          statusCode: HttpStatus.CONFLICT,
+          message: 'Your email is already exist',
+        };
       }
       const createdUser = new this.userModel({
         ...createUserDto,
@@ -49,26 +53,28 @@ export class UserService {
     }
   }
 
-  async login(loginUserDto: LoginUserDto) {
+  async login(loginUserDto: LoginUserDto): Promise<CommonResponse> {
     try {
       const user = await this.findByEmail(loginUserDto.email);
       if (!user) {
-        return new NotFoundException(
-          'Your email or password is wrong',
-        ).getResponse();
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'Your email or password is wrong',
+        };
       }
 
       const match = await bcrypt.compare(loginUserDto.password, user.password);
 
       if (!match) {
-        return new BadRequestException(
-          'Your email or password is wrong',
-        ).getResponse();
+        return {
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: 'Your email or password is wrong',
+        };
       }
 
       return {
         statusCode: HttpStatus.OK,
-        data: user,
+        access_token: await this.jwtService.signAsync({ id: user.id }),
         message: 'Login successfully',
       };
     } catch (error) {
