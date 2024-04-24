@@ -59,7 +59,7 @@ export class UserService {
       if (!user) {
         return {
           statusCode: HttpStatus.BAD_REQUEST,
-          message: 'Your email or password is wrong',
+          message: 'Your email or password is not exist',
         };
       }
 

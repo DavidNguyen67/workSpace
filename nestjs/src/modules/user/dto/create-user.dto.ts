@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsStrongPassword, IsUUID } from 'class-validator';
+import { IsEmail, IsOptional, IsString, IsUUID } from 'class-validator';
 import { User } from '../schema/user.schema';
 
 export class CreateUserDto extends User {
@@ -11,6 +11,10 @@ export class CreateUserDto extends User {
   @IsEmail()
   email: string;
 
-  @IsStrongPassword()
+  @IsString()
   password: string;
+
+  @IsOptional()
+  @IsString()
+  avatar: string;
 }
