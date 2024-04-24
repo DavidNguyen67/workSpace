@@ -58,18 +58,9 @@ export default function SignUp() {
       });
       return;
     }
-    if (!validator.isStrongPassword(userInfo.password)) {
-      toast({
-        title: 'Invalid Info',
-        description: 'Your password is not strong enough',
-        status: 'error',
-        isClosable: true,
-        position: 'top',
-      });
-      return;
-    }
     setIsLoading(true);
     toast.closeAll();
+
     const response = await signUp(userInfo);
     toast({
       description: response.message,
@@ -85,6 +76,7 @@ export default function SignUp() {
         avatar: null,
       });
     }
+
     setIsLoading(false);
   }, [toast, userInfo]);
 
@@ -94,6 +86,7 @@ export default function SignUp() {
         id="first-name"
         isRequired
         marginBottom="12px"
+        isDisabled={isLoading}
       >
         <FormLabel htmlFor="name">Name:</FormLabel>
         <Input
@@ -109,6 +102,7 @@ export default function SignUp() {
         id="email"
         isRequired
         marginBottom="12px"
+        isDisabled={isLoading}
       >
         <FormLabel htmlFor="email">Email:</FormLabel>
         <Input
@@ -124,6 +118,7 @@ export default function SignUp() {
         id="password"
         isRequired
         marginBottom="12px"
+        isDisabled={isLoading}
       >
         <FormLabel htmlFor="password">Password:</FormLabel>
         <InputGroup>
@@ -149,6 +144,7 @@ export default function SignUp() {
       <FormControl
         id="avatar"
         marginBottom="12px"
+        isDisabled={isLoading}
       >
         <FormLabel htmlFor="avatar">Avatar:</FormLabel>
         <Input

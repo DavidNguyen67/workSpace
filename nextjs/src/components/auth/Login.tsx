@@ -8,18 +8,23 @@ import {
   FormLabel,
   Input,
   InputGroup,
+  InputRightElement,
   VStack,
   useToast,
 } from '@chakra-ui/react';
 import { useCallback, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { HttpStatusCode } from 'axios';
 
 export default function Login() {
   const [userInfo, setUserInfo] = useState<UserSignIn>({
     email: '',
     password: '',
   });
+  const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const toast = useToast();
+  const router = useRouter();
 
   const handleOnChangeInput = (event: any) => {
     setUserInfo((prevUserInfo) => ({
@@ -40,6 +45,9 @@ export default function Login() {
       status: typeToast(response.statusCode),
       position: 'top',
     });
+    if (response.statusCode === HttpStatusCode.Ok) {
+      router.push('/chat');
+    }
 
     setIsLoading(false);
   }, [toast, userInfo]);
@@ -50,6 +58,7 @@ export default function Login() {
         id="email"
         isRequired
         marginBottom="12px"
+        isDisabled={isLoading}
       >
         <FormLabel htmlFor="email">Email:</FormLabel>
         <Input
@@ -65,17 +74,27 @@ export default function Login() {
         id="password"
         isRequired
         marginBottom="12px"
+        isDisabled={isLoading}
       >
         <FormLabel htmlFor="password">Password:</FormLabel>
         <InputGroup>
           <Input
             placeholder="Enter your password"
-            type={'password'}
+            type={isShowPassword ? 'text' : 'password'}
             id="password"
             name="password"
             onChange={handleOnChangeInput}
             value={userInfo.password}
           />
+          <InputRightElement width="4.5rem">
+            <Button
+              h="1.75rem"
+              size="sm"
+              onClick={() => setIsShowPassword(!isShowPassword)}
+            >
+              {isShowPassword ? 'Hide' : 'Show'}
+            </Button>
+          </InputRightElement>
         </InputGroup>
       </FormControl>
       <Button

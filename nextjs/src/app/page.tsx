@@ -36,8 +36,8 @@ export default function Home() {
       >
         <Tabs variant="soft-rounded">
           <TabList mb="1em">
-            <Tab width="50%">Login</Tab>
             <Tab width="50%">Sign up</Tab>
+            <Tab width="50%">Login</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
