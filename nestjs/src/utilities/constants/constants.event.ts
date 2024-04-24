@@ -1,5 +1,6 @@
 export const USER_EVENT = {
-  PREFIX: 'user',
+  WS: '/ws',
+  PREFIX: '/user',
   ACTION: {
     LOGIN: 'login',
   },

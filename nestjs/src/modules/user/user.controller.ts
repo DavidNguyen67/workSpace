@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { USER_CONSTANTS } from 'src/utilities/constants/constants.user';
 import { CreateUserDto } from './dto/create-user.dto';
 
-@Controller()
+@Controller(USER_CONSTANTS.PREFIX)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

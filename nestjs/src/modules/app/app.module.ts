@@ -6,6 +6,7 @@ import { UserModule } from '../user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { env } from 'process';
 import 'dotenv/config';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import 'dotenv/config';
     MongooseModule.forRoot(env.DATABASE_URL),
   ],
   controllers: [AppController],
+  // providers: [AppService, AppGateway],
   providers: [AppService],
 })
 export class AppModule {}

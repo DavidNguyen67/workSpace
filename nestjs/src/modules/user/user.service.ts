@@ -10,7 +10,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
 
 export const saltRounds = 10;
@@ -59,6 +59,7 @@ export class UserService {
       }
 
       const match = await bcrypt.compare(loginUserDto.password, user.password);
+
       if (!match) {
         return new BadRequestException(
           'Your email or password is wrong',
@@ -66,9 +67,9 @@ export class UserService {
       }
 
       return {
-        statusCode: HttpStatus.CREATED,
+        statusCode: HttpStatus.OK,
         data: user,
-        message: 'Your account is registered successfully',
+        message: 'Login successfully',
       };
     } catch (error) {
       throw new InternalServerErrorException(error.message).getResponse();
