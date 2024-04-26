@@ -1,26 +1,51 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
+import { Chat } from './schema/chat.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from '../user/schema/user.schema';
 
 @Injectable()
 export class ChatService {
-  create(createChatDto: CreateChatDto) {
-    return 'This action adds a new chat';
-  }
+  constructor(
+    @InjectModel(Chat.name) private chatModel: Model<Chat>,
+    @InjectModel(User.name) private userModel: Model<User>,
+  ) {}
 
-  findAll() {
-    return `This action returns all chat`;
-  }
+  async create(createChatDto: CreateChatDto): Promise<CommonResponse> {
+    const chat = await this.chatModel
+      .find({
+        isGroupChat: false,
+        $and: [
+          {
+            users: {
+              $elemMatch: {
+                $eq: createChatDto.userId,
+              },
+            },
+          },
+        ],
+      })
+      .populate('users', '-password')
+      .populate('latestMessage');
+    const users = await this.userModel.populate(chat, {
+      path: 'latestMessage.sender',
+      select: 'name avatar email',
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} chat`;
-  }
-
-  update(id: number, updateChatDto: UpdateChatDto) {
-    return `This action updates a #${id} chat`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} chat`;
+    if (users.length > 0) {
+      console.log(users);
+      return {
+        message: 'This is your chat',
+        statusCode: HttpStatus.OK,
+        data: users[0],
+      };
+    } else {
+      const newChat = new this.chatModel({
+        name: 'sender',
+        isGroupChat: false,
+        users: [],
+      });
+    }
   }
 }
