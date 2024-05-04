@@ -1,18 +1,26 @@
 import SLICES from '@/utilities/constants/slice.constants';
 import { SocketState } from '@/utilities/interfaces/index.interface';
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 const initialState: SocketState = {
-  io: new WebSocket('ws://localhost:8080'),
+  socket: null,
+  firebaseToken: '',
 };
 
 export const socketSlice = createSlice({
   name: SLICES.SOCKET,
   initialState,
-  reducers: {},
+  reducers: {
+    setFirebaseToken: (state, action: PayloadAction<string>) => {
+      state.firebaseToken = action.payload;
+    },
+    setSocket: (state, action: PayloadAction<any>) => {
+      state.socket = action.payload;
+    },
+  },
 });
 
 // Action creators are generated for each case reducer function
-export const {} = socketSlice.actions;
+export const { setSocket, setFirebaseToken } = socketSlice.actions;
 
 export default socketSlice.reducer;

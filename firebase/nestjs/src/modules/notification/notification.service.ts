@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Notifications } from './entities/notification.entity';
+import { Repository } from 'typeorm';
 import * as firebase from 'firebase-admin';
 import * as path from 'path';
-import { Notifications } from './entities/notifications.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { NotificationToken } from './entities/notification-token.entity';
-import { Repository } from 'typeorm';
+import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { CreateNotificationDto } from './dto/create-notification.dto';
-import * as admin from 'firebase-admin';
+import { User } from '../users/entities/user.entity';
 
 firebase.initializeApp({
   credential: firebase.credential.cert(
@@ -26,7 +26,7 @@ export class NotificationService {
   ) {}
 
   acceptPushNotification = async (
-    user: any,
+    user: User,
     notification_dto: CreateNotificationDto,
   ): Promise<NotificationToken> => {
     await this.notificationTokenRepo.update(
@@ -37,7 +37,7 @@ export class NotificationService {
     );
     // save to db
     const notification_token = await this.notificationTokenRepo.save({
-      user: user,
+      user,
       device_type: notification_dto.device_type,
       notification_token: notification_dto.notification_token,
       status: 'ACTIVE',
@@ -93,31 +93,4 @@ export class NotificationService {
       return error;
     }
   };
-
-  async sendingNotificationOneUser(token: string) {
-    const payload = {
-      token: token,
-      notification: {
-        title: 'Hi there this is title',
-        body: 'Hi there this is message',
-      },
-      data: {
-        name: 'Joe',
-        age: '21',
-      },
-    };
-    return admin
-      .messaging()
-      .send(payload)
-      .then((res) => {
-        return {
-          success: true,
-        };
-      })
-      .catch((error) => {
-        return {
-          success: false,
-        };
-      });
-  }
 }

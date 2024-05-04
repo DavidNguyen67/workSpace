@@ -1,3 +1,1 @@
-export interface SocketState {
-  io: any;
-}
+export * from './socket.interface';

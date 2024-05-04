@@ -7,7 +7,10 @@ const store = configureStore({
   reducer: {
     socket: socketSlice,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).prepend(),
 });
 
 type RootState = ReturnType<typeof store.getState>;
