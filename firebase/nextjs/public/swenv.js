@@ -1,5 +1,4 @@
-
- const process = {
+const process = {
     env: {
       NEXT_PUBLIC_FIREBASE_API_KEY: 'AIzaSyAVOTi_tR6Gz71H9oZXznpQwggWOIkniGo',
       NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: 'learnfirebase-9d7df.firebaseapp.com',
@@ -9,5 +8,5 @@
       NEXT_PUBLIC_FIREBASE_APP_ID: '1:996140472156:web:e20a3cb2b856ae475c9399',
       NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: 'G-Q9G5N1FX50',
       NEXT_PUBLIC_FIREBASE_KEY_PAIR: 'BOyvIWyu6B5tmP8Yhp7NM0EeSXZ3D0J44XHbpmnhBiPTwvZnD3JbvSoebdfsv4gvyTgL2TAiEZFJo6f5nI5yE_E'
-  }
- }
+    },
+  };
