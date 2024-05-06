@@ -19,7 +19,7 @@ import validator from 'validator';
 
 export default function SignUp() {
   const toast = useToast();
-  const [userInfo, setUserInfo] = useState<UserSignUp>({
+  const [userInfo, setUserInfo] = useState<UserSignUpType>({
     id: v4(),
     name: '',
     email: '',
@@ -44,7 +44,8 @@ export default function SignUp() {
         description: 'Your name is not valid',
         status: 'error',
         isClosable: true,
-        position: 'top',
+        position: 'top-right',
+        duration: 4000,
       });
       return;
     }
@@ -54,7 +55,8 @@ export default function SignUp() {
         description: 'Your email is not valid',
         status: 'error',
         isClosable: true,
-        position: 'top',
+        position: 'top-right',
+        duration: 4000,
       });
       return;
     }
@@ -65,7 +67,8 @@ export default function SignUp() {
     toast({
       description: response.message,
       status: typeToast(response.statusCode),
-      position: 'top',
+      position: 'top-right',
+      duration: 4000,
     });
     if (response.statusCode === HttpStatusCode.Created) {
       setUserInfo({

@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 import { HttpStatusCode } from 'axios';
 
 export default function Login() {
-  const [userInfo, setUserInfo] = useState<UserSignIn>({
+  const [userInfo, setUserInfo] = useState<UserSignInType>({
     email: '',
     password: '',
   });
@@ -43,7 +43,8 @@ export default function Login() {
     toast({
       description: response.message,
       status: typeToast(response.statusCode),
-      position: 'top',
+      position: 'top-right',
+      duration: 4000,
     });
     if (response.statusCode === HttpStatusCode.Ok) {
       router.push('/chat');

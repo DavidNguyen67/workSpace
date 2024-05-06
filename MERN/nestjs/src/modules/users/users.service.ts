@@ -10,6 +10,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { FindAllUserDto } from './dto/findAll-user.dto';
+import { FindByEmailOrUserNameUserDto } from './dto/findByEmailOrUserName-user-dto';
 
 const saltRounds = 10;
 
@@ -105,6 +106,82 @@ export class UsersService {
         statusCode: HttpStatus.OK,
         data: users,
         message: 'Users found',
+      };
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  async find(
+    findByEmailOrUserNameUserDto: FindByEmailOrUserNameUserDto,
+  ): Promise<CommonResponse> {
+    try {
+      function buildSearchConditions(dto: any) {
+        const conditions = [];
+
+        if (dto.email) {
+          conditions.push({
+            email: {
+              $regex: dto.email,
+              $options: 'i',
+            },
+          });
+        }
+
+        if (dto.username) {
+          conditions.push({
+            username: {
+              $regex: dto.username,
+              $options: 'i',
+            },
+          });
+        }
+
+        return conditions.length > 0 ? conditions : [{}];
+      }
+
+      const regex = buildSearchConditions(findByEmailOrUserNameUserDto);
+
+      const users = await this.userModel
+        .find({
+          $or: regex,
+        })
+        .sort({
+          createAt: 'desc',
+        });
+
+      if (users.length < 1) {
+        return {
+          message: 'Users not found',
+          statusCode: HttpStatus.NOT_FOUND,
+        };
+      }
+      return {
+        statusCode: HttpStatus.OK,
+        data: users,
+        message: 'Users found',
+      };
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  async findById(userId: string): Promise<CommonResponse> {
+    try {
+      const user = await this.userModel.findById(userId);
+
+      if (user) {
+        return {
+          message: 'User not found',
+          statusCode: HttpStatus.NOT_FOUND,
+        };
+      }
+      return {
+        statusCode: HttpStatus.OK,
+        data: user,
+        message: 'User found',
       };
     } catch (error) {
       console.log(error);

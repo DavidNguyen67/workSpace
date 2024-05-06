@@ -4,7 +4,7 @@ import { SCHEMAS } from 'src/utilities/constants';
 export const ChatSchema = new mongoose.Schema(
   {
     chatName: String,
-    isGroupChat: Boolean,
+    isGroupChat: { type: Boolean, default: false },
     users: [
       {
         type: mongoose.Schema.Types.ObjectId,

@@ -19,9 +19,9 @@ import validator from 'validator';
 
 export default function SignUp() {
   const toast = useToast();
-  const [userInfo, setUserInfo] = useState<UserSignUp>({
+  const [userInfo, setUserInfo] = useState<UserSignUpType>({
     id: v4(),
-    username: '',
+    name: '',
     email: '',
     password: '',
     avatar: null,
@@ -38,13 +38,14 @@ export default function SignUp() {
     }));
   };
   const handleSubmits = useCallback(async () => {
-    if (!validator.isAlpha(userInfo.username)) {
+    if (!validator.isAlpha(userInfo.name)) {
       toast({
         title: 'Invalid Info',
-        description: 'Your username is not valid',
+        description: 'Your name is not valid',
         status: 'error',
         isClosable: true,
-        position: 'top',
+        position: 'top-right',
+        duration: 4000,
       });
       return;
     }
@@ -54,7 +55,8 @@ export default function SignUp() {
         description: 'Your email is not valid',
         status: 'error',
         isClosable: true,
-        position: 'top',
+        position: 'top-right',
+        duration: 4000,
       });
       return;
     }
@@ -65,12 +67,13 @@ export default function SignUp() {
     toast({
       description: response.message,
       status: typeToast(response.statusCode),
-      position: 'top',
+      position: 'top-right',
+      duration: 4000,
     });
     if (response.statusCode === HttpStatusCode.Created) {
       setUserInfo({
         id: v4(),
-        username: '',
+        name: '',
         email: '',
         password: '',
         avatar: null,
@@ -92,9 +95,9 @@ export default function SignUp() {
         <Input
           placeholder="Enter your name"
           id="name"
-          name="username"
+          name="name"
           onChange={handleOnChangeInput}
-          value={userInfo.username}
+          value={userInfo.name}
           type="text"
         />
       </FormControl>
@@ -163,7 +166,7 @@ export default function SignUp() {
         style={{ marginTop: 15 }}
         onClick={handleSubmits}
         isLoading={isLoading}
-        isDisabled={!(userInfo.email && userInfo.password && userInfo.username)}
+        isDisabled={!(userInfo.email && userInfo.password && userInfo.name)}
       >
         Sign Up
       </Button>

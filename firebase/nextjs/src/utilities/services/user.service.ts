@@ -2,7 +2,9 @@ import instance from '@/configs/axios.config';
 import { USER_CONSTANTS } from '../constants/user.constants';
 import axios, { HttpStatusCode } from 'axios';
 
-export const signUp = async (payload: UserSignUp): Promise<CommonResponse> => {
+export const signUp = async (
+  payload: UserSignUpType
+): Promise<CommonResponse> => {
   try {
     const data = new FormData();
     data.append('file', payload.avatar || '');
@@ -85,7 +87,9 @@ export const signUp = async (payload: UserSignUp): Promise<CommonResponse> => {
   }
 };
 
-export const login = async (payload: UserSignIn): Promise<CommonResponse> => {
+export const login = async (
+  payload: UserSignInType
+): Promise<CommonResponse> => {
   return await instance.post(
     USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.LOGIN,
     payload

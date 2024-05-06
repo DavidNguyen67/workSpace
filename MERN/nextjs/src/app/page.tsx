@@ -51,7 +51,7 @@ export default function Home() {
         </Tabs>
       </Box>
 
-      {/* <NotificationComponent /> */}
+      <NotificationComponent />
     </>
   );
 }

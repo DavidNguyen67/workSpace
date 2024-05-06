@@ -1,4 +1,4 @@
-type UserSignUp = {
+type UserSignUpType = {
   id?: string;
   name: string;
   email: string;
@@ -6,7 +6,7 @@ type UserSignUp = {
   avatar: File | null;
 };
 
-type UserSignIn = {
+type UserSignInType = {
   email: string;
   password: string;
 };
