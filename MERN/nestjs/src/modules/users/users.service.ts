@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserSchema } from './schema/user.schema';
-import { Schemas } from 'src/utilities/constants';
+import { SCHEMAS } from 'src/utilities/constants';
 import { Model } from 'mongoose';
 import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -16,7 +16,7 @@ const saltRounds = 10;
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(Schemas.Users) private userModel: Model<typeof UserSchema>,
+    @InjectModel(SCHEMAS.USERS) private userModel: Model<typeof UserSchema>,
     private jwtService: JwtService,
   ) {}
 

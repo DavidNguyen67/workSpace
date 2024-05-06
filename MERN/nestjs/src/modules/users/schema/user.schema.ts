@@ -17,6 +17,11 @@ export const UserSchema = new mongoose.Schema(
       type: String,
       default: DEFAULT_VALUE.IN_ACTIVE,
     },
+    avatar: {
+      type: String,
+      default:
+        'https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg',
+    },
   },
   {
     timestamps: true,
