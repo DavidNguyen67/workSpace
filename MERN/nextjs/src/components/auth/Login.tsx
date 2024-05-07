@@ -16,7 +16,7 @@ import { HttpStatusCode } from 'axios';
 import { login } from '@/utilities/services';
 import { typeToast } from '@/utilities/functions';
 import { useAppDispatch } from '@/utilities/redux/store/index.store';
-import { setToken } from '@/utilities/redux/slices/user.slice';
+import { setInfo, setToken } from '@/utilities/redux/slices/user.slice';
 
 export default function Login() {
   const [userInfo, setUserInfo] = useState<UserSignInType>({
@@ -26,7 +26,6 @@ export default function Login() {
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const toast = useToast();
-  const router = useRouter();
   const dispatch = useAppDispatch();
 
   const handleOnChangeInput = (event: any) => {
@@ -37,6 +36,7 @@ export default function Login() {
         : event.target?.files[0],
     }));
   };
+
   const handleSubmits = useCallback(async () => {
     setIsLoading(true);
     toast.closeAll();
@@ -45,11 +45,13 @@ export default function Login() {
     toast({
       description: response.message,
       status: typeToast(response.statusCode),
-      position: 'top-right',
+      position: 'top-left',
+      isClosable: true,
       duration: 4000,
     });
     if (response.statusCode === HttpStatusCode.Ok) {
-      dispatch(setToken(response.data));
+      if (response.accessToken) dispatch(setToken(response.accessToken));
+      if (response.data) dispatch(setInfo(response.data));
     }
 
     setIsLoading(false);

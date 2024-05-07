@@ -16,6 +16,8 @@
     "@cloudinary/url-gen": "^1.19.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@fontsource/open-sans": "^5.0.28",
+    "@fontsource/raleway": "^5.0.19",
     "@reduxjs/toolkit": "^2.2.3",
     "@types/redux-logger": "^3.0.13",
     "@types/uuid": "^9.0.8",

@@ -5,6 +5,7 @@ import SignUp from '@/components/auth/SignUp';
 import { useAppSelector } from '@/utilities/redux/store/index.store';
 import {
   Box,
+  Container,
   Tab,
   TabList,
   TabPanel,
@@ -13,22 +14,21 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const { token } = useAppSelector((state) => state.user);
+  const { token, info } = useAppSelector((state) => state.user);
   const router = useRouter();
 
   useEffect(() => {
-    if (token) {
+    if (token || info) {
       router.push('/chat');
       return;
     }
-  }, [token]);
+  }, [token, info]);
 
   return (
-    <>
-      <ScrollToTop />
+    <Container maxWidth="xl">
       <Box
         display="flex"
         justifyContent="center"
@@ -64,6 +64,6 @@ export default function Home() {
           </TabPanels>
         </Tabs>
       </Box>
-    </>
+    </Container>
   );
 }

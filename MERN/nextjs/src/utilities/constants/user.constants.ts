@@ -10,5 +10,12 @@ export const USER_CONSTANTS = {
 
 export const CHAT_CONSTANTS = {
   PREFIX: '/chat',
-  ACTION: {},
+  ACTION: {
+    FIND_OR_CREATE: '/findOrCreate',
+    FIND: '/find',
+    CREATE_GROUP_CHAT: '/createGroupChat',
+    RENAME_GROUP_CHAT: '/renameGroupChat',
+    ADD_USERS_TO_GROUP: '/addUsersToGroup',
+    REMOVE_USERS_FROM_GROUP: '/removeUsersFromGroup',
+  },
 };

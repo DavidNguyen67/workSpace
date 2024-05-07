@@ -1,6 +1,6 @@
 import instance from '@/configs/axios.config';
-import { USER_CONSTANTS } from '../constants/user.constants';
-import axios, { HttpStatusCode } from 'axios';
+import { CHAT_CONSTANTS, USER_CONSTANTS } from '../constants/user.constants';
+import { HttpStatusCode } from 'axios';
 
 export const signUp = async (
   payload: UserSignUpType
@@ -119,14 +119,14 @@ export const findByEmailOrUserName = async (
 ): Promise<CommonResponse> => {
   if (payload.email) {
     return await instance.get(
-      `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.FIND_ALL}?email=${
+      `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.FIND}?email=${
         payload.email
       }`
     );
   }
   if (payload.username) {
     return await instance.get(
-      `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.FIND_ALL}?username=${
+      `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.FIND}?username=${
         payload.username
       }`
     );
@@ -135,4 +135,11 @@ export const findByEmailOrUserName = async (
     message: 'Missing query param',
     statusCode: HttpStatusCode.BadRequest,
   };
+};
+
+export const findOrCreateChat = async (payload: FindOrCreateChat) => {
+  return await instance.post(
+    CHAT_CONSTANTS.PREFIX + CHAT_CONSTANTS.ACTION.FIND_OR_CREATE,
+    payload
+  );
 };

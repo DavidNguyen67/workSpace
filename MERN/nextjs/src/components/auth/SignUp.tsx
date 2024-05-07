@@ -1,7 +1,7 @@
 'use client';
 
 import { typeToast } from '@/utilities/functions/toast.function';
-import { setToken } from '@/utilities/redux/slices/user.slice';
+import { setInfo, setToken } from '@/utilities/redux/slices/user.slice';
 import { useAppDispatch } from '@/utilities/redux/store/index.store';
 import { signUp } from '@/utilities/services/user.service';
 import {
@@ -38,14 +38,15 @@ export default function SignUp() {
         : event.target?.files[0],
     }));
   };
+
   const handleSubmits = useCallback(async () => {
-    if (!validator.isAlpha(userInfo.username)) {
+    if (!validator.isAlphanumeric(userInfo.username)) {
       toast({
         title: 'Invalid Info',
         description: 'Your username  is not valid',
         status: 'error',
         isClosable: true,
-        position: 'top-right',
+        position: 'top-left',
         duration: 4000,
       });
       return;
@@ -56,7 +57,7 @@ export default function SignUp() {
         description: 'Your email is not valid',
         status: 'error',
         isClosable: true,
-        position: 'top-right',
+        position: 'top-left',
         duration: 4000,
       });
       return;
@@ -69,7 +70,8 @@ export default function SignUp() {
     toast({
       description: response.message,
       status: typeToast(response.statusCode),
-      position: 'top-right',
+      position: 'top-left',
+      isClosable: true,
       duration: 4000,
     });
     if (response.statusCode === HttpStatusCode.Created) {
@@ -79,7 +81,8 @@ export default function SignUp() {
         password: '',
         avatar: null,
       });
-      dispatch(setToken(response.data));
+      if (response.accessToken) dispatch(setToken(response.accessToken));
+      if (response.data) dispatch(setInfo(response.data));
     }
   }, [toast, userInfo]);
 

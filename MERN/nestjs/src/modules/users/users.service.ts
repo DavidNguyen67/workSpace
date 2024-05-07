@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserSchema } from './schema/user.schema';
 import { SCHEMAS } from 'src/utilities/constants';
@@ -24,9 +22,11 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<CommonResponse> {
     try {
-      const user = await this.userModel.findOne({
-        email: { $regex: createUserDto.email, $options: 'i' },
-      });
+      const user = await this.userModel
+        .findOne({
+          email: { $regex: createUserDto.email, $options: 'i' },
+        })
+        .select('-password -__v');
       if (user) {
         return {
           message: 'This email is already exist!',
@@ -42,7 +42,8 @@ export class UsersService {
       return {
         message: 'Create new user successfully',
         statusCode: HttpStatus.CREATED,
-        data: await this.jwtService.signAsync(
+        data: user,
+        accessToken: await this.jwtService.signAsync(
           (await createdUser.save())._id.toString(),
           {
             secret: process.env.JWT_SECRET,
@@ -60,12 +61,14 @@ export class UsersService {
 
   async login(loginUserDto: LoginUserDto): Promise<CommonResponse> {
     try {
-      const user: any = await this.userModel.findOne({
-        email: {
-          $regex: loginUserDto.email,
-          $options: 'i',
-        },
-      });
+      const user: any = await this.userModel
+        .findOne({
+          email: {
+            $regex: loginUserDto.email,
+            $options: 'i',
+          },
+        })
+        .select('-password, -__v');
 
       if (!user) {
         return {
@@ -84,7 +87,8 @@ export class UsersService {
       return {
         message: 'Login success fully',
         statusCode: HttpStatus.OK,
-        data: await this.jwtService.signAsync(user.id, {
+        data: user,
+        accessToken: await this.jwtService.signAsync(user.id, {
           secret: process.env.JWT_SECRET,
         }),
       };
@@ -104,7 +108,7 @@ export class UsersService {
         .sort({
           createAt: 'desc',
         })
-        .select('-password -_id -__v')
+        .select('-password  -__v')
         .skip(findAllUserDto.skip)
         .limit(findAllUserDto.limit);
 

@@ -1,8 +1,6 @@
-import { PartialType } from '@nestjs/mapped-types';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
-import { CreateChatDto } from './create-chat.dto';
 
-export class FindOrCreateChatDto extends PartialType(CreateChatDto) {
+export class FindOrCreateChatDto {
   @IsOptional()
   @IsBoolean()
   isGroupChat: boolean;

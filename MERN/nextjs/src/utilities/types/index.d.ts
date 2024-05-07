@@ -2,6 +2,7 @@ type CommonResponse = {
   statusCode: number;
   data?: any;
   message: string;
+  accessToken?: string;
 };
 
 type CloudinaryImageResponse = {
