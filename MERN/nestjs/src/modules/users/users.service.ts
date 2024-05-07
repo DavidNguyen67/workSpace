@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { FindAllUserDto } from './dto/findAll-user.dto';
 import { FindByEmailOrUserNameUserDto } from './dto/findByEmailOrUserName-user-dto';
+import * as _ from 'lodash';
 
 const saltRounds = 10;
 
@@ -33,20 +34,27 @@ export class UsersService {
         };
       }
       const createdUser = new this.userModel({
-        ...createUserDto,
+        // Loại bỏ những trường có giá trị false bằng lodash trước khi insert vào db
+        ..._.omitBy(createUserDto, _.isNil),
         password: await bcrypt.hash(createUserDto.password, saltRounds),
       });
-      await createdUser.save();
+
       return {
         message: 'Create new user successfully',
         statusCode: HttpStatus.CREATED,
-        data: await this.jwtService.signAsync((await createdUser.save()).id, {
-          secret: process.env.JWT_SECRET,
-        }),
+        data: await this.jwtService.signAsync(
+          (await createdUser.save())._id.toString(),
+          {
+            secret: process.env.JWT_SECRET,
+          },
+        ),
       };
     } catch (error) {
       console.log(error);
-      return null;
+      return {
+        message: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      };
     }
   }
 
@@ -82,7 +90,10 @@ export class UsersService {
       };
     } catch (error) {
       console.log(error);
-      return null;
+      return {
+        message: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      };
     }
   }
 
@@ -93,6 +104,7 @@ export class UsersService {
         .sort({
           createAt: 'desc',
         })
+        .select('-password -_id -__v')
         .skip(findAllUserDto.skip)
         .limit(findAllUserDto.limit);
 
@@ -109,7 +121,10 @@ export class UsersService {
       };
     } catch (error) {
       console.log(error);
-      return null;
+      return {
+        message: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      };
     }
   }
 
@@ -164,28 +179,34 @@ export class UsersService {
       };
     } catch (error) {
       console.log(error);
-      return null;
+      return {
+        message: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      };
     }
   }
 
   async findById(userId: string): Promise<CommonResponse> {
     try {
-      const user = await this.userModel.findById(userId);
+      const user = await this.userModel.findById(userId).select('-password');
 
       if (user) {
         return {
-          message: 'User not found',
-          statusCode: HttpStatus.NOT_FOUND,
+          message: 'User  found',
+          statusCode: HttpStatus.OK,
+          data: user,
         };
       }
       return {
-        statusCode: HttpStatus.OK,
-        data: user,
-        message: 'User found',
+        statusCode: HttpStatus.NOT_FOUND,
+        message: 'User not found',
       };
     } catch (error) {
       console.log(error);
-      return null;
+      return {
+        message: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      };
     }
   }
 }

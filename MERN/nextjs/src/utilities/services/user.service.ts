@@ -6,6 +6,14 @@ export const signUp = async (
   payload: UserSignUpType
 ): Promise<CommonResponse> => {
   try {
+    if (!payload.avatar) {
+      // TH không tạo tk kèm avatar
+      return await instance.post(
+        USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.SIGN_UP,
+        payload
+      );
+    }
+
     const data = new FormData();
     data.append('file', payload.avatar || '');
     data.append('upload_preset', 'chat-app');
@@ -94,4 +102,37 @@ export const login = async (
     USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.LOGIN,
     payload
   );
+};
+
+export const findAll = async (
+  payload: UserFindAll
+): Promise<CommonResponse> => {
+  return await instance.get(
+    `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.FIND_ALL}?skip=${
+      payload.skip
+    }&limit=${payload.limit}`
+  );
+};
+
+export const findByEmailOrUserName = async (
+  payload: UserFindByEmailOrUsername
+): Promise<CommonResponse> => {
+  if (payload.email) {
+    return await instance.get(
+      `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.FIND_ALL}?email=${
+        payload.email
+      }`
+    );
+  }
+  if (payload.username) {
+    return await instance.get(
+      `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.FIND_ALL}?username=${
+        payload.username
+      }`
+    );
+  }
+  return {
+    message: 'Missing query param',
+    statusCode: HttpStatusCode.BadRequest,
+  };
 };

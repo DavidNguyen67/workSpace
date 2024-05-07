@@ -1,6 +1,8 @@
 'use client';
 
 import { typeToast } from '@/utilities/functions/toast.function';
+import { setToken } from '@/utilities/redux/slices/user.slice';
+import { useAppDispatch } from '@/utilities/redux/store/index.store';
 import { signUp } from '@/utilities/services/user.service';
 import {
   Button,
@@ -14,20 +16,19 @@ import {
 } from '@chakra-ui/react';
 import { HttpStatusCode } from 'axios';
 import { useCallback, useState } from 'react';
-import { v4 } from 'uuid';
 import validator from 'validator';
 
 export default function SignUp() {
   const toast = useToast();
   const [userInfo, setUserInfo] = useState<UserSignUpType>({
-    id: v4(),
-    name: '',
+    username: '',
     email: '',
     password: '',
     avatar: null,
   });
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   const handleOnChangeInput = (event: any) => {
     setUserInfo((prevUserInfo) => ({
@@ -38,10 +39,10 @@ export default function SignUp() {
     }));
   };
   const handleSubmits = useCallback(async () => {
-    if (!validator.isAlpha(userInfo.name)) {
+    if (!validator.isAlpha(userInfo.username)) {
       toast({
         title: 'Invalid Info',
-        description: 'Your name is not valid',
+        description: 'Your username  is not valid',
         status: 'error',
         isClosable: true,
         position: 'top-right',
@@ -64,6 +65,7 @@ export default function SignUp() {
     toast.closeAll();
 
     const response = await signUp(userInfo);
+    setIsLoading(false);
     toast({
       description: response.message,
       status: typeToast(response.statusCode),
@@ -72,15 +74,13 @@ export default function SignUp() {
     });
     if (response.statusCode === HttpStatusCode.Created) {
       setUserInfo({
-        id: v4(),
-        name: '',
+        username: '',
         email: '',
         password: '',
         avatar: null,
       });
+      dispatch(setToken(response.data));
     }
-
-    setIsLoading(false);
   }, [toast, userInfo]);
 
   return (
@@ -95,9 +95,9 @@ export default function SignUp() {
         <Input
           placeholder="Enter your name"
           id="name"
-          name="name"
+          name="username"
           onChange={handleOnChangeInput}
-          value={userInfo.name}
+          value={userInfo.username}
           type="text"
         />
       </FormControl>
@@ -166,7 +166,7 @@ export default function SignUp() {
         style={{ marginTop: 15 }}
         onClick={handleSubmits}
         isLoading={isLoading}
-        isDisabled={!(userInfo.email && userInfo.password && userInfo.name)}
+        isDisabled={!(userInfo.email && userInfo.password && userInfo.username)}
       >
         Sign Up
       </Button>

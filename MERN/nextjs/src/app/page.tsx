@@ -1,7 +1,8 @@
 'use client';
+import ScrollToTop from '@/components/ScrollToTop';
 import Login from '@/components/auth/Login';
 import SignUp from '@/components/auth/SignUp';
-import NotificationComponent from '@/components/notifications/NotificationComponent';
+import { useAppSelector } from '@/utilities/redux/store/index.store';
 import {
   Box,
   Tab,
@@ -11,10 +12,23 @@ import {
   Tabs,
   Text,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Home() {
+  const { token } = useAppSelector((state) => state.user);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (token) {
+      router.push('/chat');
+      return;
+    }
+  }, [token]);
+
   return (
     <>
+      <ScrollToTop />
       <Box
         display="flex"
         justifyContent="center"
@@ -50,8 +64,6 @@ export default function Home() {
           </TabPanels>
         </Tabs>
       </Box>
-
-      <NotificationComponent />
     </>
   );
 }

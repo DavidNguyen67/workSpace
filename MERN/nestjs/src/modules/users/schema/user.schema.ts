@@ -3,10 +3,6 @@ import { DEFAULT_VALUE } from 'src/utilities/constants';
 
 export const UserSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      unique: true,
-    },
     username: String,
     email: {
       type: String,

@@ -1,7 +1,5 @@
 'use client';
 
-import { typeToast } from '@/utilities/functions/toast.function';
-import { login } from '@/utilities/services/user.service';
 import {
   Button,
   FormControl,
@@ -15,6 +13,10 @@ import {
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { HttpStatusCode } from 'axios';
+import { login } from '@/utilities/services';
+import { typeToast } from '@/utilities/functions';
+import { useAppDispatch } from '@/utilities/redux/store/index.store';
+import { setToken } from '@/utilities/redux/slices/user.slice';
 
 export default function Login() {
   const [userInfo, setUserInfo] = useState<UserSignInType>({
@@ -25,6 +27,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const toast = useToast();
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const handleOnChangeInput = (event: any) => {
     setUserInfo((prevUserInfo) => ({
@@ -38,7 +41,6 @@ export default function Login() {
     setIsLoading(true);
     toast.closeAll();
     const response = await login(userInfo);
-    console.log(response);
 
     toast({
       description: response.message,
@@ -47,7 +49,7 @@ export default function Login() {
       duration: 4000,
     });
     if (response.statusCode === HttpStatusCode.Ok) {
-      router.push('/chat');
+      dispatch(setToken(response.data));
     }
 
     setIsLoading(false);

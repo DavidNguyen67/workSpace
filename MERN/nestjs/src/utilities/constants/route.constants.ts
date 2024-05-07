@@ -10,5 +10,7 @@ export const USER_CONSTANTS = {
 
 export const CHAT_CONSTANTS = {
   PREFIX: '/chat',
-  ACTION: {},
+  ACTION: {
+    CREATE: '/create',
+  },
 };

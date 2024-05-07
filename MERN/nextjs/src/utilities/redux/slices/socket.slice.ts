@@ -1,5 +1,5 @@
 import SLICES from '@/utilities/constants/slice.constants';
-import { SocketState } from '@/utilities/interfaces/index.interface';
+import { SocketState } from '@/utilities/interfaces';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 const initialState: SocketState = {

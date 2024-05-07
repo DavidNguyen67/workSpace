@@ -11,12 +11,7 @@ export default function Wrapper({
   return (
     <Provider store={store}>
       <ChakraProvider>
-        <Container
-          maxW="xl"
-          centerContent
-        >
-          {children}
-        </Container>
+        <Container maxW="xl">{children}</Container>
       </ChakraProvider>
     </Provider>
   );
