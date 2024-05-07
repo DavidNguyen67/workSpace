@@ -1,6 +1,6 @@
 import instance from '@/configs/axios.config';
-import { CHAT_CONSTANTS, USER_CONSTANTS } from '../constants/user.constants';
-import { HttpStatusCode } from 'axios';
+import { USER_CONSTANTS } from '../constants/user.constants';
+import axios, { HttpStatusCode } from 'axios';
 
 export const signUp = async (
   payload: UserSignUpType
@@ -77,7 +77,7 @@ export const signUp = async (
           message: 'Fail to sign up',
           statusCode: HttpStatusCode.BadRequest,
         }))
-        .catch((error) => ({
+        .catch((error: any) => ({
           message: error.message,
           statusCode: HttpStatusCode.InternalServerError,
         }));
@@ -135,11 +135,4 @@ export const findByEmailOrUserName = async (
     message: 'Missing query param',
     statusCode: HttpStatusCode.BadRequest,
   };
-};
-
-export const findOrCreateChat = async (payload: FindOrCreateChat) => {
-  return await instance.post(
-    CHAT_CONSTANTS.PREFIX + CHAT_CONSTANTS.ACTION.FIND_OR_CREATE,
-    payload
-  );
 };

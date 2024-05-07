@@ -27,13 +27,14 @@ import {
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import ProfileComponent from './profile/Profile';
-import { revertAll } from '@/utilities/redux/slices/user.slice';
+import { revertAll, setChat } from '@/utilities/redux/slices/user.slice';
 import { findAll, findOrCreateChat } from '@/utilities/services';
 import isEmail from 'validator/lib/isEmail';
 import UserListItem from './UserListItem';
 import { HttpStatusCode } from 'axios';
-import { setUsers } from '@/utilities/redux/slices/app.slice';
+import { setChats, setUsers } from '@/utilities/redux/slices/app.slice';
 import { HARD_CODE_LIMIT_DOCUMENT } from '@/utilities/constants';
+import { typeToast } from '@/utilities/functions';
 
 function SideDrawer() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -67,7 +68,7 @@ function SideDrawer() {
     if (!isEmail(searchText)) {
       payload.username = searchText;
     }
-    if (users.length > 0)
+    if (users?.length > 0)
       setFilteredUsers(
         users.filter((item) => {
           if (
@@ -84,33 +85,39 @@ function SideDrawer() {
     setIsLoading(true);
     const response = await findAll({
       limit: HARD_CODE_LIMIT_DOCUMENT,
-      skip: users.length || 0,
+      skip: users?.length || 0,
     });
     setIsLoading(false);
     if (response.statusCode === HttpStatusCode.NotFound) {
-      toast({
-        title: 'Null users',
-        status: 'warning',
-        duration: 5000,
-        isClosable: true,
-        position: 'top-left',
-      });
+      return;
     }
     dispatch(setUsers(response.data));
   }, []);
 
   const handleClickItem = async (item: User) => {
     if (info) {
-      console.log({
-        receiveId: item._id,
-        senderId: info?._id,
-      });
-
       const response = await findOrCreateChat({
         receiveId: item._id,
         senderId: info?._id,
       });
-      console.log(response);
+      if (
+        response.statusCode === HttpStatusCode.Ok ||
+        response.statusCode === HttpStatusCode.Created
+      ) {
+        dispatch(setChat(response.data));
+        dispatch(
+          setChats(
+            Array.isArray(response.data) ? response.data : [response.data]
+          )
+        );
+      }
+      toast({
+        description: response.message,
+        status: typeToast(response.statusCode),
+        position: 'top-left',
+        isClosable: true,
+        duration: 4000,
+      });
     }
     onClose();
   };
@@ -215,7 +222,7 @@ function SideDrawer() {
               />
             </Box>
             {searchText ? (
-              filteredUsers.length > 0 ? (
+              filteredUsers?.length > 0 ? (
                 filteredUsers.map((item) => (
                   <UserListItem
                     key={item._id}
@@ -231,7 +238,7 @@ function SideDrawer() {
                   Not found
                 </Text>
               )
-            ) : users.length > 0 ? (
+            ) : users?.length > 0 ? (
               users.map((item) => (
                 <UserListItem
                   key={item._id}

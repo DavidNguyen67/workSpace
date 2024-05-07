@@ -53,7 +53,7 @@ export class ChatService {
       const chats = await this.chatModel
         .find({
           users: {
-            $in: [new Types.ObjectId(findChatDto.userId)],
+            $in: [new Types.ObjectId(findChatDto.senderId)],
           },
         })
         .sort({ updatedAt: -1 })
