@@ -1,18 +1,12 @@
-import instance from '@/configs/axios.config';
-import { CHAT_CONSTANTS } from '@/utilities/constants';
 import SLICES from '@/utilities/constants/slice.constants';
 import { UserState } from '@/utilities/interfaces';
-import {
-  PayloadAction,
-  createAction,
-  createAsyncThunk,
-  createSlice,
-} from '@reduxjs/toolkit';
+import { PayloadAction, createAction, createSlice } from '@reduxjs/toolkit';
 
 const initialState: UserState = {
   info: null,
   token: '',
   chat: null,
+  currentChatId: '',
 };
 
 export const revertAll = createAction('REVERT_ALL');
@@ -30,12 +24,16 @@ export const userSlice = createSlice({
     setChat: (state, action: PayloadAction<Chat>) => {
       state.chat = action.payload;
     },
+    setCurrentChatId: (state, action: PayloadAction<string>) => {
+      state.currentChatId = action.payload;
+    },
   },
   // Sử lý logout
   extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
 });
 
 // Action creators are generated for each case reducer function
-export const { setToken, setInfo, setChat } = userSlice.actions;
+export const { setToken, setInfo, setChat, setCurrentChatId } =
+  userSlice.actions;
 
 export default userSlice.reducer;

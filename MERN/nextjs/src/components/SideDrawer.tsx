@@ -27,10 +27,14 @@ import {
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import ProfileComponent from './profile/Profile';
-import { revertAll, setChat } from '@/utilities/redux/slices/user.slice';
+import {
+  revertAll,
+  setChat,
+  setCurrentChatId,
+} from '@/utilities/redux/slices/user.slice';
 import { findAll, findOrCreateChat } from '@/utilities/services';
 import isEmail from 'validator/lib/isEmail';
-import UserListItem from './UserListItem';
+import ItemUser from './ItemUser';
 import { HttpStatusCode } from 'axios';
 import { setChats, setUsers } from '@/utilities/redux/slices/app.slice';
 import { HARD_CODE_LIMIT_DOCUMENT } from '@/utilities/constants';
@@ -58,16 +62,6 @@ function SideDrawer() {
   }, [dispatch, revertAll]);
 
   const handleSearch = useCallback(() => {
-    let payload: UserFindByEmailOrUsername = {
-      email: '',
-      username: '',
-    };
-    if (isEmail(searchText)) {
-      payload.email = searchText;
-    }
-    if (!isEmail(searchText)) {
-      payload.username = searchText;
-    }
     if (users?.length > 0)
       setFilteredUsers(
         users.filter((item) => {
@@ -79,7 +73,7 @@ function SideDrawer() {
           }
         })
       );
-  }, [searchText]);
+  }, [searchText, users]);
 
   const handleFetchUsers = useCallback(async () => {
     setIsLoading(true);
@@ -92,7 +86,7 @@ function SideDrawer() {
       return;
     }
     dispatch(setUsers(response.data));
-  }, []);
+  }, [findAll, dispatch]);
 
   const handleClickItem = async (item: User) => {
     if (info) {
@@ -110,6 +104,7 @@ function SideDrawer() {
             Array.isArray(response.data) ? response.data : [response.data]
           )
         );
+        dispatch(setCurrentChatId(response.data?._id));
       }
       toast({
         description: response.message,
@@ -224,7 +219,7 @@ function SideDrawer() {
             {searchText ? (
               filteredUsers?.length > 0 ? (
                 filteredUsers.map((item) => (
-                  <UserListItem
+                  <ItemUser
                     key={item._id}
                     data={item}
                     onClick={() => handleClickItem(item)}
@@ -240,7 +235,7 @@ function SideDrawer() {
               )
             ) : users?.length > 0 ? (
               users.map((item) => (
-                <UserListItem
+                <ItemUser
                   key={item._id}
                   data={item}
                   onClick={() => handleClickItem(item)}

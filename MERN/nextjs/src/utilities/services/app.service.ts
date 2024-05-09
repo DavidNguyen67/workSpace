@@ -19,3 +19,12 @@ export const findAllChatBySenderId = async (
     }`
   );
 };
+
+export const createGroupChat = async (
+  payload: GroupChat
+): Promise<CommonResponse> => {
+  return await instance.post(
+    CHAT_CONSTANTS.PREFIX + CHAT_CONSTANTS.ACTION.CREATE_GROUP_CHAT,
+    payload
+  );
+};

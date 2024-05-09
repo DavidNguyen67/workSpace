@@ -17,3 +17,9 @@ type Chat = {
 type FindChat = {
   senderId: string;
 };
+
+type GroupChat = {
+  chatName: string;
+  senderId: string;
+  receiveIds: string[];
+};

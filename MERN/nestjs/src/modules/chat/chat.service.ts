@@ -52,9 +52,16 @@ export class ChatService {
     try {
       const chats = await this.chatModel
         .find({
-          users: {
-            $in: [new Types.ObjectId(findChatDto.senderId)],
-          },
+          $or: [
+            {
+              users: {
+                $in: [new Types.ObjectId(findChatDto.senderId)],
+              },
+            },
+            {
+              groupAdmin: new Types.ObjectId(findChatDto.senderId),
+            },
+          ],
         })
         .sort({ updatedAt: -1 })
         .populate('users', '-password -__v')

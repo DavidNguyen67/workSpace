@@ -2,15 +2,17 @@ import { useAppSelector } from '@/utilities/redux/store/index.store';
 import { Avatar, Box, Text } from '@chakra-ui/react';
 import { MouseEventHandler } from 'react';
 
-interface UserListItemProps {
+interface ItemUserProps {
   data: User;
   onClick: MouseEventHandler<HTMLDivElement>;
+  selectedUserIds?: string[];
 }
 
-const UserListItem = (props: UserListItemProps) => {
-  const { onClick, data } = props;
+const ItemUser = (props: ItemUserProps) => {
+  const { onClick, data, selectedUserIds } = props;
   const { info } = useAppSelector((state) => state.user);
-  if (info?._id !== data._id)
+  if (info?._id !== data._id) {
+    if (selectedUserIds && selectedUserIds.includes(data._id)) return;
     return (
       <>
         <Box
@@ -47,6 +49,7 @@ const UserListItem = (props: UserListItemProps) => {
         </Box>
       </>
     );
+  }
 };
 
-export default UserListItem;
+export default ItemUser;

@@ -17,13 +17,14 @@ import {
 } from '@chakra-ui/react';
 import { HttpStatusCode } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
+import GroupChatModal from './GroupChatModal';
+import { setCurrentChatId } from '@/utilities/redux/slices/user.slice';
 
 interface MyChatsProps {}
 
 const MyChats = (props: MyChatsProps) => {
-  const { info } = useAppSelector((state) => state.user);
+  const { info, currentChatId } = useAppSelector((state) => state.user);
   const { chats } = useAppSelector((state) => state.app);
-  const [selectedReceiveId, setSelectedReceiveId] = useState<string>('');
   const [isFetching, setIsFetching] = useState<boolean>(true);
   const dispatch = useAppDispatch();
 
@@ -38,6 +39,8 @@ const MyChats = (props: MyChatsProps) => {
       }
     }
   }, [info, findAllChatBySenderId]);
+
+  const handleAddGroupChat = useCallback(async () => {}, []);
 
   useEffect(() => {
     findAllChat();
@@ -66,13 +69,16 @@ const MyChats = (props: MyChatsProps) => {
           alignItems="center"
         >
           My Chats
-          <Button
-            display="flex"
-            fontSize={{ base: '17px', md: '10px', lg: '17px' }}
-            rightIcon={<AddIcon />}
-          >
-            New Group Chat
-          </Button>
+          <GroupChatModal>
+            <Button
+              display="flex"
+              fontSize={{ base: '17px', md: '10px', lg: '17px' }}
+              rightIcon={<AddIcon />}
+              onClick={handleAddGroupChat}
+            >
+              New Group Chat
+            </Button>
+          </GroupChatModal>
         </Box>
         <Box
           display="flex"
@@ -94,14 +100,16 @@ const MyChats = (props: MyChatsProps) => {
               <Stack overflowY="scroll">
                 {chats.map((item) => (
                   <Box
-                    bg={selectedReceiveId === item._id ? '#38B2AC' : '#E8E8E8'}
+                    bg={currentChatId === item._id ? '#38B2AC' : '#E8E8E8'}
                     cursor="pointer"
                     px={3}
                     py={2}
                     borderRadius="lg"
                     onClick={() =>
-                      setSelectedReceiveId(
-                        selectedReceiveId === item._id ? '' : item._id
+                      dispatch(
+                        setCurrentChatId(
+                          currentChatId === item._id ? '' : item._id
+                        )
                       )
                     }
                     key={item._id}
