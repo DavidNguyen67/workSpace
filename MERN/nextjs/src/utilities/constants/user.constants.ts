@@ -19,3 +19,11 @@ export const CHAT_CONSTANTS = {
     DELETE_GROUP_CHAT: '/deleteGroupChat',
   },
 };
+
+export const MESSAGE_CONSTANTS = {
+  PREFIX: '/message',
+  ACTION: {
+    CREATE: '/create',
+    FIND_BY_CHAT_ID: '/findByChatId',
+  },
+};

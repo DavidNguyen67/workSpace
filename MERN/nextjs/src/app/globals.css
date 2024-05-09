@@ -13,3 +13,10 @@ body {
 body {
   background-color: rgba(31, 103, 56, 0.757) !important;
 }
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}

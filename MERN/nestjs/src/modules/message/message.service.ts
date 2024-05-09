@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { UpdateMessageDto } from './dto/update-message.dto';
 import { Model, Types } from 'mongoose';
 import { MessageSchema } from './schema/message.schema';
 import { SCHEMAS } from 'src/utilities/constants';
 import { InjectModel } from '@nestjs/mongoose';
 import { ChatSchema } from '../chat/schema/chat.schema';
-import { UserSchema } from '../users/schema/user.schema';
 import { FindByChatIdDto } from './dto/FindByChatId-message.dto';
 
 @Injectable()
@@ -74,7 +72,11 @@ export class MessageService {
           chat: new Types.ObjectId(findByChatIdDto.chatId),
         })
         .populate('sender', '-password')
-        .populate('chat');
+        .populate({
+          path: 'chat',
+          populate: { path: 'users', select: '-password' },
+        })
+        .sort({ createAt: 'desc' });
 
       if (messages.length < 1) {
         return {

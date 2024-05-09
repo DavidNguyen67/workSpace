@@ -101,22 +101,26 @@ const MyChats = (props: MyChatsProps) => {
                   >
                     <Avatar
                       size="xs"
+                      my={'auto'}
                       name={getReceive(item.users, info?._id || '')?.username}
                       src={getReceive(item.users, info?._id || '')?.avatar}
                     />
-                    <Text>
-                      {!item.isGroupChat && info?._id
-                        ? getReceive(item.users, info?._id)?.username
-                        : item.chatName}
-                    </Text>
-                    {item.latestMessage && (
-                      <Text fontSize="xs">
-                        <b>{item.latestMessage.sender.username} : </b>
-                        {item.latestMessage.content.length > 50
-                          ? item.latestMessage.content.substring(0, 51) + '...'
-                          : item.latestMessage.content}
+                    <Box>
+                      <Text>
+                        {!item.isGroupChat && info?._id
+                          ? getReceive(item.users, info?._id)?.username
+                          : item.chatName}
                       </Text>
-                    )}
+                      {item.latestMessage && (
+                        <Text fontSize="xs">
+                          <b>{item.latestMessage.sender.username}</b>
+                          {item.latestMessage.content.length > 50
+                            ? item.latestMessage.content.substring(0, 51) +
+                              '...'
+                            : item.latestMessage.content}
+                        </Text>
+                      )}
+                    </Box>
                   </Box>
                 ))}
               </Stack>
