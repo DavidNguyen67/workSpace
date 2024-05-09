@@ -1,27 +1,98 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
+import { Model, Types } from 'mongoose';
+import { MessageSchema } from './schema/message.schema';
+import { SCHEMAS } from 'src/utilities/constants';
+import { InjectModel } from '@nestjs/mongoose';
+import { ChatSchema } from '../chat/schema/chat.schema';
+import { UserSchema } from '../users/schema/user.schema';
+import { FindByChatIdDto } from './dto/FindByChatId-message.dto';
 
 @Injectable()
 export class MessageService {
-  create(createMessageDto: CreateMessageDto) {
-    return 'This action adds a new message';
+  constructor(
+    @InjectModel(SCHEMAS.MESSAGE)
+    private messageModel: Model<typeof MessageSchema>,
+    @InjectModel(SCHEMAS.CHAT)
+    private chatModel: Model<typeof ChatSchema>,
+  ) {}
+
+  async create(createMessageDto: CreateMessageDto): Promise<CommonResponse> {
+    try {
+      const createdMessage = await this.messageModel.create({
+        sender: createMessageDto.senderId,
+        content: createMessageDto.content,
+        chat: createMessageDto.chatId,
+      });
+
+      if (!createdMessage) {
+        return {
+          message: 'Create new message fail',
+          statusCode: HttpStatus.AMBIGUOUS,
+          data: createdMessage,
+        };
+      }
+      await this.chatModel.findByIdAndUpdate(createMessageDto.chatId, {
+        latestMessage: createdMessage._id,
+      });
+      const populatedMessage = await this.messageModel.populate(
+        createdMessage,
+        [
+          { path: 'sender', select: '-password' }, // Populate sender từ UserModel
+          {
+            path: 'chat',
+            populate: {
+              path: 'users',
+              select: '-password',
+            },
+          },
+        ],
+      );
+
+      return {
+        message: 'Create new message successfully',
+        statusCode: HttpStatus.CREATED,
+        data: populatedMessage,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        message: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
   }
 
-  findAll() {
-    return `This action returns all message`;
-  }
+  async findByChatId(
+    findByChatIdDto: FindByChatIdDto,
+  ): Promise<CommonResponse> {
+    try {
+      const messages = await this.messageModel
+        .find({
+          chat: new Types.ObjectId(findByChatIdDto.chatId),
+        })
+        .populate('sender', '-password')
+        .populate('chat');
 
-  findOne(id: number) {
-    return `This action returns a #${id} message`;
-  }
-
-  update(id: number, updateMessageDto: UpdateMessageDto) {
-    return `This action updates a #${id} message`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} message`;
+      if (messages.length < 1) {
+        return {
+          message: 'Not found message',
+          statusCode: HttpStatus.NOT_FOUND,
+        };
+      }
+      return {
+        message: 'This is your message',
+        statusCode: HttpStatus.OK,
+        data: messages,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        message: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
   }
 }

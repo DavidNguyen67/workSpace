@@ -72,7 +72,7 @@ function SideDrawer() {
     setIsLoading(true);
     const response = await findAll({
       limit: HARD_CODE_LIMIT_DOCUMENT,
-      skip: users?.length || 0,
+      skip: 0,
     });
     setIsLoading(false);
     if (response.statusCode === HttpStatusCode.NotFound) {
