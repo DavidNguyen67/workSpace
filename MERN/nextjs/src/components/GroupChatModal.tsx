@@ -89,10 +89,15 @@ const GroupChatModal = (props: GroupChatModalProps) => {
     if (response.statusCode === HttpStatusCode.Created) {
       onClose();
       dispatch(setChats([...chats, response.data]));
+      setNewGroupChat({
+        chatName: '',
+        receiveIds: [],
+        senderId: '',
+      });
     }
   }, [newGroupChat]);
 
-  const handleClickItem = async (item: User) => {
+  const handleAddUser = async (item: User) => {
     setNewGroupChat((state) => ({
       ...state,
       receiveIds: [...state.receiveIds, item._id],
@@ -185,7 +190,7 @@ const GroupChatModal = (props: GroupChatModalProps) => {
                     <ItemUser
                       data={item}
                       key={item._id}
-                      onClick={() => handleClickItem(item)}
+                      onClick={() => handleAddUser(item)}
                       selectedUserIds={newGroupChat?.receiveIds}
                     />
                   ))
@@ -194,7 +199,7 @@ const GroupChatModal = (props: GroupChatModalProps) => {
                     <ItemUser
                       data={item}
                       key={item._id}
-                      onClick={() => handleClickItem(item)}
+                      onClick={() => handleAddUser(item)}
                       selectedUserIds={newGroupChat?.receiveIds}
                     />
                   ))}
@@ -205,6 +210,7 @@ const GroupChatModal = (props: GroupChatModalProps) => {
             <Button
               onClick={handleSubmit}
               colorScheme="blue"
+              isLoading={isLoading}
             >
               Create Chat
             </Button>

@@ -4,10 +4,11 @@ import { Badge } from '@chakra-ui/react';
 interface UserBadgeItemProps {
   onClick: any;
   data: User;
+  adminId?: string;
 }
 
 const UserBadgeItem = (props: UserBadgeItemProps) => {
-  const { onClick, data } = props;
+  const { onClick, data, adminId } = props;
 
   return (
     <>
@@ -24,7 +25,7 @@ const UserBadgeItem = (props: UserBadgeItemProps) => {
         onClick={onClick}
       >
         {data.username}
-        {/* {admin === user._id && <span> (Admin)</span>} */}
+        {adminId === data._id && <span> (Admin)</span>}
         <CloseIcon pl={1} />
       </Badge>
     </>

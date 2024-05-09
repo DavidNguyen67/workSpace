@@ -16,7 +16,7 @@ import {
 
 interface ProfileComponentProps {
   user: User | null;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const ProfileComponent = (props: ProfileComponentProps) => {

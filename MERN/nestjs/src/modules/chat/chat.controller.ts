@@ -1,5 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Body, Controller, Get, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CHAT_CONSTANTS } from 'src/utilities/constants';
 import { FindOrCreateChatDto } from './dto/findOrCreate-chat.dto';
@@ -7,6 +15,9 @@ import { FindChatDto } from './dto/find-chat.dto';
 import { CreateGroupChatDto } from './dto/create-group-chat.dto';
 import { RenameGroupChatDto } from './dto/renameGroup-chat.dto';
 import { AddUsersGroupChatDto } from './dto/addUsersToGroup-chat.dto';
+import { RemoveUsersFromGroupChatDto } from './dto/removeUsersFromGroup-chat.dto';
+import { UpdateUsersInGroupDto } from './dto/updateUsersInGroup-chat.dto';
+import { DeleteGroupChatDto } from './dto/deleteGroup-chat.dto';
 
 @Controller(CHAT_CONSTANTS.PREFIX)
 export class ChatController {
@@ -32,19 +43,15 @@ export class ChatController {
     return await this.chatService.renameGroupChat(renameGroupChatDto);
   }
 
-  @Put(CHAT_CONSTANTS.ACTION.ADD_USERS_TO_GROUP)
-  async addUsersToGroupChat(
-    @Body() addUsersGroupChatDto: AddUsersGroupChatDto,
+  @Put(CHAT_CONSTANTS.ACTION.UPDATE_USERS_TO_GROUP)
+  async updateUsersToGroupChat(
+    @Body() updateUsersInGroupDto: UpdateUsersInGroupDto,
   ) {
-    return await this.chatService.addUsersToGroupChat(addUsersGroupChatDto);
+    return await this.chatService.updateUsersToGroupChat(updateUsersInGroupDto);
   }
 
-  @Put(CHAT_CONSTANTS.ACTION.REMOVE_USERS_FROM_GROUP)
-  async removeUsersFromGroupChat(
-    @Body() addUsersGroupChatDto: AddUsersGroupChatDto,
-  ) {
-    return await this.chatService.removeUsersFromGroupChat(
-      addUsersGroupChatDto,
-    );
+  @Delete(CHAT_CONSTANTS.ACTION.DELETE_GROUP_CHAT)
+  async deleteGroupChat(@Query() deleteGroupChatDto: DeleteGroupChatDto) {
+    return await this.chatService.deleteGroupChat(deleteGroupChatDto);
   }
 }

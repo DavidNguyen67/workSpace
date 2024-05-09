@@ -28,30 +28,37 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import ProfileComponent from './profile/Profile';
 import {
-  revertAll,
+  revertUser,
   setChat,
-  setCurrentChatId,
+  setCurrentChat,
 } from '@/utilities/redux/slices/user.slice';
 import { findAll, findOrCreateChat } from '@/utilities/services';
-import isEmail from 'validator/lib/isEmail';
 import ItemUser from './ItemUser';
 import { HttpStatusCode } from 'axios';
-import { setChats, setUsers } from '@/utilities/redux/slices/app.slice';
+import {
+  findChat,
+  setChats,
+  setUsers,
+} from '@/utilities/redux/slices/app.slice';
 import { HARD_CODE_LIMIT_DOCUMENT } from '@/utilities/constants';
 import { typeToast } from '@/utilities/functions';
+import useSearchUsers from '@/utilities/hooks/useSearchUsers';
 
 function SideDrawer() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { info } = useAppSelector((state) => state.user);
+  const { chats } = useAppSelector((state) => state.app);
   const dispatch = useAppDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchText, setSearchText] = useState<string>('');
   const toast = useToast();
   const { users } = useAppSelector((state) => state.app);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const { filteredUsers } = useSearchUsers(users, searchText);
+  const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [selectedUserId, setSelectedUserId] = useState<string>('');
 
   const handleLogout = useCallback(() => {
-    dispatch(revertAll());
+    dispatch(revertUser());
     toast({
       title: 'Logout success fully',
       status: 'success',
@@ -59,21 +66,7 @@ function SideDrawer() {
       isClosable: true,
       position: 'top-left',
     });
-  }, [dispatch, revertAll]);
-
-  const handleSearch = useCallback(() => {
-    if (users?.length > 0)
-      setFilteredUsers(
-        users.filter((item) => {
-          if (
-            item.username.includes(searchText) ||
-            item.email.includes(searchText)
-          ) {
-            return item;
-          }
-        })
-      );
-  }, [searchText, users]);
+  }, [dispatch, revertUser]);
 
   const handleFetchUsers = useCallback(async () => {
     setIsLoading(true);
@@ -89,22 +82,25 @@ function SideDrawer() {
   }, [findAll, dispatch]);
 
   const handleClickItem = async (item: User) => {
+    setSelectedUserId(item._id === selectedUserId ? '' : item._id);
     if (info) {
+      setIsCreating(true);
       const response = await findOrCreateChat({
         receiveId: item._id,
         senderId: info?._id,
       });
+      setIsCreating(false);
       if (
         response.statusCode === HttpStatusCode.Ok ||
         response.statusCode === HttpStatusCode.Created
       ) {
         dispatch(setChat(response.data));
         dispatch(
-          setChats(
-            Array.isArray(response.data) ? response.data : [response.data]
-          )
+          findChat({
+            senderId: info._id,
+          })
         );
-        dispatch(setCurrentChatId(response.data?._id));
+        dispatch(setCurrentChat(response.data));
       }
       toast({
         description: response.message,
@@ -120,10 +116,6 @@ function SideDrawer() {
   useEffect(() => {
     handleFetchUsers();
   }, []);
-
-  useEffect(() => {
-    handleSearch();
-  }, [searchText]);
 
   return (
     <>
@@ -220,8 +212,10 @@ function SideDrawer() {
               filteredUsers?.length > 0 ? (
                 filteredUsers.map((item) => (
                   <ItemUser
+                    isLoading={isCreating}
                     key={item._id}
                     data={item}
+                    selectedUserId={selectedUserId}
                     onClick={() => handleClickItem(item)}
                   />
                 ))
@@ -236,8 +230,10 @@ function SideDrawer() {
             ) : users?.length > 0 ? (
               users.map((item) => (
                 <ItemUser
+                  isLoading={isCreating}
                   key={item._id}
                   data={item}
+                  selectedUserId={selectedUserId}
                   onClick={() => handleClickItem(item)}
                 />
               ))

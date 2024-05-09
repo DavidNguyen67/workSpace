@@ -15,7 +15,7 @@ export const ChatSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: SCHEMAS.MESSAGE,
     },
-    groupAdmin: {
+    groupAdminId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: SCHEMAS.USERS,
     },

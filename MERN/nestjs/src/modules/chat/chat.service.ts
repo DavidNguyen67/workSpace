@@ -9,6 +9,8 @@ import { FindOrCreateChatDto } from './dto/findOrCreate-chat.dto';
 import { FindChatDto } from './dto/find-chat.dto';
 import { RenameGroupChatDto } from './dto/renameGroup-chat.dto';
 import { AddUsersGroupChatDto } from './dto/addUsersToGroup-chat.dto';
+import { UpdateUsersInGroupDto } from './dto/updateUsersInGroup-chat.dto';
+import { DeleteGroupChatDto } from './dto/deleteGroup-chat.dto';
 @Injectable()
 export class ChatService {
   constructor(
@@ -22,7 +24,7 @@ export class ChatService {
       const groupChat = new this.chatModel({
         chatName: createGroupChatDto.chatName,
         users: createGroupChatDto.receiveIds,
-        groupAdmin: createGroupChatDto.senderId,
+        groupAdminId: createGroupChatDto.senderId,
         isGroupChat: true,
       });
       const createdGroupChat = await groupChat.save();
@@ -59,7 +61,7 @@ export class ChatService {
               },
             },
             {
-              groupAdmin: new Types.ObjectId(findChatDto.senderId),
+              groupAdminId: new Types.ObjectId(findChatDto.senderId),
             },
           ],
         })
@@ -240,6 +242,70 @@ export class ChatService {
       return {
         message: 'Remove users failed',
         statusCode: HttpStatus.NOT_FOUND,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        message: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+  }
+
+  async updateUsersToGroupChat(
+    updateUsersInGroupDto: UpdateUsersInGroupDto,
+  ): Promise<CommonResponse> {
+    try {
+      const updatedChat = await this.chatModel.findByIdAndUpdate(
+        new Types.ObjectId(updateUsersInGroupDto.chatId),
+        {
+          users: updateUsersInGroupDto.receiveIds,
+          chatName: updateUsersInGroupDto.chatName,
+        },
+        { new: true }, // Return the updated document
+      );
+
+      if (updatedChat) {
+        return {
+          message: 'Update group successfully',
+          data: await this.findOneChatBy_Id(updatedChat._id), // Return the updated chat
+          statusCode: HttpStatus.OK,
+        };
+      }
+
+      return {
+        message: 'Update group failed',
+        statusCode: HttpStatus.NOT_FOUND,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        message: error.message,
+        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      };
+    }
+  }
+
+  async deleteGroupChat(
+    deleteGroupChatDto: DeleteGroupChatDto,
+  ): Promise<CommonResponse> {
+    try {
+      const chat = await this.chatModel
+        .findOneAndDelete({
+          _id: new Types.ObjectId(deleteGroupChatDto.chatId),
+        })
+        .exec();
+
+      if (!chat) {
+        return {
+          message: 'Delete fail',
+          statusCode: HttpStatus.AMBIGUOUS,
+        };
+      }
+      return {
+        message: 'Delete successfully',
+        statusCode: HttpStatus.OK,
+        data: chat,
       };
     } catch (error) {
       console.log(error);

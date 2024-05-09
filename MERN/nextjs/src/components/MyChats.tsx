@@ -1,44 +1,27 @@
 import { getReceive } from '@/utilities/functions';
-import { setChats } from '@/utilities/redux/slices/app.slice';
+import { findChat, setChats } from '@/utilities/redux/slices/app.slice';
 import {
   useAppDispatch,
   useAppSelector,
 } from '@/utilities/redux/store/index.store';
-import { findAllChatBySenderId } from '@/utilities/services';
 import { AddIcon } from '@chakra-ui/icons';
-import {
-  Avatar,
-  Box,
-  Button,
-  Spinner,
-  Stack,
-  Text,
-  useToast,
-} from '@chakra-ui/react';
-import { HttpStatusCode } from 'axios';
+import { Avatar, Box, Button, Spinner, Stack, Text } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import GroupChatModal from './GroupChatModal';
-import { setCurrentChatId } from '@/utilities/redux/slices/user.slice';
+import { setCurrentChat } from '@/utilities/redux/slices/user.slice';
 
 interface MyChatsProps {}
 
 const MyChats = (props: MyChatsProps) => {
-  const { info, currentChatId } = useAppSelector((state) => state.user);
-  const { chats } = useAppSelector((state) => state.app);
-  const [isFetching, setIsFetching] = useState<boolean>(true);
+  const { info, currentChat } = useAppSelector((state) => state.user);
+  const { chats, isLoading } = useAppSelector((state) => state.app);
   const dispatch = useAppDispatch();
 
   const findAllChat = useCallback(async () => {
     if (info) {
-      setIsFetching(true);
-      const response = await findAllChatBySenderId({ senderId: info?._id });
-      setIsFetching(false);
-      if (response.statusCode === HttpStatusCode.Ok) {
-        dispatch(setChats(response.data));
-        return;
-      }
+      dispatch(findChat({ senderId: info?._id }));
     }
-  }, [info, findAllChatBySenderId]);
+  }, [info, findChat]);
 
   const handleAddGroupChat = useCallback(async () => {}, []);
 
@@ -90,7 +73,7 @@ const MyChats = (props: MyChatsProps) => {
           borderRadius="lg"
           overflowY="hidden"
         >
-          {isFetching ? (
+          {isLoading ? (
             <Spinner
               m="auto"
               display="flex"
@@ -100,15 +83,15 @@ const MyChats = (props: MyChatsProps) => {
               <Stack overflowY="scroll">
                 {chats.map((item) => (
                   <Box
-                    bg={currentChatId === item._id ? '#38B2AC' : '#E8E8E8'}
+                    bg={currentChat?._id === item._id ? '#38B2AC' : '#E8E8E8'}
                     cursor="pointer"
                     px={3}
                     py={2}
                     borderRadius="lg"
                     onClick={() =>
                       dispatch(
-                        setCurrentChatId(
-                          currentChatId === item._id ? '' : item._id
+                        setCurrentChat(
+                          currentChat?._id === item._id ? null : item
                         )
                       )
                     }

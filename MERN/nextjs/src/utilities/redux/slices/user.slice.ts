@@ -6,10 +6,10 @@ const initialState: UserState = {
   info: null,
   token: '',
   chat: null,
-  currentChatId: '',
+  currentChat: null,
 };
 
-export const revertAll = createAction('REVERT_ALL');
+export const revertUser = createAction(`${SLICES.USER}/REVERT_ALL`);
 
 export const userSlice = createSlice({
   name: SLICES.USER,
@@ -24,16 +24,15 @@ export const userSlice = createSlice({
     setChat: (state, action: PayloadAction<Chat>) => {
       state.chat = action.payload;
     },
-    setCurrentChatId: (state, action: PayloadAction<string>) => {
-      state.currentChatId = action.payload;
+    setCurrentChat: (state, action: PayloadAction<Chat | null>) => {
+      state.currentChat = action.payload;
     },
   },
   // Sử lý logout
-  extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
+  extraReducers: (builder) => builder.addCase(revertUser, () => initialState),
 });
 
 // Action creators are generated for each case reducer function
-export const { setToken, setInfo, setChat, setCurrentChatId } =
-  userSlice.actions;
+export const { setToken, setInfo, setChat, setCurrentChat } = userSlice.actions;
 
 export default userSlice.reducer;

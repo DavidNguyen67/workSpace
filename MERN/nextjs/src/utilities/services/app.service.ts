@@ -28,3 +28,22 @@ export const createGroupChat = async (
     payload
   );
 };
+
+export const updateUsersToGroupChat = async (
+  payload: UpdateUsersInGroup
+): Promise<CommonResponse> => {
+  return await instance.put(
+    CHAT_CONSTANTS.PREFIX + CHAT_CONSTANTS.ACTION.UPDATE_USERS_TO_GROUP,
+    payload
+  );
+};
+
+export const deleteGroupChat = async (
+  payload: DeleteGroupChat
+): Promise<CommonResponse> => {
+  return await instance.delete(
+    `${
+      CHAT_CONSTANTS.PREFIX + CHAT_CONSTANTS.ACTION.DELETE_GROUP_CHAT
+    }?chatId=${payload.chatId}`
+  );
+};

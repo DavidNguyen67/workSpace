@@ -28,7 +28,6 @@ export default function SignUp() {
   });
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
 
   const handleOnChangeInput = (event: any) => {
     setUserInfo((prevUserInfo) => ({
@@ -81,8 +80,6 @@ export default function SignUp() {
         password: '',
         avatar: null,
       });
-      if (response.accessToken) dispatch(setToken(response.accessToken));
-      if (response.data) dispatch(setInfo(response.data));
     }
   }, [toast, userInfo]);
 
