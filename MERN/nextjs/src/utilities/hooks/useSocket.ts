@@ -1,59 +1,69 @@
 'use client';
-
-import { useEffect, useRef } from 'react';
-import { useAppDispatch, useAppSelector } from '../redux/store/index.store';
-import { getMessaging, onMessage } from 'firebase/messaging';
-import firebaseApp from '@/configs/firebase.config';
-import useFcmToken from './useFCMToken';
-import { setFirebaseToken, setSocket } from '../redux/slices/socket.slice';
+import { useEffect, useRef, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../redux/store';
 import { io } from 'socket.io-client';
 import { useToast } from '@chakra-ui/react';
+import { setSocket } from '../redux/slices';
+import socketConfig from '@/configs/socket.config';
 
+/**
+ * Hook tùy chỉnh để quản lý kết nối WebSocket.
+ * Hook này khởi tạo kết nối WebSocket nếu chưa được thiết lập.
+ * Nếu URL của WebSocket không được cung cấp trong biến môi trường, hook sẽ hiển thị một thông báo lỗi.
+ * @returns {Object} Một đối tượng chứa instance của WebSocket.
+ */
 const useSocket = () => {
-  const { firebaseToken, socket } = useAppSelector((state) => state.socket);
-  const { fcmToken, notificationPermissionStatus } = useFcmToken();
+  const { socket } = useAppSelector((state) => state.socket);
   const toast = useToast();
+  const [isConnected, setIsConnected] = useState<boolean>(!!socket?.connected);
   const toastIdRef: any = useRef();
-
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-      if (notificationPermissionStatus === 'granted') {
-        const messaging = getMessaging(firebaseApp);
-        const unsubscribe = onMessage(messaging, (payload) =>
-          console.log('Foreground push notification received:', payload)
-        );
-        return () => {
-          unsubscribe();
-        };
-      }
-    }
-  }, [notificationPermissionStatus]);
+  function onConnect() {
+    setIsConnected(true);
+  }
+
+  function onDisconnect() {
+    setIsConnected(false);
+  }
 
   useEffect(() => {
-    if (!firebaseToken) {
-      dispatch(setFirebaseToken(fcmToken));
-    }
-  }, [fcmToken]);
-
-  useEffect(() => {
+    // Khởi tạo kết nối WebSocket nếu chưa được thiết lập
     if (!socket) {
       if (process.env.NEXT_PUBLIC_BASE_URL_WS) {
-        dispatch(setSocket(io(process.env.NEXT_PUBLIC_BASE_URL_WS)));
+        // Tạo một instance mới của WebSocket
+        dispatch(
+          setSocket(io(process.env.NEXT_PUBLIC_BASE_URL_WS, socketConfig))
+        );
       } else {
+        // Hiển thị một thông báo lỗi nếu thiếu URL của WebSocket
         if (toastIdRef.current) {
           toast.close(toastIdRef.current);
         }
         toastIdRef.current = toast({
           status: 'error',
-          title: 'Missing process.env.NEXT_PUBLIC_BASE_URL_WS',
+          title: 'Thiếu biến môi trường NEXT_PUBLIC_BASE_URL_WS',
         });
+        console.log('Thiếu biến môi trường NEXT_PUBLIC_BASE_URL_WS');
       }
     }
-  }, [notificationPermissionStatus]);
+  }, []);
 
-  return { firebaseToken, socket };
+  useEffect(() => {
+    if (socket) {
+      socket.on('connect', onConnect);
+      socket.on('disconnect', onDisconnect);
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('connect', onConnect);
+        socket.off('disconnect', onDisconnect);
+      }
+    };
+  }, []);
+
+  return { socket, isConnected };
 };
 
 export default useSocket;

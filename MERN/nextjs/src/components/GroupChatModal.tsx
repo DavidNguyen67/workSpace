@@ -1,7 +1,4 @@
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '@/utilities/redux/store/index.store';
+import { useAppDispatch, useAppSelector } from '@/utilities/redux/store';
 import {
   Box,
   Button,

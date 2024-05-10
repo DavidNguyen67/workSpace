@@ -1,4 +1,4 @@
-import { useAppSelector } from '@/utilities/redux/store/index.store';
+import { useAppSelector } from '@/utilities/redux/store';
 import { Avatar, Box, Spinner, Text } from '@chakra-ui/react';
 import { MouseEventHandler } from 'react';
 

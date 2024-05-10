@@ -1,5 +1,5 @@
 'use client';
-import { useAppSelector } from '@/utilities/redux/store/index.store';
+import { useAppSelector } from '@/utilities/redux/store';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 

@@ -10,22 +10,22 @@ import { FindByEmailOrUserNameUserDto } from './dto/findByEmailOrUserName-user-d
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post(USER_CONSTANTS.ACTION.SIGN_UP)
+  @Post(USER_CONSTANTS.ACTION.HTTP.SIGN_UP)
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
   }
 
-  @Post(USER_CONSTANTS.ACTION.LOGIN)
+  @Post(USER_CONSTANTS.ACTION.HTTP.LOGIN)
   async login(@Body() loginUserDto: LoginUserDto) {
     return await this.usersService.login(loginUserDto);
   }
 
-  @Get(USER_CONSTANTS.ACTION.FIND_ALL)
+  @Get(USER_CONSTANTS.ACTION.HTTP.FIND_ALL)
   async findAll(@Query() findAllUserDto: FindAllUserDto) {
     return await this.usersService.findAll(findAllUserDto);
   }
 
-  @Get(USER_CONSTANTS.ACTION.FIND)
+  @Get(USER_CONSTANTS.ACTION.HTTP.FIND)
   async find(
     @Query() findByEmailOrUserNameUserDto: FindByEmailOrUserNameUserDto,
   ) {

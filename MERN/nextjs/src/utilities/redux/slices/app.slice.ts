@@ -14,6 +14,7 @@ const initialState: AppState = {
   chats: [],
   isLoading: false,
   message: '',
+  firebaseToken: '',
 };
 export const revertApp = createAction(`${SLICES.APP}/REVERT_ALL`);
 
@@ -46,6 +47,9 @@ export const appSlice = createSlice({
     setChats: (state, action: PayloadAction<Chat[]>) => {
       state.chats = action.payload;
     },
+    setFirebaseToken: (state, action: PayloadAction<string>) => {
+      state.firebaseToken = action.payload;
+    },
   },
   // Code logic xử lý async action
   extraReducers: (builder) => {
@@ -75,6 +79,6 @@ export const appSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setUsers, setChats } = appSlice.actions;
+export const { setUsers, setChats, setFirebaseToken } = appSlice.actions;
 
 export default appSlice.reducer;

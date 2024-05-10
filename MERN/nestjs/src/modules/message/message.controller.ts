@@ -8,12 +8,12 @@ import { FindByChatIdDto } from './dto/FindByChatId-message.dto';
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
-  @Post(MESSAGE_CONSTANTS.ACTION.CREATE)
+  @Post(MESSAGE_CONSTANTS.ACTION.HTTP.CREATE)
   create(@Body() createMessageDto: CreateMessageDto) {
     return this.messageService.create(createMessageDto);
   }
 
-  @Get(MESSAGE_CONSTANTS.ACTION.FIND_BY_CHAT_ID)
+  @Get(MESSAGE_CONSTANTS.ACTION.HTTP.FIND_BY_CHAT_ID)
   findByChatId(@Query() findByChatIdDto: FindByChatIdDto) {
     return this.messageService.findByChatId(findByChatIdDto);
   }

@@ -1,16 +1,31 @@
 import _ from 'lodash';
 
+/**
+ * Hàm này nhận vào một mảng các người tham gia cuộc trò chuyện và id của người gửi, sau đó trả về người nhận.
+ * @param {User[]} joiners Mảng các người tham gia cuộc trò chuyện.
+ * @param {string} senderId Id của người gửi.
+ * @returns {User | null} Người nhận hoặc null nếu không tìm thấy.
+ */
 export const getReceive = (joiners: User[], senderId: string): User | null => {
-  const sender = joiners.find((user) => user._id !== senderId);
+  // Tìm người nhận trong mảng các người tham gia cuộc trò chuyện
+  const receiver = joiners.find((user) => user._id !== senderId);
 
-  if (!sender || !sender.username) {
+  // Nếu không tìm thấy người nhận hoặc không có tên người nhận, trả về null
+  if (!receiver || !receiver.username) {
     return null;
   }
 
-  return sender;
+  // Trả về người nhận đã tìm thấy
+  return receiver;
 };
 
-// Hàm so sánh hai mảng các đối tượng theo thuộc tính property
+/**
+ * Hàm này so sánh hai mảng các đối tượng theo một thuộc tính cụ thể.
+ * @param {string[]} array1 Mảng 1 chứa các giá trị của thuộc tính để so sánh.
+ * @param {object[]} array2 Mảng 2 chứa các đối tượng để so sánh.
+ * @param {string} property Thuộc tính để so sánh.
+ * @returns {boolean} Kết quả so sánh: true nếu hai mảng giống nhau, false nếu không giống nhau.
+ */
 export const compareArrays = (
   array1: string[],
   array2: object[],

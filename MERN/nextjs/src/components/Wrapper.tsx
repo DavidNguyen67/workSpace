@@ -1,6 +1,6 @@
 'use client';
 import theme from '@/configs/theme.config';
-import store from '@/utilities/redux/store/index.store';
+import store from '@/utilities/redux/store';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Provider } from 'react-redux';
 

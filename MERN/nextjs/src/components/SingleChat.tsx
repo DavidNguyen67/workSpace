@@ -1,9 +1,6 @@
 import { getReceive, typeToast } from '@/utilities/functions';
 import { setCurrentChat } from '@/utilities/redux/slices/user.slice';
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '@/utilities/redux/store/index.store';
+import { useAppDispatch, useAppSelector } from '@/utilities/redux/store';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -20,17 +17,20 @@ import UpdateGroupChatModal from './UpdateGroupChatModal';
 import { getMessages, sendMessage } from '@/utilities/services';
 import { HttpStatusCode } from 'axios';
 import ScrollableChat from './ScrollableChat';
+import useSocket from '@/utilities/hooks/useSocket';
+import { USER_CONSTANTS } from '@/utilities/constants';
 
 interface SingleChatProps {}
 
 const SingleChat = (props: SingleChatProps) => {
   const { currentChat, info } = useAppSelector((state) => state.user);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isTyping, setIsTyping] = useState<boolean>(true);
   const dispatch = useAppDispatch();
   const toast = useToast();
   const [newMessageText, setNewMessageText] = useState<string>('');
   const [messages, setMessages] = useState<MessageSentResponse[]>([]);
+  const { socket, isConnected } = useSocket();
 
   const handleGetMessages = useCallback(async () => {
     if (currentChat?._id) {
@@ -82,10 +82,27 @@ const SingleChat = (props: SingleChatProps) => {
     [currentChat, messages, info, newMessageText]
   );
 
+  const handleSetupChat = useCallback(() => {
+    setIsLoading(false);
+  }, [setIsLoading]);
+
   useEffect(() => {
     handleGetMessages();
     setNewMessageText('');
   }, [currentChat?._id]);
+
+  useEffect(() => {
+    if (isConnected && currentChat) {
+      socket?.emit(USER_CONSTANTS.ACTION.WS.JOIN_ROOM, currentChat);
+      socket?.on(USER_CONSTANTS.ACTION.WS.CONNECTED, handleSetupChat);
+    }
+
+    return () => {
+      if (isConnected && currentChat) {
+        socket?.off(USER_CONSTANTS.ACTION.WS.CONNECTED, handleSetupChat);
+      }
+    };
+  }, [isConnected, currentChat]);
 
   return (
     <>

@@ -9,7 +9,7 @@ export const signUp = async (
     if (!payload.avatar) {
       // TH không tạo tk kèm avatar
       return await instance.post(
-        USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.SIGN_UP,
+        USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.HTTP.SIGN_UP,
         payload
       );
     }
@@ -51,7 +51,7 @@ export const signUp = async (
     });
 
     const signUpPromise = instance.post(
-      USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.SIGN_UP,
+      USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.HTTP.SIGN_UP,
       { ...payload, avatar: (await uploadImagePromise).url }
     );
 
@@ -99,7 +99,7 @@ export const login = async (
   payload: UserSignInType
 ): Promise<CommonResponse> => {
   return await instance.post(
-    USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.LOGIN,
+    USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.HTTP.LOGIN,
     payload
   );
 };
@@ -108,7 +108,7 @@ export const findAll = async (
   payload: UserFindAll
 ): Promise<CommonResponse> => {
   return await instance.get(
-    `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.FIND_ALL}?skip=${
+    `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.HTTP.FIND_ALL}?skip=${
       payload.skip
     }&limit=${payload.limit}`
   );
@@ -119,14 +119,14 @@ export const findByEmailOrUserName = async (
 ): Promise<CommonResponse> => {
   if (payload.email) {
     return await instance.get(
-      `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.FIND}?email=${
+      `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.HTTP.FIND}?email=${
         payload.email
       }`
     );
   }
   if (payload.username) {
     return await instance.get(
-      `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.FIND}?username=${
+      `${USER_CONSTANTS.PREFIX + USER_CONSTANTS.ACTION.HTTP.FIND}?username=${
         payload.username
       }`
     );

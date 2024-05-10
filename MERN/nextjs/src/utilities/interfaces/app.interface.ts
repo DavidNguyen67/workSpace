@@ -3,4 +3,5 @@ export interface AppState {
   chats: Chat[];
   isLoading: boolean;
   message: string;
+  firebaseToken: string;
 }

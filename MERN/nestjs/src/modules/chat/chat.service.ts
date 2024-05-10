@@ -11,6 +11,7 @@ import { RenameGroupChatDto } from './dto/renameGroup-chat.dto';
 import { AddUsersGroupChatDto } from './dto/addUsersToGroup-chat.dto';
 import { UpdateUsersInGroupDto } from './dto/updateUsersInGroup-chat.dto';
 import { DeleteGroupChatDto } from './dto/deleteGroup-chat.dto';
+import { JoinRoomChatDto } from './dto/joinRoom-chat.dto';
 @Injectable()
 export class ChatService {
   constructor(
@@ -325,6 +326,16 @@ export class ChatService {
         .populate('users', '-password -__v')
         .populate('latestMessage', '-__v')
         .select('-__v');
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  // Socket join room
+  async joinRoom(joinRoomChatDto: JoinRoomChatDto) {
+    try {
+      console.log(joinRoomChatDto);
     } catch (error) {
       console.log(error);
       return null;

@@ -1,7 +1,4 @@
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '@/utilities/redux/store/index.store';
+import { useAppDispatch, useAppSelector } from '@/utilities/redux/store';
 import { Avatar } from '@chakra-ui/avatar';
 import { Tooltip } from '@chakra-ui/tooltip';
 import ScrollableFeed from 'react-scrollable-feed';

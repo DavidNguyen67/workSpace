@@ -23,34 +23,34 @@ import { DeleteGroupChatDto } from './dto/deleteGroup-chat.dto';
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
-  @Get(CHAT_CONSTANTS.ACTION.FIND)
+  @Get(CHAT_CONSTANTS.ACTION.HTTP.FIND)
   async findAllBySenderId(@Query() findChatDto: FindChatDto) {
     return await this.chatService.findAllBySenderId(findChatDto);
   }
 
-  @Post(CHAT_CONSTANTS.ACTION.FIND_OR_CREATE)
+  @Post(CHAT_CONSTANTS.ACTION.HTTP.FIND_OR_CREATE)
   async findOrCreate(@Body() findOrCreateChatDto: FindOrCreateChatDto) {
     return await this.chatService.findOrCreate(findOrCreateChatDto);
   }
 
-  @Post(CHAT_CONSTANTS.ACTION.CREATE_GROUP_CHAT)
+  @Post(CHAT_CONSTANTS.ACTION.HTTP.CREATE_GROUP_CHAT)
   async createGroupChat(@Body() createGroupChatDto: CreateGroupChatDto) {
     return await this.chatService.createGroupChat(createGroupChatDto);
   }
 
-  @Put(CHAT_CONSTANTS.ACTION.RENAME_GROUP_CHAT)
+  @Put(CHAT_CONSTANTS.ACTION.HTTP.RENAME_GROUP_CHAT)
   async renameGroupChat(@Body() renameGroupChatDto: RenameGroupChatDto) {
     return await this.chatService.renameGroupChat(renameGroupChatDto);
   }
 
-  @Put(CHAT_CONSTANTS.ACTION.UPDATE_USERS_TO_GROUP)
+  @Put(CHAT_CONSTANTS.ACTION.HTTP.UPDATE_USERS_TO_GROUP)
   async updateUsersToGroupChat(
     @Body() updateUsersInGroupDto: UpdateUsersInGroupDto,
   ) {
     return await this.chatService.updateUsersToGroupChat(updateUsersInGroupDto);
   }
 
-  @Delete(CHAT_CONSTANTS.ACTION.DELETE_GROUP_CHAT)
+  @Delete(CHAT_CONSTANTS.ACTION.HTTP.DELETE_GROUP_CHAT)
   async deleteGroupChat(@Query() deleteGroupChatDto: DeleteGroupChatDto) {
     return await this.chatService.deleteGroupChat(deleteGroupChatDto);
   }

@@ -1,5 +1,10 @@
 import { HttpStatusCode } from 'axios';
 
+/**
+ * Hàm này xác định loại của toast dựa trên mã trạng thái HTTP.
+ * @param {number} statusCode Mã trạng thái HTTP.
+ * @returns {'error' | 'success' | 'warning'} Loại của toast.
+ */
 export const typeToast = (
   statusCode: number
 ): 'error' | 'success' | 'warning' => {

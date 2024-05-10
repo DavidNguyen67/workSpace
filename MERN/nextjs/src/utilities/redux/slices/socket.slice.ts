@@ -4,16 +4,12 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 const initialState: SocketState = {
   socket: null,
-  firebaseToken: '',
 };
 
 export const socketSlice = createSlice({
   name: SLICES.SOCKET,
   initialState,
   reducers: {
-    setFirebaseToken: (state, action: PayloadAction<string>) => {
-      state.firebaseToken = action.payload;
-    },
     setSocket: (state, action: PayloadAction<any>) => {
       state.socket = action.payload;
     },
@@ -21,6 +17,6 @@ export const socketSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setSocket, setFirebaseToken } = socketSlice.actions;
+export const { setSocket } = socketSlice.actions;
 
 export default socketSlice.reducer;

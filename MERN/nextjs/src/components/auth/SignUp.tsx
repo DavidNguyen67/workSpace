@@ -2,7 +2,7 @@
 
 import { typeToast } from '@/utilities/functions/toast.function';
 import { setInfo, setToken } from '@/utilities/redux/slices/user.slice';
-import { useAppDispatch } from '@/utilities/redux/store/index.store';
+import { useAppDispatch } from '@/utilities/redux/store';
 import { signUp } from '@/utilities/services/user.service';
 import {
   Button,

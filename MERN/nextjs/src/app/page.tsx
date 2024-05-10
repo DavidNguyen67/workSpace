@@ -2,7 +2,7 @@
 import ScrollToTop from '@/components/ScrollToTop';
 import Login from '@/components/auth/Login';
 import SignUp from '@/components/auth/SignUp';
-import { useAppSelector } from '@/utilities/redux/store/index.store';
+import { useAppSelector } from '@/utilities/redux/store';
 import {
   Box,
   Container,

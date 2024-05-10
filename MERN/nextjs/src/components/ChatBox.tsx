@@ -1,5 +1,5 @@
 import { Box, Spinner } from '@chakra-ui/react';
-import { useAppSelector } from '@/utilities/redux/store/index.store';
+import { useAppSelector } from '@/utilities/redux/store';
 import SingleChat from './SingleChat';
 
 interface ChatBoxProps {}

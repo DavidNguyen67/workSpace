@@ -1,8 +1,5 @@
 'use client';
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '@/utilities/redux/store/index.store';
+import { useAppDispatch, useAppSelector } from '@/utilities/redux/store';
 import { BellIcon, ChevronDownIcon, SearchIcon } from '@chakra-ui/icons';
 import {
   Avatar,

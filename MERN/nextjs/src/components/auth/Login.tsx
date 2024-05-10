@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { HttpStatusCode } from 'axios';
 import { login } from '@/utilities/services';
 import { typeToast } from '@/utilities/functions';
-import { useAppDispatch } from '@/utilities/redux/store/index.store';
+import { useAppDispatch } from '@/utilities/redux/store';
 import { setInfo, setToken } from '@/utilities/redux/slices/user.slice';
 
 export default function Login() {

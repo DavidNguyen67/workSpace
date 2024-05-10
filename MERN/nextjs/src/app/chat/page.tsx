@@ -3,7 +3,7 @@
 import ChatBox from '@/components/ChatBox';
 import MyChats from '@/components/MyChats';
 import SideDrawer from '@/components/SideDrawer';
-import { useAppSelector } from '@/utilities/redux/store/index.store';
+import { useAppSelector } from '@/utilities/redux/store';
 import { Box } from '@chakra-ui/react';
 
 export default function Chat() {
