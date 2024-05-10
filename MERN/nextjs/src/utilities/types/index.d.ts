@@ -3,6 +3,7 @@ type CommonResponse = {
   data?: any;
   message: string;
   accessToken?: string;
+  maxRecord?: number;
 };
 
 type CloudinaryImageResponse = {

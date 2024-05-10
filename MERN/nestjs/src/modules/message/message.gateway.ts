@@ -18,11 +18,12 @@ import {
 } from 'src/utilities/constants';
 import 'dotenv/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { MessageSchema } from './schema/message.schema';
 import { Socket } from 'socket.io';
 import { JoinRoomChatDto } from '../chat/dto/joinRoom-chat.dto';
 import { ChatService } from '../chat/chat.service';
+import { TypingChatDto } from '../chat/dto/typing-chat.dto';
 
 @WebSocketGateway({
   cors: {
@@ -57,6 +58,41 @@ export class MessageGateway implements OnGatewayConnection {
     client.emit(USER_CONSTANTS.ACTION.WS.CONNECTED);
   }
 
+  @SubscribeMessage(USER_CONSTANTS.ACTION.WS.TYPING)
+  onTyping(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() typingChatDto: TypingChatDto,
+  ) {
+    client.in(typingChatDto.chatId).emit(USER_CONSTANTS.ACTION.WS.TYPING);
+  }
+
+  @SubscribeMessage(USER_CONSTANTS.ACTION.WS.STOP_TYPING)
+  onStopTyping(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() typingChatDto: TypingChatDto,
+  ) {
+    client.in(typingChatDto.chatId).emit(USER_CONSTANTS.ACTION.WS.STOP_TYPING);
+  }
+
+  @SubscribeMessage(USER_CONSTANTS.ACTION.WS.SEND_MESSAGE)
+  onSendMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() createMessageDto: CreateMessageDto,
+  ) {
+    const chat = this.chatService.findOneChatBy_Id(
+      new Types.ObjectId(createMessageDto.chatId),
+    );
+    console.log(chat);
+  }
+
+  // @SubscribeMessage(USER_CONSTANTS.ACTION.WS.JOIN_ROOM)
+  // joinRoom(
+  //   @ConnectedSocket() client: Socket,
+  //   @MessageBody() joinRoomChatDto: JoinRoomChatDto,
+  // ) {
+  //   client.join(joinRoomChatDto.chatId);
+  //   client.emit(USER_CONSTANTS.ACTION.WS.CONNECTED);
+  // }
   // @SubscribeMessage(USER_CONSTANTS.ACTION.WS.JOIN_ROOM)
   // joinRoom(
   //   @ConnectedSocket() client: Socket,

@@ -15,6 +15,8 @@ export const USER_CONSTANTS = {
       DISCONNECTED: '/disconnected',
       TYPING: '/typing',
       STOP_TYPING: '/stopTyping',
+      SEND_MESSAGE: '/sendMessage',
+      RECEIVE_MESSAGE: '/receiveMessage',
     },
   },
 };

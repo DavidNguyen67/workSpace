@@ -4,4 +4,5 @@ export interface AppState {
   isLoading: boolean;
   message: string;
   firebaseToken: string;
+  maxRecord: number;
 }

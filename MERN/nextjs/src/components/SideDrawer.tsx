@@ -22,34 +22,30 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ProfileComponent from './profile/Profile';
 import {
   revertUser,
   setChat,
   setCurrentChat,
 } from '@/utilities/redux/slices/user.slice';
-import { findAll, findOrCreateChat } from '@/utilities/services';
+import { findOrCreateChat } from '@/utilities/services';
 import ItemUser from './ItemUser';
 import { HttpStatusCode } from 'axios';
-import {
-  findChat,
-  setChats,
-  setUsers,
-} from '@/utilities/redux/slices/app.slice';
-import { HARD_CODE_LIMIT_DOCUMENT } from '@/utilities/constants';
+import { findChat } from '@/utilities/redux/slices/app.slice';
 import { typeToast } from '@/utilities/functions';
 import useSearchUsers from '@/utilities/hooks/useSearchUsers';
+import useUsers from '@/utilities/hooks/useUsers';
 
 function SideDrawer() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { info } = useAppSelector((state) => state.user);
-  const { chats } = useAppSelector((state) => state.app);
   const dispatch = useAppDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchText, setSearchText] = useState<string>('');
   const toast = useToast();
-  const { users } = useAppSelector((state) => state.app);
+  const [isFetchMore, setIsFetchMore] = useState<boolean>(false);
+  const { users, isLoading: isLoadingUsers } = useUsers(isFetchMore);
   const { filteredUsers } = useSearchUsers(users, searchText);
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [selectedUserId, setSelectedUserId] = useState<string>('');
@@ -65,54 +61,40 @@ function SideDrawer() {
     });
   }, [dispatch, revertUser]);
 
-  const handleFetchUsers = useCallback(async () => {
-    setIsLoading(true);
-    const response = await findAll({
-      limit: HARD_CODE_LIMIT_DOCUMENT,
-      skip: 0,
-    });
-    setIsLoading(false);
-    if (response.statusCode === HttpStatusCode.NotFound) {
-      return;
-    }
-    dispatch(setUsers(response.data));
-  }, [findAll, dispatch]);
-
-  const handleClickItem = async (item: User) => {
-    setSelectedUserId(item._id === selectedUserId ? '' : item._id);
-    if (info) {
-      setIsCreating(true);
-      const response = await findOrCreateChat({
-        receiveId: item._id,
-        senderId: info?._id,
-      });
-      setIsCreating(false);
-      if (
-        response.statusCode === HttpStatusCode.Ok ||
-        response.statusCode === HttpStatusCode.Created
-      ) {
-        dispatch(setChat(response.data));
-        dispatch(
-          findChat({
-            senderId: info._id,
-          })
-        );
-        dispatch(setCurrentChat(response.data));
+  const handleClickItem = useCallback(
+    async (item: User) => {
+      setSelectedUserId(item._id === selectedUserId ? '' : item._id);
+      if (info) {
+        setIsCreating(true);
+        const response = await findOrCreateChat({
+          receiveId: item._id,
+          senderId: info?._id,
+        });
+        setIsCreating(false);
+        if (
+          response.statusCode === HttpStatusCode.Ok ||
+          response.statusCode === HttpStatusCode.Created
+        ) {
+          dispatch(setChat(response.data));
+          dispatch(
+            findChat({
+              senderId: info._id,
+            })
+          );
+          dispatch(setCurrentChat(response.data));
+        }
+        toast({
+          description: response.message,
+          status: typeToast(response.statusCode),
+          position: 'top-left',
+          isClosable: true,
+          duration: 4000,
+        });
       }
-      toast({
-        description: response.message,
-        status: typeToast(response.statusCode),
-        position: 'top-left',
-        isClosable: true,
-        duration: 4000,
-      });
-    }
-    onClose();
-  };
-
-  useEffect(() => {
-    handleFetchUsers();
-  }, []);
+      onClose();
+    },
+    [selectedUserId]
+  );
 
   return (
     <>
@@ -207,7 +189,7 @@ function SideDrawer() {
             </Box>
             {searchText ? (
               filteredUsers?.length > 0 ? (
-                filteredUsers.map((item) => (
+                filteredUsers.map((item, index) => (
                   <ItemUser
                     isLoading={isCreating}
                     key={item._id}
@@ -225,7 +207,7 @@ function SideDrawer() {
                 </Text>
               )
             ) : users?.length > 0 ? (
-              users.map((item) => (
+              users.map((item, index) => (
                 <ItemUser
                   isLoading={isCreating}
                   key={item._id}
@@ -242,12 +224,12 @@ function SideDrawer() {
                 Not found
               </Text>
             )}
-            {isLoading && (
+            {/* {isLoadingUsers && (
               <Spinner
                 m="auto"
                 display="flex"
               />
-            )}
+            )} */}
           </DrawerBody>
         </DrawerContent>
       </Drawer>

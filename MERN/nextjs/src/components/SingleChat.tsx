@@ -19,13 +19,24 @@ import { HttpStatusCode } from 'axios';
 import ScrollableChat from './ScrollableChat';
 import useSocket from '@/utilities/hooks/useSocket';
 import { USER_CONSTANTS } from '@/utilities/constants';
+import Lottie from 'react-lottie';
+import animationData from '../animations/typing.json';
 
 interface SingleChatProps {}
+
+const defaultOptions = {
+  loop: true,
+  autoplay: true,
+  animationData: animationData,
+  rendererSettings: {
+    preserveAspectRatio: 'xMidYMid slice',
+  },
+};
 
 const SingleChat = (props: SingleChatProps) => {
   const { currentChat, info } = useAppSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isTyping, setIsTyping] = useState<boolean>(true);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const toast = useToast();
   const [newMessageText, setNewMessageText] = useState<string>('');
@@ -47,14 +58,16 @@ const SingleChat = (props: SingleChatProps) => {
 
   const handleTyping = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
+      socket?.emit(USER_CONSTANTS.ACTION.WS.TYPING, currentChat?._id);
       setNewMessageText(event.target.value);
     },
-    []
+    [socket, currentChat]
   );
 
   const handleKeyDown = useCallback(
     async (event: any) => {
       if (event.keyCode === 13 || event.which === 13) {
+        socket?.emit(USER_CONSTANTS.ACTION.WS.STOP_TYPING, currentChat?._id);
         setIsLoading(true);
         const response = await sendMessage({
           chatId: currentChat?._id,
@@ -71,6 +84,11 @@ const SingleChat = (props: SingleChatProps) => {
             position: 'top-left',
             duration: 4000,
           });
+          socket?.emit(USER_CONSTANTS.ACTION.WS.SEND_MESSAGE, {
+            chatId: currentChat?._id,
+            senderId: info?._id,
+            content: newMessageText,
+          });
           return;
         }
         const { data }: { data?: MessageSentResponse } = response;
@@ -79,7 +97,7 @@ const SingleChat = (props: SingleChatProps) => {
         if (data) setMessages([...messages, data]);
       }
     },
-    [currentChat, messages, info, newMessageText]
+    [currentChat, messages, info, newMessageText, socket]
   );
 
   const handleSetupChat = useCallback(() => {
@@ -95,11 +113,17 @@ const SingleChat = (props: SingleChatProps) => {
     if (isConnected && currentChat) {
       socket?.emit(USER_CONSTANTS.ACTION.WS.JOIN_ROOM, currentChat);
       socket?.on(USER_CONSTANTS.ACTION.WS.CONNECTED, handleSetupChat);
+      socket?.on(USER_CONSTANTS.ACTION.WS.TYPING, () => setIsTyping(true));
+      socket?.on(USER_CONSTANTS.ACTION.WS.STOP_TYPING, () =>
+        setIsTyping(false)
+      );
     }
 
     return () => {
       if (isConnected && currentChat) {
         socket?.off(USER_CONSTANTS.ACTION.WS.CONNECTED, handleSetupChat);
+        socket?.off(USER_CONSTANTS.ACTION.WS.TYPING);
+        socket?.off(USER_CONSTANTS.ACTION.WS.STOP_TYPING);
       }
     };
   }, [isConnected, currentChat]);
@@ -172,6 +196,18 @@ const SingleChat = (props: SingleChatProps) => {
               mt={3}
               onKeyDown={handleKeyDown}
             >
+              {isTyping ? (
+                <div>
+                  <Lottie
+                    options={defaultOptions}
+                    // height={50}
+                    width={70}
+                    style={{ marginBottom: 15, marginLeft: 0 }}
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
               <Input
                 variant="filled"
                 bg="#E0E0E0"

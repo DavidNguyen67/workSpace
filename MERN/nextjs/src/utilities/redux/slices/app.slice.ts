@@ -15,6 +15,7 @@ const initialState: AppState = {
   isLoading: false,
   message: '',
   firebaseToken: '',
+  maxRecord: 0,
 };
 export const revertApp = createAction(`${SLICES.APP}/REVERT_ALL`);
 
@@ -50,6 +51,12 @@ export const appSlice = createSlice({
     setFirebaseToken: (state, action: PayloadAction<string>) => {
       state.firebaseToken = action.payload;
     },
+    insertUsers: (state, action: PayloadAction<User[]>) => {
+      state.users.push(...action.payload);
+    },
+    setMaxRecord: (state, action: PayloadAction<number>) => {
+      state.maxRecord = action.payload;
+    },
   },
   // Code logic xử lý async action
   extraReducers: (builder) => {
@@ -79,6 +86,12 @@ export const appSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setUsers, setChats, setFirebaseToken } = appSlice.actions;
+export const {
+  setUsers,
+  setChats,
+  setFirebaseToken,
+  insertUsers,
+  setMaxRecord,
+} = appSlice.actions;
 
 export default appSlice.reducer;

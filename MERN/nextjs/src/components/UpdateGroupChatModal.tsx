@@ -28,13 +28,14 @@ import _ from 'lodash';
 import { deleteGroupChat, updateUsersToGroupChat } from '@/utilities/services';
 import { setCurrentChat } from '@/utilities/redux/slices/user.slice';
 import PopConfirm from './PopConfirm';
+import useApp from '@/utilities/hooks/useApp';
 
 interface UpdateGroupChatModalProps {}
 
 const UpdateGroupChatModal = (props: UpdateGroupChatModalProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { currentChat, info } = useAppSelector((state) => state.user);
-  const { users } = useAppSelector((state) => state.app);
+  const { users } = useApp();
   const [searchText, setSearchText] = useState<string>('');
   const [isLoadingUpdating, setIsLoadingUpdating] = useState<boolean>(false);
   const dispatch = useAppDispatch();

@@ -3,4 +3,5 @@ type CommonResponse = {
   message: string;
   data?: any;
   accessToken?: string;
+  maxRecord?: number;
 };

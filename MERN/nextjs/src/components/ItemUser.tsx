@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/utilities/redux/store';
 import { Avatar, Box, Spinner, Text } from '@chakra-ui/react';
-import { MouseEventHandler } from 'react';
+import { LegacyRef, MouseEventHandler } from 'react';
 
 interface ItemUserProps {
   data: User;
@@ -13,6 +13,7 @@ interface ItemUserProps {
 const ItemUser = (props: ItemUserProps) => {
   const { onClick, data, selectedUserIds, isLoading, selectedUserId } = props;
   const { info } = useAppSelector((state) => state.user);
+
   if (info?._id !== data._id) {
     if (selectedUserIds && selectedUserIds.includes(data._id)) return;
     return (
@@ -33,7 +34,7 @@ const ItemUser = (props: ItemUserProps) => {
           alignItems="center"
           color="black"
           px={3}
-          py={2}
+          py={4}
           mb={2}
           borderRadius="lg"
           justifyContent={'space-between'}

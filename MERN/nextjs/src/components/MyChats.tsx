@@ -1,5 +1,5 @@
 import { getReceive } from '@/utilities/functions';
-import { findChat, setChats } from '@/utilities/redux/slices/app.slice';
+import { findChat } from '@/utilities/redux/slices/app.slice';
 import { useAppDispatch, useAppSelector } from '@/utilities/redux/store';
 import { AddIcon } from '@chakra-ui/icons';
 import { Avatar, Box, Button, Spinner, Stack, Text } from '@chakra-ui/react';

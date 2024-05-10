@@ -11,16 +11,20 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ItemUser from './ItemUser';
 import UserBadgeItem from './UserBadgeItem';
 import { createGroupChat } from '@/utilities/services';
 import { typeToast } from '@/utilities/functions';
 import { HttpStatusCode } from 'axios';
 import { setChats } from '@/utilities/redux/slices/app.slice';
+import { InView } from 'react-intersection-observer';
+import useUsers from '@/utilities/hooks/useUsers';
+import ScrollableFeed from 'react-scrollable-feed';
 
 interface GroupChatModalProps {
   children: React.ReactNode;
@@ -29,7 +33,7 @@ interface GroupChatModalProps {
 const GroupChatModal = (props: GroupChatModalProps) => {
   const { children } = props;
   const toast = useToast();
-  const { users, chats } = useAppSelector((state) => state.app);
+  const { chats } = useAppSelector((state) => state.app);
   const { info } = useAppSelector((state) => state.user);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -41,6 +45,8 @@ const GroupChatModal = (props: GroupChatModalProps) => {
     receiveIds: [],
     senderId: '',
   });
+  const [isFetchMore, setIsFetchMore] = useState<boolean>(false);
+  const { users, isLoading: isLoadingUsers } = useUsers(isFetchMore);
 
   const handleSubmit = useCallback(async () => {
     if (!info) return;
@@ -163,44 +169,74 @@ const GroupChatModal = (props: GroupChatModalProps) => {
                 value={searchText}
               />
             </FormControl>
-            <Box
-              w="100%"
-              display="flex"
-              flexWrap="wrap"
+            <InView
+              onChange={(inView, entry) => {
+                setIsFetchMore(inView);
+              }}
+              // Các config của intersection-observer đều là props của Inview
             >
-              {newGroupChat?.receiveIds?.length > 0 &&
-                newGroupChat.receiveIds.map((item) => {
-                  if (filteredUsers?.length < 1 && users?.length < 1) return;
-                  const data = users.find((user) => user._id === item);
-                  if (data)
-                    return (
-                      <UserBadgeItem
-                        key={data?._id}
-                        data={data}
-                        onClick={() => handleDeleteUser(item)}
+              {({ inView, ref, entry }) => (
+                <ScrollableFeed>
+                  <Box
+                    w="100%"
+                    display="flex"
+                    flexWrap="wrap"
+                    overflowY={'scroll'}
+                    maxHeight={'50vh'}
+                  >
+                    {newGroupChat?.receiveIds?.length > 0 &&
+                      newGroupChat.receiveIds.map((item) => {
+                        if (filteredUsers?.length < 1 && users?.length < 1)
+                          return;
+                        const data = users.find((user) => user._id === item);
+                        if (data)
+                          return (
+                            <UserBadgeItem
+                              key={data?._id}
+                              data={data}
+                              onClick={() => handleDeleteUser(item)}
+                            />
+                          );
+                      })}
+                    {searchText
+                      ? filteredUsers?.length > 0 &&
+                        filteredUsers.map((item, index) => (
+                          <Box
+                            ref={index === users.length - 3 ? ref : null}
+                            key={item._id}
+                            w="100%"
+                          >
+                            <ItemUser
+                              data={item}
+                              onClick={() => handleAddUser(item)}
+                              selectedUserIds={newGroupChat?.receiveIds}
+                            />
+                          </Box>
+                        ))
+                      : users?.length > 0 &&
+                        users.map((item, index) => (
+                          <Box
+                            ref={index === users.length - 3 ? ref : null}
+                            key={item._id}
+                            w="100%"
+                          >
+                            <ItemUser
+                              data={item}
+                              onClick={() => handleAddUser(item)}
+                              selectedUserIds={newGroupChat?.receiveIds}
+                            />
+                          </Box>
+                        ))}
+                    {isLoadingUsers && (
+                      <Spinner
+                        m="auto"
+                        display="flex"
                       />
-                    );
-                })}
-              {searchText
-                ? filteredUsers?.length > 0 &&
-                  filteredUsers.map((item) => (
-                    <ItemUser
-                      data={item}
-                      key={item._id}
-                      onClick={() => handleAddUser(item)}
-                      selectedUserIds={newGroupChat?.receiveIds}
-                    />
-                  ))
-                : users?.length > 0 &&
-                  users.map((item) => (
-                    <ItemUser
-                      data={item}
-                      key={item._id}
-                      onClick={() => handleAddUser(item)}
-                      selectedUserIds={newGroupChat?.receiveIds}
-                    />
-                  ))}
-            </Box>
+                    )}
+                  </Box>
+                </ScrollableFeed>
+              )}
+            </InView>
           </ModalBody>
 
           <ModalFooter>

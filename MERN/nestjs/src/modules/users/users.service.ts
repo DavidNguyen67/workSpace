@@ -122,6 +122,7 @@ export class UsersService {
         statusCode: HttpStatus.OK,
         data: users,
         message: 'Users found',
+        maxRecord: await this.userModel.countDocuments({}),
       };
     } catch (error) {
       console.log(error);
