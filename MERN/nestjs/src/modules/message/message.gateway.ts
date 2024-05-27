@@ -6,7 +6,7 @@ import {
   WebSocketServer,
   OnGatewayConnection,
   ConnectedSocket,
-  WsResponse,
+  OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
@@ -31,7 +31,9 @@ import { TypingChatDto } from '../chat/dto/typing-chat.dto';
   },
   path: MESSAGE_CONSTANTS.PREFIX,
 })
-export class MessageGateway implements OnGatewayConnection {
+export class MessageGateway
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
 
@@ -42,11 +44,12 @@ export class MessageGateway implements OnGatewayConnection {
     private messageModel: Model<typeof MessageSchema>,
   ) {}
 
-  handleConnection(@ConnectedSocket() client: Socket, ...args: any[]) {}
+  handleConnection(client: Socket) {
+    console.log(client.id, 'Connected');
+  }
 
-  @SubscribeMessage(MESSAGE_CONSTANTS.ACTION.HTTP.CREATE)
-  create(@MessageBody() createMessageDto: CreateMessageDto) {
-    return this.messageService.create(createMessageDto);
+  handleDisconnect(client: Socket) {
+    console.log(client.id, 'Disconnected');
   }
 
   @SubscribeMessage(USER_CONSTANTS.ACTION.WS.JOIN_ROOM)
@@ -75,30 +78,19 @@ export class MessageGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage(USER_CONSTANTS.ACTION.WS.SEND_MESSAGE)
-  onSendMessage(
+  async onSendMessage(
     @ConnectedSocket() client: Socket,
     @MessageBody() createMessageDto: CreateMessageDto,
   ) {
-    const chat = this.chatService.findOneChatBy_Id(
+    const chat: Chat | any = await this.chatService.findOneChatBy_Id(
       new Types.ObjectId(createMessageDto.chatId),
     );
-    console.log(chat);
+    if (chat.users?.length > 0) {
+      chat.users.forEach((item: User) => {
+        client
+          .in(createMessageDto.chatId)
+          .emit(USER_CONSTANTS.ACTION.WS.RECEIVE_MESSAGE, createMessageDto);
+      });
+    }
   }
-
-  // @SubscribeMessage(USER_CONSTANTS.ACTION.WS.JOIN_ROOM)
-  // joinRoom(
-  //   @ConnectedSocket() client: Socket,
-  //   @MessageBody() joinRoomChatDto: JoinRoomChatDto,
-  // ) {
-  //   client.join(joinRoomChatDto.chatId);
-  //   client.emit(USER_CONSTANTS.ACTION.WS.CONNECTED);
-  // }
-  // @SubscribeMessage(USER_CONSTANTS.ACTION.WS.JOIN_ROOM)
-  // joinRoom(
-  //   @ConnectedSocket() client: Socket,
-  //   @MessageBody() joinRoomChatDto: JoinRoomChatDto,
-  // ) {
-  //   client.join(joinRoomChatDto.chatId);
-  //   client.emit(USER_CONSTANTS.ACTION.WS.CONNECTED);
-  // }
 }

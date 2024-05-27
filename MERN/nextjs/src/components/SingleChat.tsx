@@ -75,6 +75,12 @@ const SingleChat = (props: SingleChatProps) => {
           content: newMessageText,
         });
         setIsLoading(false);
+        socket?.emit(USER_CONSTANTS.ACTION.WS.SEND_MESSAGE, {
+          chatId: currentChat?._id,
+          senderId: info?._id,
+          content: newMessageText,
+        });
+
         // Nếu gửi fail
         if (response.statusCode !== HttpStatusCode.Created) {
           toast({
@@ -83,11 +89,6 @@ const SingleChat = (props: SingleChatProps) => {
             isClosable: true,
             position: 'top-left',
             duration: 4000,
-          });
-          socket?.emit(USER_CONSTANTS.ACTION.WS.SEND_MESSAGE, {
-            chatId: currentChat?._id,
-            senderId: info?._id,
-            content: newMessageText,
           });
           return;
         }
@@ -111,11 +112,16 @@ const SingleChat = (props: SingleChatProps) => {
 
   useEffect(() => {
     if (isConnected && currentChat) {
-      socket?.emit(USER_CONSTANTS.ACTION.WS.JOIN_ROOM, currentChat);
+      socket?.emit(USER_CONSTANTS.ACTION.WS.JOIN_ROOM, {
+        chatId: currentChat._id,
+      });
       socket?.on(USER_CONSTANTS.ACTION.WS.CONNECTED, handleSetupChat);
       socket?.on(USER_CONSTANTS.ACTION.WS.TYPING, () => setIsTyping(true));
       socket?.on(USER_CONSTANTS.ACTION.WS.STOP_TYPING, () =>
         setIsTyping(false)
+      );
+      socket?.on(USER_CONSTANTS.ACTION.WS.RECEIVE_MESSAGE, (data) =>
+        console.log(data)
       );
     }
 
@@ -124,6 +130,7 @@ const SingleChat = (props: SingleChatProps) => {
         socket?.off(USER_CONSTANTS.ACTION.WS.CONNECTED, handleSetupChat);
         socket?.off(USER_CONSTANTS.ACTION.WS.TYPING);
         socket?.off(USER_CONSTANTS.ACTION.WS.STOP_TYPING);
+        socket?.off(USER_CONSTANTS.ACTION.WS.RECEIVE_MESSAGE);
       }
     };
   }, [isConnected, currentChat]);
