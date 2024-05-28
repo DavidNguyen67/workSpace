@@ -1,22 +1,20 @@
 import { Modal } from 'antd';
 import { useCallback, useState } from 'react';
 
-interface ModalAuthProps {
-  toggleModal: boolean;
-  setToggleModal: React.Dispatch<React.SetStateAction<boolean>>;
-  title: string;
+interface ModalCommonProps {
+  isVisible: boolean;
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
   content: React.ReactNode;
 }
 
-function ModalAuth({
-  toggleModal,
-  setToggleModal,
-  title,
+function ModalCommon({
+  isVisible,
+  setIsVisible,
   content,
-}: Readonly<ModalAuthProps>) {
+}: Readonly<ModalCommonProps>) {
   const hideModal = useCallback(() => {
-    setToggleModal(false);
-  }, [setToggleModal]);
+    setIsVisible(false);
+  }, [setIsVisible]);
 
   const handleSubmit = useCallback(() => {
     hideModal();
@@ -25,10 +23,10 @@ function ModalAuth({
   return (
     <>
       <Modal
-        title={title}
-        open={toggleModal}
+        open={isVisible}
         onCancel={hideModal}
         onOk={handleSubmit}
+        footer={[]}
       >
         {content}
       </Modal>
@@ -36,4 +34,4 @@ function ModalAuth({
   );
 }
 
-export default ModalAuth;
+export default ModalCommon;
