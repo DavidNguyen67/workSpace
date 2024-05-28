@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Wrapper from '@/components/app/Wrapper';
+import 'antd/dist/reset.css';
+import Container from './Container';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,7 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Wrapper>{children}</Wrapper>
+        <Wrapper>
+          <Container>{children}</Container>
+        </Wrapper>
       </body>
     </html>
   );
