@@ -21,9 +21,18 @@ import {
   FireOutlined,
   AppstoreOutlined,
   AntDesignOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, Row, Typography, theme } from 'antd';
+import {
+  Breadcrumb,
+  FloatButton,
+  Layout,
+  Menu,
+  Row,
+  Typography,
+  theme,
+} from 'antd';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAppSelector } from '@/redux/stores';
@@ -237,6 +246,14 @@ const Container = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         isVisible={isVisibleModal}
         setIsVisible={setIsVisibleModal}
       />
+      <FloatButton.Group shape="circle">
+        <FloatButton
+          badge={{ count: 12 }}
+          icon={<QuestionCircleOutlined />}
+        />
+        <FloatButton badge={{ count: 123, overflowCount: 999 }} />
+        <FloatButton.BackTop />
+      </FloatButton.Group>
     </Layout>
   );
 };

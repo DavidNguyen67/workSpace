@@ -1,77 +1,77 @@
 'use client';
-import React, { useState } from 'react';
-import { Row, Col, Card, Carousel, Divider } from 'antd';
-import { CarOutlined } from '@ant-design/icons';
+import React, { useMemo, useState } from 'react';
+import { Row, Col, Card, Carousel, Divider, Typography, Space } from 'antd';
+import { chunkArray, takeItems } from '@/utilities/functions/array';
+import { ADVERTISEMENTS } from '@/utilities/seeds';
+import CommodityComponent from '@/components/app/Commodity';
 import { truncateDescription } from '@/utilities/functions/text';
-import ItemCard from '@/components/renderItem/Item';
+import { LikeOutlined } from '@ant-design/icons';
+import Countdown from '@/components/time/Countdown';
 
 const { Meta } = Card;
+const { Title } = Typography;
 
 const contentStyle: React.CSSProperties = {
-  height: '35vh',
+  height: '39vh',
   color: '#fff',
-  lineHeight: '35vh',
+  lineHeight: '39vh',
   textAlign: 'center',
   background: '#364d79',
 };
 
 function AdvertiseComponent() {
+  const [listItems, setListItems] = useState<Advertisement[]>(
+    takeItems(ADVERTISEMENTS, 6)
+  );
   return (
     <Col
       xs={24}
       lg={12}
     >
       <Row gutter={[8, 8]}>
-        <Row gutter={[8, 8]}>
-          <Col xs={24}>
-            <Carousel autoplay>
-              <div>
-                <h3 style={contentStyle}>1</h3>
-              </div>
-              <div>
-                <h3 style={contentStyle}>2</h3>
-              </div>
-              <div>
-                <h3 style={contentStyle}>3</h3>
-              </div>
-              <div>
-                <h3 style={contentStyle}>4</h3>
-              </div>
-            </Carousel>
-          </Col>
-        </Row>
+        <Col xs={24}>
+          <Carousel
+            autoplay
+            arrows
+          >
+            <div>
+              <h3 style={contentStyle}>1</h3>
+            </div>
+            <div>
+              <h3 style={contentStyle}>2</h3>
+            </div>
+            <div>
+              <h3 style={contentStyle}>3</h3>
+            </div>
+            <div>
+              <h3 style={contentStyle}>4</h3>
+            </div>
+          </Carousel>
+        </Col>
         <Divider />
-        <Row gutter={[8, 8]}>
-          {Array.from(
-            [1, 2, 3, 4].map((item) => (
-              <Col
-                xs={24}
-                lg={12}
-                key={item}
-              >
-                <Card
-                  hoverable
-                  title="Xe hơi"
-                  extra={<CarOutlined />}
-                >
-                  <Meta
-                    description={truncateDescription(
-                      'Mua xe hơi mới giảm giá lớn!',
-                      15
-                    )}
-                  />
-                </Card>
-              </Col>
-            ))
-          )}
-        </Row>
+        {listItems.map((item) => (
+          <Col
+            xs={12}
+            lg={8}
+            key={item.id}
+          >
+            <Card hoverable>
+              <Meta
+                title={item.label}
+                avatar={item.icon}
+              />
+            </Card>
+          </Col>
+        ))}
       </Row>
     </Col>
   );
 }
 
-const ListItem = () => {
-  // const [listItems, setListItems] = useState<>([]);
+const ListAdvertise = () => {
+  const [listItems, setListItems] = useState<Advertisement[]>(ADVERTISEMENTS);
+
+  const chunkedItems = useMemo(() => chunkArray(listItems, 8), [listItems]);
 
   return (
     <>
@@ -79,20 +79,35 @@ const ListItem = () => {
         xs={24}
         lg={12}
       >
-        <Row gutter={[8, 8]}>
-          {Array.from(
-            [1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
-              <Col
-                key={item}
-                xs={24}
-                lg={12}
-                xl={8}
-              >
-                <ItemCard />
-              </Col>
-            ))
-          )}
-        </Row>
+        <Carousel
+          autoplay
+          dots={false}
+        >
+          {chunkedItems.map((group, index) => (
+            <div key={index}>
+              <Row gutter={[8, 8]}>
+                {group.map((item) => (
+                  <Col
+                    key={item.id}
+                    xs={24}
+                    md={12}
+                  >
+                    <Card hoverable>
+                      <Meta
+                        title={item.label}
+                        avatar={item.icon}
+                        description={`${truncateDescription(
+                          item.description,
+                          45
+                        )}`}
+                      />
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+            </div>
+          ))}
+        </Carousel>
       </Col>
     </>
   );
@@ -102,7 +117,22 @@ const App: React.FC = () => {
   return (
     <>
       <AdvertiseComponent />
-      <ListItem />
+      <ListAdvertise />
+      <Divider>
+        <Title level={4}>
+          <Space>
+            <LikeOutlined />
+            TOP DEAL SIÊU RẺ
+          </Space>
+        </Title>
+      </Divider>
+      <CommodityComponent />
+      <Divider>
+        <Title level={4}>
+          <Space>Hàng xịn giá sốc</Space>
+        </Title>
+        <Countdown />
+      </Divider>
     </>
   );
 };
