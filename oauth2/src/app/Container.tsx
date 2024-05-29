@@ -221,10 +221,10 @@ const Container = ({ children }: Readonly<{ children: React.ReactNode }>) => {
               style={{
                 padding: 24,
                 background: '#fff',
-                height: '75vh',
+                minHeight: '75vh',
               }}
             >
-              <Row>{children}</Row>
+              <Row gutter={[16, 8]}>{children}</Row>
             </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>
