@@ -9,6 +9,7 @@ import {
   Typography,
   Carousel,
   Tabs,
+  Button,
 } from 'antd';
 import { COMMODITIES } from '@/utilities/seeds/commodity.seed';
 import { CarOutlined, FireOutlined, StarOutlined } from '@ant-design/icons';
@@ -16,31 +17,46 @@ import moment from 'moment';
 import { truncateDescription } from '@/utilities/functions/text';
 import { chunkArray } from '@/utilities/functions/array';
 import type { TabsProps } from 'antd';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const { Meta } = Card;
 const { Text } = Typography;
 
 interface ItemCommodityProps {
   item: Commodity;
+  onClick?: () => void;
 }
 
-function ItemCommodity({ item }: Readonly<ItemCommodityProps>) {
+export function ItemCommodity({ item, onClick }: Readonly<ItemCommodityProps>) {
   return (
     <>
       <Col
         key={item.id}
-        xs={12}
-        md={8}
+        xs={24}
+        sm={12}
         lg={6}
       >
         <Card
           hoverable
+          onClick={onClick}
           cover={
-            <img
-              alt={item.name}
-              src={item.imageUrl}
-              style={{ borderRadius: '8px', border: '2px solid #f0f0f0' }}
-            />
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                position: 'relative',
+                padding: '50%',
+              }}
+            >
+              <Image
+                alt={item.name}
+                src={item.imageUrl}
+                layout="fill"
+                objectFit="contain"
+                style={{ borderRadius: '8px', border: '2px solid #f0f0f0' }}
+              />
+            </div>
           }
         >
           <Meta
@@ -54,14 +70,13 @@ function ItemCommodity({ item }: Readonly<ItemCommodityProps>) {
                   <Tag color="green">
                     <FireOutlined /> Bán chạy
                   </Tag>
-                  <Tag color="blue">
-                    <StarOutlined /> Mới
-                  </Tag>
                 </Space>
-                <div>{truncateDescription(item.description, 30)}</div>
-                <div style={{ fontSize: '1.2em', fontWeight: 'bold' }}>
+                <br />
+                <Text>{truncateDescription(item.description, 30)}</Text>
+                <br />
+                <Text style={{ fontSize: '1.2em', fontWeight: 'bold' }}>
                   {`${item.price.toLocaleString()} VND`}
-                </div>
+                </Text>
                 <Divider />
 
                 <Space>
@@ -81,6 +96,7 @@ function ListItemCommodity() {
   const [listItems, setListItems] = useState<Commodity[]>(COMMODITIES);
 
   const chunkedItems = useMemo(() => chunkArray(listItems, 4), [listItems]);
+  const router = useRouter();
 
   return (
     <Carousel
@@ -94,6 +110,7 @@ function ListItemCommodity() {
               <ItemCommodity
                 item={item}
                 key={item.id}
+                onClick={() => router.push(`/item/${index}`)}
               />
             ))}
           </Row>
@@ -126,12 +143,20 @@ const CommodityComponent = () => {
   );
 
   return (
-    <Col xs={24}>
-      <Tabs
-        defaultActiveKey="1"
-        items={items}
-      />
-    </Col>
+    <>
+      <Button
+        style={{ marginLeft: 'auto' }}
+        type="primary"
+      >
+        Xem tất cả
+      </Button>
+      <Col xs={24}>
+        <Tabs
+          defaultActiveKey="1"
+          items={items}
+        />
+      </Col>
+    </>
   );
 };
 

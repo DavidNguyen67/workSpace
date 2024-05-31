@@ -1,12 +1,22 @@
 'use client';
 import React, { useMemo, useState } from 'react';
-import { Row, Col, Card, Carousel, Divider, Typography, Space } from 'antd';
+import {
+  Row,
+  Col,
+  Card,
+  Carousel,
+  Divider,
+  Typography,
+  Space,
+  Button,
+} from 'antd';
 import { chunkArray, takeItems } from '@/utilities/functions/array';
 import { ADVERTISEMENTS } from '@/utilities/seeds';
 import CommodityComponent from '@/components/app/Commodity';
 import { truncateDescription } from '@/utilities/functions/text';
 import { LikeOutlined } from '@ant-design/icons';
 import Countdown from '@/components/time/Countdown';
+import HotCommodities from '@/components/app/hotCommodity/HotCommodities';
 
 const { Meta } = Card;
 const { Title } = Typography;
@@ -92,7 +102,10 @@ const ListAdvertise = () => {
                     xs={24}
                     md={12}
                   >
-                    <Card hoverable>
+                    <Card
+                      hoverable
+                      onClick={() => {}}
+                    >
                       <Meta
                         title={item.label}
                         avatar={item.icon}
@@ -127,12 +140,19 @@ const App: React.FC = () => {
         </Title>
       </Divider>
       <CommodityComponent />
-      <Divider>
+      {/* <Divider>
         <Title level={4}>
           <Space>Hàng xịn giá sốc</Space>
         </Title>
         <Countdown />
       </Divider>
+      <HotCommodities />
+      <Divider>
+        <Title level={4}>
+          <Space>BẠN CÓ THỂ THÍCH</Space>
+        </Title>
+      </Divider>
+      <CommodityComponent /> */}
     </>
   );
 };
