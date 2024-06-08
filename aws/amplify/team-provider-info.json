@@ -19,6 +19,9 @@
         "transcription": {},
         "speechGenerator": {},
         "interpretText": {}
+      },
+      "storage": {
+        "s3": {}
       }
     }
   }

@@ -112,13 +112,12 @@ const SpeechToText: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [sentimentScore, setSentimentScore] = useState(0);
   const [audioBuffer, setAudioBuffer] = useState<ArrayBuffer | null>(null);
-  const [api] = notification.useNotification();
+  const [api, contextHolder] = notification.useNotification();
 
   const finishRecording = async (pcmData: Uint8Array) => {
     try {
       setAudioBuffer(null);
       setIsLoading(true);
-      console.log(pcmData);
 
       const { transcription } = await Predictions.convert({
         transcription: {
@@ -156,7 +155,7 @@ const SpeechToText: React.FC = () => {
           | 'mixed'
       );
     } catch (error: any) {
-      api.error(error.message);
+      api.error({ message: error.message });
     } finally {
       setIsLoading(false);
     }
@@ -189,6 +188,7 @@ const SpeechToText: React.FC = () => {
 
   return (
     <Layout>
+      {contextHolder}
       <Row
         justify="center"
         style={{ marginBottom: '24px' }}

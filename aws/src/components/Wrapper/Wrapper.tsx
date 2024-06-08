@@ -4,7 +4,7 @@ import { withAuthenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import config from '@/amplifyconfiguration.json';
 import { Amplify } from 'aws-amplify';
-import { Layout } from 'antd';
+import { Layout, notification } from 'antd';
 
 Amplify.configure(config);
 
