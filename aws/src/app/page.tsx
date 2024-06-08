@@ -1,5 +1,6 @@
 'use client';
 
+import ChatBot from '@/components/ChatBot/ChatBot';
 import FileToText from '@/components/Tabs/FileToText';
 import SpeechToText from '@/components/Tabs/SpeechToText';
 import type { TabsProps } from 'antd';
@@ -18,8 +19,8 @@ const items: TabsProps['items'] = [
   },
   {
     key: '3',
-    label: 'Tab 3',
-    children: 'Content of Tab Pane 3',
+    label: 'ChatBot',
+    children: <ChatBot />,
   },
 ];
 

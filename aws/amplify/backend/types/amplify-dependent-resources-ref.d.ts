@@ -10,6 +10,13 @@ export type AmplifyDependentResourcesAttributes = {
       "UserPoolName": "string"
     }
   },
+  "interactions": {
+    "lex": {
+      "BotName": "string",
+      "FunctionArn": "string",
+      "Region": "string"
+    }
+  },
   "predictions": {
     "interpretText": {
       "region": "string",

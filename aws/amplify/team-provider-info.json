@@ -22,6 +22,12 @@
       },
       "storage": {
         "s3": {}
+      },
+      "interactions": {
+        "lex": {
+          "deploymentBucketName": "amplify-aws-dev-949a9-deployment",
+          "s3Key": "amplify-builds/lex-426e4576466a7553694e-build.zip"
+        }
       }
     }
   }

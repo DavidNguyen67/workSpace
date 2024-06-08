@@ -4,9 +4,22 @@ import { withAuthenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import config from '@/amplifyconfiguration.json';
 import { Amplify } from 'aws-amplify';
-import { Layout, notification } from 'antd';
+import { Layout } from 'antd';
 
 Amplify.configure(config);
+Amplify.configure({
+  ...Amplify.getConfig(),
+  Interactions: {
+    LexV2: {
+      '<your-bot-name>': {
+        aliasId: 'Prod',
+        botId: '<your-bot-id>',
+        localeId: '<your-bot-locale-id>',
+        region: '<your-bot-region>',
+      },
+    },
+  },
+});
 
 const { Content } = Layout;
 

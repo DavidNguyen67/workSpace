@@ -25,6 +25,31 @@
       "service": "Cognito"
     }
   },
+  "interactions": {
+    "lex": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lex"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_interactions_lex_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "interactions",
+          "resourceName": "lex"
+        }
+      ]
+    },
+    "AMPLIFY_interactions_lex_s3Key": {
+      "usedBy": [
+        {
+          "category": "interactions",
+          "resourceName": "lex"
+        }
+      ]
+    }
+  },
   "predictions": {
     "interpretText": {
       "interpretType": "interpretText",
