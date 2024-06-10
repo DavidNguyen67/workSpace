@@ -1,1 +1,0 @@
-export const HARD_CODE_LIMIT_DOCUMENT = 5;
