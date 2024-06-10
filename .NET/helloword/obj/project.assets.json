@@ -1047,11 +1047,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Tự học\\.NET\\helloword\\helloword.csproj",
+      "projectUniqueName": "D:\\learn\\.NET\\helloword\\helloword.csproj",
       "projectName": "helloword",
-      "projectPath": "D:\\Tự học\\.NET\\helloword\\helloword.csproj",
+      "projectPath": "D:\\learn\\.NET\\helloword\\helloword.csproj",
       "packagesPath": "C:\\Users\\LENOVO LEGION\\.nuget\\packages\\",
-      "outputPath": "D:\\Tự học\\.NET\\helloword\\obj\\",
+      "outputPath": "D:\\learn\\.NET\\helloword\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\LENOVO LEGION\\AppData\\Roaming\\NuGet\\NuGet.Config"
