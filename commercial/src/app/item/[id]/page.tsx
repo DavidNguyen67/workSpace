@@ -7,7 +7,6 @@ import {
   Carousel,
   Col,
   Divider,
-  Popconfirm,
   Rate,
   Row,
   Space,
@@ -24,6 +23,8 @@ import {
   SmileOutlined,
   ThunderboltOutlined,
 } from '@ant-design/icons';
+import AddressForm from '@/components/app/Form/Address';
+// import CustomMap from '@/components/app/GoogleMap/Map';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -91,10 +92,21 @@ interface ItemProps {
 }
 
 function Item({ params }: Readonly<ItemProps>) {
+  const ticketStyle = {
+    border: '2px dashed #d9d9d9',
+    padding: '4px',
+    borderRadius: '4px',
+    display: 'inline-block',
+    margin: '4px 0',
+  };
+  const { addressString } = useAppSelector((state) => state.user);
   const router = useRouter();
   const chunkedItems = useMemo(() => chunkArray([], 4), []);
   const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
+  const [isVisibleModalChangeAddress, setIsVisibleModalChangeAddress] =
+    useState<boolean>(false);
   const { accessToken } = useAppSelector((state) => state.user);
+  const [similarCommodities, setSimilarCommodities] = useState([]);
 
   const handleClickLinkItem = useCallback(() => {
     if (accessToken) {
@@ -171,17 +183,24 @@ function Item({ params }: Readonly<ItemProps>) {
     );
   }, []);
 
+  const handleClickChangeAddress = useCallback(() => {
+    setIsVisibleModalChangeAddress(true);
+  }, []);
+
   const CardBody = useCallback(() => {
     return (
       <div>
-        <Space>
+        <Space
+          direction="horizontal"
+          style={{ width: '100%', justifyContent: 'space-between' }}
+        >
           <Space.Compact
             direction="vertical"
             style={{ justifyContent: 'space-between' }}
             block
           >
             <Text strong>Thông tin vận chuyển</Text>
-            <Text>Giao đến Q. Hoàn Kiếm, P. Hàng Trống, Hà Nội</Text>
+            <Text>Giao đến {`${addressString}`}</Text>
           </Space.Compact>
           <Space direction="vertical">
             <Text
@@ -190,6 +209,7 @@ function Item({ params }: Readonly<ItemProps>) {
                 color: '#1677ff',
                 cursor: 'pointer',
               }}
+              onClick={handleClickChangeAddress}
             >
               Đổi
             </Text>
@@ -233,9 +253,16 @@ function Item({ params }: Readonly<ItemProps>) {
             25.000₫
           </Text>
         </div>
+        <ModalCommon
+          isVisible={isVisibleModalChangeAddress}
+          setIsVisible={setIsVisibleModalChangeAddress}
+          content={<AddressForm afterSubmit={setIsVisibleModalChangeAddress} />}
+        />
       </div>
     );
-  }, []);
+  }, [addressString, handleClickChangeAddress, isVisibleModalChangeAddress]);
+
+  const handleGetSimilarCommodities = useCallback(async () => {}, []);
 
   return (
     <>
@@ -269,24 +296,34 @@ function Item({ params }: Readonly<ItemProps>) {
                     <Title level={5}>Ưu đãi khác</Title>
                     <Text>4 Mã Giảm Giá</Text>
                   </Col>
+                  <Space
+                    direction="horizontal"
+                    style={{ marginRight: '8px' }}
+                  >
+                    <div style={ticketStyle}>
+                      <Text style={{ fontSize: '12px' }}>
+                        Giảm 70K <SmileOutlined style={{ color: '#52c41a' }} />
+                      </Text>
+                    </div>
+                    <div style={ticketStyle}>
+                      <Text style={{ fontSize: '12px' }}>
+                        Giảm 15K{' '}
+                        <ThunderboltOutlined style={{ color: '#faad14' }} />
+                      </Text>
+                    </div>
+                  </Space>
 
-                  <Text style={{ fontSize: '16px' }}>
-                    Giảm 70K <SmileOutlined style={{ color: '#52c41a' }} />
-                  </Text>
-
-                  <Text style={{ fontSize: '16px' }}>
-                    Giảm 15K{' '}
-                    <ThunderboltOutlined style={{ color: '#faad14' }} />
-                  </Text>
                   <ArrowRightOutlined
                     style={{
                       fontSize: '24px',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
+                      margin: '0 auto',
                     }}
                   />
                 </Row>
               </Card>
+            </Col>
+            <Col xs={24}>
+              <Card title="Sản phẩm tương tự"></Card>
             </Col>
           </Row>
         </Col>

@@ -20,7 +20,8 @@ export const appSlice = createSlice({
     toggleTheme: (state) => {
       state.theme = state.theme === THEME.DARK ? THEME.LIGHT : THEME.DARK;
     },
-    // incrementByAmount(state, action: PayloadAction<number>) {
+
+    // incrementByAmount(state, action: PayloadAction<number>) =>{
     //   state.value += action.payload;
     // },
   },

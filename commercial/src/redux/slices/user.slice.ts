@@ -4,11 +4,15 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 interface UserState {
   accessToken: string;
   refreshToken: string;
+  address: AddressForm | null;
+  addressString: string;
 }
 
 const initialState: UserState = {
   accessToken: '',
   refreshToken: '',
+  address: null,
+  addressString: '',
 };
 
 export const appSlice = createSlice({
@@ -26,10 +30,17 @@ export const appSlice = createSlice({
       state.accessToken = '';
       state.refreshToken = '';
     },
+    setAddress: (
+      state,
+      action: PayloadAction<{ address: AddressForm; addressString: string }>
+    ) => {
+      state.address = action.payload.address;
+      state.addressString = action.payload.addressString;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setToken } = appSlice.actions;
+export const { setToken, setAddress } = appSlice.actions;
 
 export default appSlice.reducer;
