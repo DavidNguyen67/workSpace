@@ -3,10 +3,13 @@ import FormLogin from '@/components/auth/FormLogin';
 import ModalCommon from '@/components/modal/ModalCommon';
 import { chunkArray } from '@/utilities/functions/array';
 import {
+  Button,
   Card,
   Carousel,
   Col,
   Divider,
+  Input,
+  InputNumber,
   Rate,
   Row,
   Space,
@@ -14,12 +17,14 @@ import {
   Typography,
 } from 'antd';
 import Image from 'next/image';
-import { useCallback, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/redux/stores';
 import NextLink from 'next/link';
 import {
   ArrowRightOutlined,
+  MinusOutlined,
+  PlusOutlined,
   SmileOutlined,
   ThunderboltOutlined,
 } from '@ant-design/icons';
@@ -27,9 +32,11 @@ import AddressForm from '@/components/app/Form/Address';
 import SimilarCommodities from '@/components/app/Commodity/SimilarCommodities';
 import { COMMODITIES } from '@/utilities/seeds/commodity.seed';
 import DiscountComponent from '@/components/app/Discount';
+import { isNumber } from 'lodash';
+import { KEYBOARD_NUMBERS } from '@/utilities/enums';
 // import CustomMap from '@/components/app/GoogleMap/Map';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text } = Typography;
 
 interface ItemImageProps {
   chunkedItems: any[][];
@@ -115,6 +122,7 @@ function Item({ params }: Readonly<ItemProps>) {
   const [similarCommodities, setSimilarCommodities] = useState(
     chunkArray(COMMODITIES, 3)
   );
+  const [count, setCount] = useState<number>(0);
 
   const handleClickLinkItem = useCallback(() => {
     if (accessToken) {
@@ -156,7 +164,8 @@ function Item({ params }: Readonly<ItemProps>) {
         </Space>
         <Text style={{ marginLeft: '8px' }}>(50)</Text>
         <Divider type='vertical' />
-        Đã bán 257
+        <Text>Đã bán 257</Text>
+        <br />
         <Space style={{ marginTop: '8px' }}>
           <Text
             type='danger'
@@ -278,6 +287,31 @@ function Item({ params }: Readonly<ItemProps>) {
     setIsVisibleModalDiscount(!isVisibleModalDiscount);
   }, [isVisibleModalDiscount]);
 
+  const handleMinusCount = useCallback(() => {
+    setCount(count - 1);
+  }, [count]);
+
+  const handleAddCount = useCallback(() => {
+    setCount(count + 1);
+  }, [count]);
+
+  const handleChangeCountInput = useCallback((event: any) => {
+    if (
+      KEYBOARD_NUMBERS.NUMBER_0 < event.which &&
+      event.which < KEYBOARD_NUMBERS.NUMBER_9
+    ) {
+      setCount(+event.key);
+      return;
+    }
+    if (
+      KEYBOARD_NUMBERS.NUMPAD_0 < event.which &&
+      event.which < KEYBOARD_NUMBERS.NUMPAD_9
+    ) {
+      setCount(+event.key);
+      return;
+    }
+  }, []);
+
   return (
     <>
       <Row gutter={[16, 8]}>
@@ -353,7 +387,33 @@ function Item({ params }: Readonly<ItemProps>) {
           xs={24}
           md={6}
         >
-          <Card title='Card title'>Card content</Card>
+          <Card title='Card title'>
+            <Title level={5}>Số lượng</Title>
+            <Button
+              icon={<MinusOutlined />}
+              onClick={handleMinusCount}
+              disabled={count === 1}
+            />
+            <Input
+              value={count}
+              style={{ margin: '0 4px', width: 60, textAlign: 'center' }}
+              onKeyDown={handleChangeCountInput}
+            />
+            <Button
+              icon={<PlusOutlined />}
+              onClick={handleAddCount}
+            />
+            <Title level={5}>Tạm tính</Title>
+            <InputNumber
+              value={count}
+              bordered={false}
+              style={{ width: '100%' }}
+              formatter={(value) =>
+                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              }
+              readOnly
+            />
+          </Card>
         </Col>
       </Row>
       {/* Form login */}
