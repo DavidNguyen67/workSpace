@@ -5,12 +5,16 @@ interface ModalCommonProps {
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
   content: React.ReactNode;
+  title?: string;
+  width?: number;
 }
 
 function ModalCommon({
   isVisible,
   setIsVisible,
   content,
+  title = '',
+  width,
 }: Readonly<ModalCommonProps>) {
   const hideModal = useCallback(() => {
     setIsVisible(false);
@@ -27,6 +31,8 @@ function ModalCommon({
         onCancel={hideModal}
         onOk={handleSubmit}
         footer={[]}
+        title={title}
+        width={width}
       >
         {content}
       </Modal>

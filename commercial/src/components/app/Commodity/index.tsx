@@ -26,16 +26,33 @@ const { Text } = Typography;
 interface ItemCommodityProps {
   item: Commodity;
   onClick?: () => void;
+  isShowTile?: boolean;
+  isShowTags?: boolean;
+  isShowInfoShip?: boolean;
+  suffixCurrency?: string;
+  currencyFontSize?: number | string;
+  descriptionFontSize?: number | string;
+  groupLength?: number;
 }
 
-export function ItemCommodity({ item, onClick }: Readonly<ItemCommodityProps>) {
+export function ItemCommodity({
+  item,
+  onClick,
+  isShowTile = true,
+  isShowTags = true,
+  isShowInfoShip = true,
+  suffixCurrency = 'VND',
+  currencyFontSize = '1.2em',
+  descriptionFontSize = '1em',
+  groupLength = 4,
+}: Readonly<ItemCommodityProps>) {
   return (
     <>
       <Col
         key={item.id}
         xs={24}
         sm={12}
-        lg={6}
+        lg={24 / groupLength}
       >
         <Card
           hoverable
@@ -52,37 +69,49 @@ export function ItemCommodity({ item, onClick }: Readonly<ItemCommodityProps>) {
               <Image
                 alt={item.name}
                 src={item.imageUrl}
-                layout="fill"
-                objectFit="contain"
+                layout='fill'
+                objectFit='contain'
                 style={{ borderRadius: '8px', border: '2px solid #f0f0f0' }}
               />
             </div>
           }
         >
           <Meta
-            title={item.name}
+            title={isShowTile && item.name}
             description={
               <>
-                <Space>
-                  <Tag color="blue">
-                    <StarOutlined /> Mới
-                  </Tag>
-                  <Tag color="green">
-                    <FireOutlined /> Bán chạy
-                  </Tag>
-                </Space>
-                <br />
-                <Text>{truncateDescription(item.description, 30)}</Text>
-                <br />
-                <Text style={{ fontSize: '1.2em', fontWeight: 'bold' }}>
-                  {`${item.price.toLocaleString()} VND`}
+                {isShowTags && (
+                  <>
+                    <Space>
+                      <Tag color='blue'>
+                        <StarOutlined /> Mới
+                      </Tag>
+                      <Tag color='green'>
+                        <FireOutlined /> Bán chạy
+                      </Tag>
+                    </Space>
+                    <br />
+                  </>
+                )}
+                <Text style={{ fontSize: descriptionFontSize }}>
+                  {truncateDescription(item.description, 30)}
                 </Text>
-                <Divider />
+                <br />
+                <Text
+                  style={{ fontSize: currencyFontSize, fontWeight: 'bold' }}
+                >
+                  {`${item.price.toLocaleString()} ${suffixCurrency}`}
+                </Text>
 
-                <Space>
-                  <CarOutlined style={{ color: '#1890ff' }} />
-                  <Text>Giao chiều thứ 6 ({moment().format('DD/MM')})</Text>
-                </Space>
+                {isShowInfoShip && (
+                  <>
+                    <Divider />
+                    <Space>
+                      <CarOutlined style={{ color: '#1890ff' }} />
+                      <Text>Giao chiều thứ 6 ({moment().format('DD/MM')})</Text>
+                    </Space>
+                  </>
+                )}
               </>
             }
           />
@@ -146,13 +175,13 @@ const CommodityComponent = () => {
     <>
       <Button
         style={{ marginLeft: 'auto' }}
-        type="primary"
+        type='primary'
       >
         Xem tất cả
       </Button>
       <Col xs={24}>
         <Tabs
-          defaultActiveKey="1"
+          defaultActiveKey='1'
           items={items}
         />
       </Col>

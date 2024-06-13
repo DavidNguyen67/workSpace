@@ -24,6 +24,9 @@ import {
   ThunderboltOutlined,
 } from '@ant-design/icons';
 import AddressForm from '@/components/app/Form/Address';
+import SimilarCommodities from '@/components/app/Commodity/SimilarCommodities';
+import { COMMODITIES } from '@/utilities/seeds/commodity.seed';
+import DiscountComponent from '@/components/app/Discount';
 // import CustomMap from '@/components/app/GoogleMap/Map';
 
 const { Title, Text, Paragraph } = Typography;
@@ -53,8 +56,8 @@ function ItemImage({
             src={
               'https://salt.tikicdn.com/cache/280x280/ts/product/12/81/63/bba4b0b8f768037d2f39e864095c96c5.jpg.webp'
             }
-            layout="fill"
-            objectFit="contain"
+            layout='fill'
+            objectFit='contain'
             style={{ borderRadius: '8px', border: '2px solid #f0f0f0' }}
           />
         </div>
@@ -101,34 +104,39 @@ function Item({ params }: Readonly<ItemProps>) {
   };
   const { addressString } = useAppSelector((state) => state.user);
   const router = useRouter();
-  const chunkedItems = useMemo(() => chunkArray([], 4), []);
-  const [isVisibleModal, setIsVisibleModal] = useState<boolean>(false);
+  const chunkedItems = useMemo(() => chunkArray(COMMODITIES, 4), []);
+  const [isVisibleModalLogin, setIsVisibleModalLogin] =
+    useState<boolean>(false);
+  const [isVisibleModalDiscount, setIsVisibleModalDiscount] =
+    useState<boolean>(false);
   const [isVisibleModalChangeAddress, setIsVisibleModalChangeAddress] =
     useState<boolean>(false);
   const { accessToken } = useAppSelector((state) => state.user);
-  const [similarCommodities, setSimilarCommodities] = useState([]);
+  const [similarCommodities, setSimilarCommodities] = useState(
+    chunkArray(COMMODITIES, 3)
+  );
 
   const handleClickLinkItem = useCallback(() => {
     if (accessToken) {
       router.push('/profile');
     } else {
-      setIsVisibleModal(!isVisibleModal);
+      setIsVisibleModalLogin(!isVisibleModalLogin);
     }
-  }, [accessToken, isVisibleModal, router]);
+  }, [accessToken, isVisibleModalLogin, router]);
 
   const CardTitle = useCallback(() => {
     return (
       <>
         <div style={{ marginTop: '8px' }}></div>
-        <Tag color="magenta">magenta</Tag>
-        <Tag color="red">red</Tag>
-        <Tag color="volcano">volcano</Tag>
-        <Tag color="orange">orange</Tag>
+        <Tag color='magenta'>magenta</Tag>
+        <Tag color='red'>red</Tag>
+        <Tag color='volcano'>volcano</Tag>
+        <Tag color='orange'>orange</Tag>
         <Text>
           Thương hiệu:{' '}
           <NextLink
             href={'/brand/Elmich'}
-            className="ant-typography css-dev-only-do-not-override-j9bb5n"
+            className='ant-typography css-dev-only-do-not-override-j9bb5n'
           >
             Elmich
           </NextLink>
@@ -139,7 +147,7 @@ function Item({ params }: Readonly<ItemProps>) {
         >
           h3. Ant Design
         </Title>
-        <Space align="center">
+        <Space align='center'>
           <Text>24</Text>
           <Rate
             allowHalf
@@ -147,11 +155,11 @@ function Item({ params }: Readonly<ItemProps>) {
           />
         </Space>
         <Text style={{ marginLeft: '8px' }}>(50)</Text>
-        <Divider type="vertical" />
+        <Divider type='vertical' />
         Đã bán 257
         <Space style={{ marginTop: '8px' }}>
           <Text
-            type="danger"
+            type='danger'
             style={{
               fontSize: '24px',
               fontWeight: 'bold',
@@ -169,7 +177,7 @@ function Item({ params }: Readonly<ItemProps>) {
             2.080.000₫
           </Text>
           <Text
-            type="danger"
+            type='danger'
             style={{
               marginLeft: '8px',
               fontSize: '14px',
@@ -191,18 +199,18 @@ function Item({ params }: Readonly<ItemProps>) {
     return (
       <div>
         <Space
-          direction="horizontal"
+          direction='horizontal'
           style={{ width: '100%', justifyContent: 'space-between' }}
         >
           <Space.Compact
-            direction="vertical"
+            direction='vertical'
             style={{ justifyContent: 'space-between' }}
             block
           >
             <Text strong>Thông tin vận chuyển</Text>
             <Text>Giao đến {`${addressString}`}</Text>
           </Space.Compact>
-          <Space direction="vertical">
+          <Space direction='vertical'>
             <Text
               style={{
                 marginLeft: '8px',
@@ -224,7 +232,7 @@ function Item({ params }: Readonly<ItemProps>) {
           </Title>
           <Text>Trước 10h ngày mai: </Text>
           <Text
-            type="danger"
+            type='danger'
             strong
           >
             12.000₫
@@ -241,7 +249,7 @@ function Item({ params }: Readonly<ItemProps>) {
           </Title>
           <Text>13h - 18h, 01/06: </Text>
           <Text
-            type="success"
+            type='success'
             strong
           >
             Miễn phí
@@ -256,13 +264,19 @@ function Item({ params }: Readonly<ItemProps>) {
         <ModalCommon
           isVisible={isVisibleModalChangeAddress}
           setIsVisible={setIsVisibleModalChangeAddress}
-          content={<AddressForm afterSubmit={setIsVisibleModalChangeAddress} />}
+          content={
+            <AddressForm handleCloseModal={setIsVisibleModalChangeAddress} />
+          }
         />
       </div>
     );
   }, [addressString, handleClickChangeAddress, isVisibleModalChangeAddress]);
 
   const handleGetSimilarCommodities = useCallback(async () => {}, []);
+
+  const handleShowGetMoreDiscountModal = useCallback(async () => {
+    setIsVisibleModalDiscount(!isVisibleModalDiscount);
+  }, [isVisibleModalDiscount]);
 
   return (
     <>
@@ -289,15 +303,15 @@ function Item({ params }: Readonly<ItemProps>) {
             <Col xs={24}>
               <Card>
                 <Row
-                  align="middle"
+                  align='middle'
                   gutter={[16, 16]}
                 >
-                  <Col flex="auto">
+                  <Col flex='auto'>
                     <Title level={5}>Ưu đãi khác</Title>
                     <Text>4 Mã Giảm Giá</Text>
                   </Col>
                   <Space
-                    direction="horizontal"
+                    direction='horizontal'
                     style={{ marginRight: '8px' }}
                   >
                     <div style={ticketStyle}>
@@ -317,13 +331,21 @@ function Item({ params }: Readonly<ItemProps>) {
                     style={{
                       fontSize: '24px',
                       margin: '0 auto',
+                      padding: '12px',
+                      cursor: 'pointer',
                     }}
+                    onClick={handleShowGetMoreDiscountModal}
                   />
                 </Row>
               </Card>
             </Col>
             <Col xs={24}>
-              <Card title="Sản phẩm tương tự"></Card>
+              <Card title='Sản phẩm tương tự'>
+                <SimilarCommodities
+                  productTag=''
+                  chunkedItems={similarCommodities}
+                />
+              </Card>
             </Col>
           </Row>
         </Col>
@@ -331,13 +353,36 @@ function Item({ params }: Readonly<ItemProps>) {
           xs={24}
           md={6}
         >
-          <Card title="Card title">Card content</Card>
+          <Card title='Card title'>Card content</Card>
         </Col>
       </Row>
+      {/* Form login */}
       <ModalCommon
-        content={<FormLogin setIsVisible={setIsVisibleModal} />}
-        isVisible={isVisibleModal}
-        setIsVisible={setIsVisibleModal}
+        content={<FormLogin setIsVisible={setIsVisibleModalLogin} />}
+        isVisible={isVisibleModalLogin}
+        setIsVisible={setIsVisibleModalLogin}
+      />
+
+      {/* Danh sách discount */}
+      <ModalCommon
+        content={
+          <>
+            <DiscountComponent
+              discountImgUrl='https://vcdn.tikicdn.com/cache/128x128/ts/seller/21/ce/5c/b52d0b8576680dc3666474ae31b091ec.jpg'
+              dateExpired={new Date()}
+              percentDiscount={50}
+              conditionalDiscount={() => [
+                'Giảm 100K cho đơn hàng từ 1 triệu.',
+                'Áp dụng cho các sản phẩm thương hiệu FAMCO, Elmich, Smartcook của nhà bán Tiki Trading',
+                'Mỗi khách hàng được sử dụng tối đa 2 lần.',
+              ]}
+              code='ELM100T0624'
+            />
+          </>
+        }
+        isVisible={isVisibleModalDiscount}
+        setIsVisible={setIsVisibleModalDiscount}
+        title='Mã giảm giá'
       />
     </>
   );

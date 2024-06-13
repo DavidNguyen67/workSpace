@@ -13,10 +13,10 @@ import { useAppDispatch } from '@/redux/stores';
 const { Option } = Select;
 
 interface AddressFormProps {
-  afterSubmit?: Function;
+  handleCloseModal?: Function;
 }
 
-const AddressForm = ({ afterSubmit }: Readonly<AddressFormProps>) => {
+const AddressForm = ({ handleCloseModal }: Readonly<AddressFormProps>) => {
   const [form] = Form.useForm<AddressForm>();
   const [cities, setCities] = useState<NestedDivisions[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
@@ -58,9 +58,9 @@ const AddressForm = ({ afterSubmit }: Readonly<AddressFormProps>) => {
           ${cities.find((item) => item.code === values.cityCode)?.name}`,
         })
       );
-      if (typeof afterSubmit === 'function') afterSubmit();
+      if (typeof handleCloseModal === 'function') handleCloseModal();
     },
-    [dispatch, wards, districts, cities, afterSubmit]
+    [dispatch, wards, districts, cities, handleCloseModal]
   );
 
   const onFinishFailed: FormProps<AddressForm>['onFinishFailed'] = useCallback(
@@ -78,8 +78,8 @@ const AddressForm = ({ afterSubmit }: Readonly<AddressFormProps>) => {
     <>
       <Form
         form={form}
-        name="addressForm"
-        layout="vertical"
+        name='addressForm'
+        layout='vertical'
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
@@ -116,12 +116,12 @@ const AddressForm = ({ afterSubmit }: Readonly<AddressFormProps>) => {
           <Input placeholder="Nhập số điện thoại" />
         </Form.Item> */}
         <Form.Item<AddressForm>
-          name="cityCode"
-          label="Tỉnh/Thành phố"
+          name='cityCode'
+          label='Tỉnh/Thành phố'
           rules={[{ required: true, message: 'Vui lòng chọn tỉnh/thành phố!' }]}
         >
           <Select
-            placeholder="Chọn tỉnh/thành phố"
+            placeholder='Chọn tỉnh/thành phố'
             onChange={handleCitySelectedChange}
           >
             {cities?.length > 0 &&
@@ -136,12 +136,12 @@ const AddressForm = ({ afterSubmit }: Readonly<AddressFormProps>) => {
           </Select>
         </Form.Item>
         <Form.Item<AddressForm>
-          name="districtCode"
-          label="Quận/Huyện"
+          name='districtCode'
+          label='Quận/Huyện'
           rules={[{ required: true, message: 'Vui lòng chọn quận/huyện!' }]}
         >
           <Select
-            placeholder="Chọn quận/huyện"
+            placeholder='Chọn quận/huyện'
             onChange={handleDistrictSelectedChange}
             disabled={!selectedCity}
           >
@@ -157,12 +157,12 @@ const AddressForm = ({ afterSubmit }: Readonly<AddressFormProps>) => {
           </Select>
         </Form.Item>
         <Form.Item<AddressForm>
-          name="wardCode"
-          label="Phường/Xã"
+          name='wardCode'
+          label='Phường/Xã'
           rules={[{ required: true, message: 'Vui lòng chọn phường/xã!' }]}
         >
           <Select
-            placeholder="Chọn phường/xã"
+            placeholder='Chọn phường/xã'
             disabled={!selectedDistrict}
           >
             {wards?.length > 0 &&
@@ -177,23 +177,26 @@ const AddressForm = ({ afterSubmit }: Readonly<AddressFormProps>) => {
           </Select>
         </Form.Item>
         <Form.Item<AddressForm>
-          name="detailedAddress"
-          label="Địa chỉ chi tiết"
+          name='detailedAddress'
+          label='Địa chỉ chi tiết'
         >
-          <Input placeholder="Nhập số nhà, ngõ ngách, đường phố" />
+          <Input placeholder='Nhập số nhà, ngõ ngách, đường phố' />
         </Form.Item>
         <Divider />
         <Form.Item style={{ textAlign: 'right' }}>
           <Space>
             <Button
-              htmlType="reset"
-              onClick={() => form.resetFields()}
+              htmlType='reset'
+              onClick={() => {
+                form.resetFields();
+                if (typeof handleCloseModal === 'function') handleCloseModal();
+              }}
             >
               Hủy
             </Button>
             <Button
-              type="primary"
-              htmlType="submit"
+              type='primary'
+              htmlType='submit'
             >
               Lưu
             </Button>
