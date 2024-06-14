@@ -139,7 +139,7 @@ function ListItemCommodity() {
               <ItemCommodity
                 item={item}
                 key={item.id}
-                onClick={() => router.push(`/item/${index}`)}
+                onClick={() => router.push(`/brand/${index}/item/${index}`)}
               />
             ))}
           </Row>

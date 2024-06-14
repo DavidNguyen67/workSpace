@@ -23,8 +23,10 @@ import { useAppSelector } from '@/redux/stores';
 import NextLink from 'next/link';
 import {
   ArrowRightOutlined,
+  CreditCardOutlined,
   MinusOutlined,
   PlusOutlined,
+  ShoppingCartOutlined,
   SmileOutlined,
   ThunderboltOutlined,
 } from '@ant-design/icons';
@@ -34,6 +36,7 @@ import { COMMODITIES } from '@/utilities/seeds/commodity.seed';
 import DiscountComponent from '@/components/app/Discount';
 import { isNumber } from 'lodash';
 import { KEYBOARD_NUMBERS } from '@/utilities/enums';
+import Link from 'next/link';
 // import CustomMap from '@/components/app/GoogleMap/Map';
 
 const { Title, Text } = Typography;
@@ -79,8 +82,8 @@ function ItemImage({
         {chunkedItems.map((group, index) => (
           <div key={index}>
             <Row gutter={[8, 8]}>
-              {group.map((item) => (
-                <>Link xem</>
+              {group.map((item, index) => (
+                <div key={index}>Link xem</div>
               ))}
             </Row>
           </div>
@@ -109,19 +112,28 @@ function Item({ params }: Readonly<ItemProps>) {
     display: 'inline-block',
     margin: '4px 0',
   };
+
   const { addressString } = useAppSelector((state) => state.user);
+
   const router = useRouter();
+
   const chunkedItems = useMemo(() => chunkArray(COMMODITIES, 4), []);
+
   const [isVisibleModalLogin, setIsVisibleModalLogin] =
     useState<boolean>(false);
+
   const [isVisibleModalDiscount, setIsVisibleModalDiscount] =
     useState<boolean>(false);
+
   const [isVisibleModalChangeAddress, setIsVisibleModalChangeAddress] =
     useState<boolean>(false);
+
   const { accessToken } = useAppSelector((state) => state.user);
+
   const [similarCommodities, setSimilarCommodities] = useState(
     chunkArray(COMMODITIES, 3)
   );
+
   const [count, setCount] = useState<number>(0);
 
   const handleClickLinkItem = useCallback(() => {
@@ -298,19 +310,27 @@ function Item({ params }: Readonly<ItemProps>) {
   const handleChangeCountInput = useCallback((event: any) => {
     if (
       KEYBOARD_NUMBERS.NUMBER_0 < event.which &&
-      event.which < KEYBOARD_NUMBERS.NUMBER_9
+      event.which <= KEYBOARD_NUMBERS.NUMBER_9
     ) {
       setCount(+event.key);
       return;
     }
     if (
       KEYBOARD_NUMBERS.NUMPAD_0 < event.which &&
-      event.which < KEYBOARD_NUMBERS.NUMPAD_9
+      event.which <= KEYBOARD_NUMBERS.NUMPAD_9
     ) {
       setCount(+event.key);
       return;
     }
   }, []);
+
+  const handleClickBuyItem = useCallback(() => {
+    if (accessToken) {
+      alert('Mua item');
+    } else {
+      setIsVisibleModalLogin(!isVisibleModalLogin);
+    }
+  }, [accessToken, isVisibleModalLogin]);
 
   return (
     <>
@@ -388,32 +408,78 @@ function Item({ params }: Readonly<ItemProps>) {
           md={6}
         >
           <Card title='Card title'>
-            <Title level={5}>Số lượng</Title>
-            <Button
-              icon={<MinusOutlined />}
-              onClick={handleMinusCount}
-              disabled={count === 1}
-            />
-            <Input
-              value={count}
-              style={{ margin: '0 4px', width: 60, textAlign: 'center' }}
-              onKeyDown={handleChangeCountInput}
-            />
-            <Button
-              icon={<PlusOutlined />}
-              onClick={handleAddCount}
-            />
-            <Title level={5}>Tạm tính</Title>
-            <InputNumber
-              value={count}
-              bordered={false}
-              style={{ width: '100%' }}
-              formatter={(value) =>
-                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-              }
-              readOnly
-            />
+            <Space direction='vertical'>
+              <Title level={5}>Số lượng</Title>
+              <Space>
+                <Button
+                  icon={<MinusOutlined />}
+                  onClick={handleMinusCount}
+                  disabled={count === 1}
+                />
+                <Input
+                  value={count}
+                  style={{ margin: '0 4px', width: 60, textAlign: 'center' }}
+                  onKeyDown={handleChangeCountInput}
+                />
+                <Button
+                  icon={<PlusOutlined />}
+                  onClick={handleAddCount}
+                />
+              </Space>
+            </Space>
+            <Space
+              direction='vertical'
+              style={{ marginTop: '4px' }}
+            >
+              <Title level={5}>Tạm tính</Title>
+              <InputNumber
+                value={count}
+                variant={'borderless'}
+                style={{ width: '100%', marginTop: '-12px' }}
+                formatter={(value) =>
+                  `${value} đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                }
+                readOnly
+              />
+            </Space>
+            <Space
+              direction='vertical'
+              style={{ width: '100%', marginTop: '16px' }}
+            >
+              <Button
+                type='primary'
+                danger
+                style={{
+                  width: '100%',
+                }}
+                icon={<ShoppingCartOutlined />}
+                onClick={handleClickBuyItem}
+              >
+                Mua ngay
+              </Button>
+              <Button
+                style={{
+                  width: '100%',
+                }}
+                icon={<PlusOutlined />}
+                onClick={handleClickBuyItem}
+              >
+                Thêm vào giỏ
+              </Button>
+              <Button
+                style={{
+                  width: '100%',
+                }}
+                icon={<CreditCardOutlined />}
+                onClick={handleClickBuyItem}
+              >
+                Mua trước trả sau
+              </Button>
+            </Space>
           </Card>
+          <Link href={`/brand/${'other'}/item/${'other'}`}>
+            So sánh 1 nhà bán khác (Giá từ 185.000 ₫)
+          </Link>
         </Col>
       </Row>
       {/* Form login */}
