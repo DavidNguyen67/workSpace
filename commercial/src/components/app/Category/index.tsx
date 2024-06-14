@@ -1,6 +1,13 @@
 'use client';
 import ModalCommon from '@/components/modal/ModalCommon';
-import { useAppSelector } from '@/redux/stores';
+import {
+  setBrands,
+  setDeliveries,
+  setRatings,
+  setServices,
+  setSuppliers,
+} from '@/redux/slices/filteredProduct.slice';
+import { useAppDispatch, useAppSelector } from '@/redux/stores';
 import {
   RATINGS,
   SERVICES,
@@ -9,7 +16,7 @@ import {
   BRANDS,
   DELIVERIES,
 } from '@/utilities/seeds';
-import { CarOutlined, FilterOutlined } from '@ant-design/icons';
+import { FilterOutlined } from '@ant-design/icons';
 import {
   Button,
   Checkbox,
@@ -28,180 +35,199 @@ import { useCallback, useMemo, useState } from 'react';
 const { Option } = Select;
 const { Text } = Typography;
 
-const AllFilterFeaturesComponent = () => {
-  const {
-    filterPrices,
-    filterBrands,
-    filterDeliveries,
-    filterRatings,
-    filterServices,
-    filterSuppliers,
-  } = useAppSelector((state) => state.filterProductSlice);
+interface AllFilterFeaturesComponentProps {}
 
-  const [minValue, setMinValue] = useState<number>(filterPrices.min ?? 0);
+const AllFilterFeaturesComponent =
+  ({}: Readonly<AllFilterFeaturesComponentProps>) => {
+    const {
+      filterPrices,
+      filterBrands,
+      filterDeliveries,
+      filterRatings,
+      filterServices,
+      filterSuppliers,
+    } = useAppSelector((state) => state.filterProductSlice);
 
-  const [maxValue, setMaxValue] = useState<number>(
-    filterPrices.max ?? 999999999
-  );
+    const dispatch = useAppDispatch();
 
-  const [api, contextHolder] = notification.useNotification();
+    const [minValue, setMinValue] = useState<number>(filterPrices.min ?? 0);
 
-  const services = useMemo(() => SERVICES, []);
+    const [maxValue, setMaxValue] = useState<number>(
+      filterPrices.max ?? 999999999
+    );
 
-  const ratings = useMemo(() => RATINGS, []);
+    const [api, contextHolder] = notification.useNotification();
 
-  const prices = useMemo(() => PRICES, []);
+    const actionMap = useMemo(
+      () => ({
+        services: setServices,
+        ratings: setRatings,
+        brands: setBrands,
+        suppliers: setSuppliers,
+        deliveries: setDeliveries,
+      }),
+      []
+    );
 
-  const brands = useMemo(() => BRANDS, []);
+    const services = useMemo(() => SERVICES, []);
 
-  const suppliers = useMemo(() => SUPPLIERS, []);
+    const ratings = useMemo(() => RATINGS, []);
 
-  const deliveries = useMemo(() => DELIVERIES, []);
+    const prices = useMemo(() => PRICES, []);
 
-  const handleChangeMinValue: InputNumberProps['onChange'] = useCallback(
-    (value: any) => {
-      if (value < 0) return;
-      if (value >= maxValue) {
-        api.warning({
-          message: 'Greater than max value',
-        });
-        return;
-      }
-      setMinValue(value);
-    },
-    [maxValue, api]
-  );
+    const brands = useMemo(() => BRANDS, []);
 
-  const handleChangeMaxValue: InputNumberProps['onChange'] = useCallback(
-    (value: any) => {
-      if (value <= minValue) {
-        api.warning({
-          message: 'Less than min value',
-        });
-        return;
-      }
-      setMaxValue(value);
-    },
-    [api, minValue]
-  );
+    const suppliers = useMemo(() => SUPPLIERS, []);
 
-  const handleClickViewMoreBrands = useCallback(() => {
-    alert('View more branches');
-  }, []);
+    const deliveries = useMemo(() => DELIVERIES, []);
 
-  const handleClickViewMoreSuppliers = useCallback(() => {
-    alert('View more suppliers');
-  }, []);
+    const handleChangeMinValue: InputNumberProps['onChange'] = useCallback(
+      (value: any) => {
+        if (value < 0) return;
+        if (value >= maxValue) {
+          api.warning({
+            message: 'Greater than max value',
+          });
+          return;
+        }
+        setMinValue(value);
+      },
+      [maxValue, api]
+    );
 
-  // Hàm render danh sách checkbox
-  const renderCheckboxList = useCallback(
-    (
-      data: {
-        label: string;
-        value: string;
-        icon?: JSX.Element;
-      }[]
-    ) => (
-      <Row gutter={[8, 8]}>
-        {data.map((item) => (
-          <Col
-            key={item.value}
-            span={12}
-          >
-            <Checkbox>
-              <Space>
-                {item.icon}
-                {item.label}
-              </Space>
-            </Checkbox>
+    const handleChangeMaxValue: InputNumberProps['onChange'] = useCallback(
+      (value: any) => {
+        if (value <= minValue) {
+          api.warning({
+            message: 'Less than min value',
+          });
+          return;
+        }
+        setMaxValue(value);
+      },
+      [api, minValue]
+    );
+
+    const handleClickViewMoreBrands = useCallback(() => {
+      alert('View more branches');
+    }, []);
+
+    const handleClickViewMoreSuppliers = useCallback(() => {
+      alert('View more suppliers');
+    }, []);
+
+    const handleClickFilterItem = useCallback(
+      (item: ConditionFilter, filterType?: keyof typeof actionMap) => {
+        if (filterType) dispatch(actionMap[filterType](item));
+      },
+      [dispatch, actionMap]
+    );
+
+    // Hàm render danh sách checkbox
+    const renderCheckboxList = useCallback(
+      (data: ConditionFilter[], filterType?: keyof typeof actionMap) => (
+        <Row gutter={[8, 8]}>
+          {data.map((item) => (
+            <Col
+              key={item.value}
+              span={12}
+            >
+              <Checkbox onClick={() => handleClickFilterItem(item, filterType)}>
+                <Space>
+                  {item.icon}
+                  {item.label}
+                </Space>
+              </Checkbox>
+            </Col>
+          ))}
+        </Row>
+      ),
+      [handleClickFilterItem]
+    );
+
+    return (
+      <>
+        {contextHolder}
+        <Divider>Dịch vụ</Divider>
+        {renderCheckboxList(services, 'services')}
+
+        <Divider>Ưu đãi</Divider>
+        <Row gutter={[8, 8]}>
+          <Col span={12}>
+            <Checkbox>Siêu rẻ</Checkbox>
           </Col>
-        ))}
-      </Row>
-    ),
-    []
-  );
+        </Row>
 
-  return (
-    <>
-      {contextHolder}
-      <Divider>Dịch vụ</Divider>
-      {renderCheckboxList(services)}
+        <Divider>Đánh giá</Divider>
+        {renderCheckboxList(ratings, 'ratings')}
 
-      <Divider>Ưu đãi</Divider>
-      <Row gutter={[8, 8]}>
-        <Col span={12}>
-          <Checkbox>Siêu rẻ</Checkbox>
+        <Divider>Giá</Divider>
+        {renderCheckboxList(prices)}
+        <br />
+        <Text>Tự nhập khoảng giá</Text>
+        <Col span={24}>
+          <Space>
+            <InputNumber
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              }
+              parser={(value) => value && value?.replace(/\s?đ|(,*)/g, '')}
+              style={{ width: '100%' }}
+              addonAfter='VND'
+              defaultValue={minValue}
+              onChange={handleChangeMinValue}
+              min={0}
+              formNoValidate
+            />
+            -
+            <InputNumber
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              }
+              parser={(value) => value && value?.replace(/\s?đ|(,*)/g, '')}
+              style={{ width: '100%' }}
+              addonAfter='VND'
+              defaultValue={maxValue}
+              onChange={handleChangeMaxValue}
+            />
+          </Space>
         </Col>
-      </Row>
 
-      <Divider>Đánh giá</Divider>
-      {renderCheckboxList(ratings)}
+        <Divider>Thương hiệu</Divider>
+        {renderCheckboxList(brands, 'brands')}
+        <Col span={24}>
+          <Text
+            underline
+            onClick={handleClickViewMoreBrands}
+            style={{ cursor: 'pointer' }}
+          >
+            Xem thêm
+          </Text>
+        </Col>
 
-      <Divider>Giá</Divider>
-      {renderCheckboxList(prices)}
-      <br />
-      <Text>Tự nhập khoảng giá</Text>
-      <Col span={24}>
-        <Space>
-          <InputNumber
-            formatter={(value) =>
-              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-            }
-            parser={(value) => value && value?.replace(/\s?đ|(,*)/g, '')}
-            style={{ width: '100%' }}
-            addonAfter='VND'
-            defaultValue={minValue}
-            onChange={handleChangeMinValue}
-            min={0}
-            formNoValidate
-          />
-          -
-          <InputNumber
-            formatter={(value) =>
-              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-            }
-            parser={(value) => value && value?.replace(/\s?đ|(,*)/g, '')}
-            style={{ width: '100%' }}
-            addonAfter='VND'
-            defaultValue={maxValue}
-            onChange={handleChangeMaxValue}
-          />
-        </Space>
-      </Col>
+        <Divider>Nhà cung cấp</Divider>
+        {renderCheckboxList(suppliers, 'suppliers')}
+        <Col span={24}>
+          <Text
+            underline
+            onClick={handleClickViewMoreSuppliers}
+            style={{ cursor: 'pointer' }}
+          >
+            Xem thêm
+          </Text>
+        </Col>
 
-      <Divider>Thương hiệu</Divider>
-      {renderCheckboxList(brands)}
-      <Col span={24}>
-        <Text
-          underline
-          onClick={handleClickViewMoreBrands}
-          style={{ cursor: 'pointer' }}
-        >
-          Xem thêm
-        </Text>
-      </Col>
-
-      <Divider>Nhà cung cấp</Divider>
-      {renderCheckboxList(suppliers)}
-      <Col span={24}>
-        <Text
-          underline
-          onClick={handleClickViewMoreSuppliers}
-          style={{ cursor: 'pointer' }}
-        >
-          Xem thêm
-        </Text>
-      </Col>
-
-      <Divider>Giao hàng</Divider>
-      {renderCheckboxList(deliveries)}
-    </>
-  );
-};
+        <Divider>Giao hàng</Divider>
+        {renderCheckboxList(deliveries, 'deliveries')}
+      </>
+    );
+  };
 
 interface FilterSectionComponentProps {}
 
 function FilterSectionComponent({}: Readonly<FilterSectionComponentProps>) {
+  const { ...filters } = useAppSelector((state) => state.filterProductSlice);
+
   const suppliers = useMemo(() => SUPPLIERS, []);
 
   const [isShowFilterItemModal, setIsShowFilterItemModal] =
@@ -218,7 +244,8 @@ function FilterSectionComponent({}: Readonly<FilterSectionComponentProps>) {
         <Select
           defaultValue='all'
           style={{ width: '100%' }}
-          mode='tags'
+          mode='multiple'
+          maxTagCount='responsive'
         >
           {suppliers.map((supplier) => (
             <Option
@@ -235,7 +262,8 @@ function FilterSectionComponent({}: Readonly<FilterSectionComponentProps>) {
         <Select
           defaultValue='all'
           style={{ width: '100%' }}
-          mode='tags'
+          mode='multiple'
+          maxTagCount='responsive'
         >
           {suppliers.map((supplier) => (
             <Option
@@ -275,6 +303,9 @@ function FilterSectionComponent({}: Readonly<FilterSectionComponentProps>) {
         title='Tất cả bộ lọc'
         okText='Lọc'
         cancelText='Huỷ'
+        onOk={() => {
+          console.log(filters);
+        }}
         centered
         footer={(_, { CancelBtn, OkBtn }) => {
           return (

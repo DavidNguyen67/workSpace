@@ -18,14 +18,21 @@ function ModalCommon({
   footer = [],
   okText,
   cancelText,
+  onOk,
 }: Readonly<ModalCommonProps>) {
   const hideModal = useCallback(() => {
     setIsVisible(false);
   }, [setIsVisible]);
 
-  const handleSubmit = useCallback(() => {
-    hideModal();
-  }, [hideModal]);
+  const handleSubmit = useCallback(
+    (event: any) => {
+      if (typeof onOk === 'function') {
+        onOk(event);
+      }
+      hideModal();
+    },
+    [hideModal, onOk]
+  );
 
   return (
     <>
