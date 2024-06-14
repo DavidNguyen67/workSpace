@@ -1,81 +1,90 @@
 'use client';
 import ModalCommon from '@/components/modal/ModalCommon';
-import { SUPPLIERS } from '@/utilities/seeds';
+import { useAppSelector } from '@/redux/stores';
 import {
-  CarOutlined,
-  DollarOutlined,
-  FilterOutlined,
-  ShopOutlined,
-} from '@ant-design/icons';
+  RATINGS,
+  SERVICES,
+  SUPPLIERS,
+  PRICES,
+  BRANDS,
+  DELIVERIES,
+} from '@/utilities/seeds';
+import { CarOutlined, FilterOutlined } from '@ant-design/icons';
 import {
   Button,
   Checkbox,
   Col,
   Divider,
-  Input,
+  InputNumber,
+  InputNumberProps,
+  notification,
   Row,
   Select,
   Space,
   Typography,
 } from 'antd';
-import Link from 'next/link';
 import { useCallback, useMemo, useState } from 'react';
 
 const { Option } = Select;
 const { Text } = Typography;
 
-const services = [
-  { label: 'Giao siêu tốc 2H', value: 'fast_delivery_2h' },
-  { label: 'Ưu đãi', value: 'discount' },
-];
-
-const ratings = [
-  { label: 'Từ 5 sao', value: '5_star' },
-  { label: 'Từ 4 sao', value: '4_star' },
-  { label: 'Từ 3 sao', value: '3_star' },
-];
-
-const prices = [
-  { label: 'Dưới 60.000', value: 'below_60000', icon: <DollarOutlined /> },
-  {
-    label: '60.000 -> 140.000',
-    value: '60000_140000',
-    icon: <DollarOutlined />,
-  },
-  {
-    label: '140.000 -> 280.000',
-    value: '140000_280000',
-    icon: <DollarOutlined />,
-  },
-  { label: 'Trên 280.000', value: 'above_280000', icon: <DollarOutlined /> },
-];
-
-const brands = [
-  { label: 'Deli', value: 'deli', icon: <ShopOutlined /> },
-  { label: 'Thiên Long', value: 'thien_long', icon: <ShopOutlined /> },
-  { label: 'Hồng Hà', value: 'hong_ha', icon: <ShopOutlined /> },
-  { label: 'Pentel', value: 'pentel', icon: <ShopOutlined /> },
-  { label: 'KLONG', value: 'klong', icon: <ShopOutlined /> },
-];
-
-const suppliers = [
-  { label: 'Nhà Sách Vĩnh Thụy', value: 'vinh_thuy', icon: <ShopOutlined /> },
-  { label: 'Nhà sách Fahasa', value: 'fahasa', icon: <ShopOutlined /> },
-  { label: 'Bamboo Books', value: 'bamboo_books', icon: <ShopOutlined /> },
-  { label: 'Info book', value: 'info_book', icon: <ShopOutlined /> },
-  {
-    label: 'HỆ THỐNG NHÀ SÁCH ABC',
-    value: 'abc_books',
-    icon: <ShopOutlined />,
-  },
-];
-
-const deliveries = [
-  { label: 'Hàng nội địa', value: 'domestic', icon: <CarOutlined /> },
-  { label: 'Hàng quốc tế', value: 'international', icon: <CarOutlined /> },
-];
-
 const AllFilterFeaturesComponent = () => {
+  const {
+    filterPrices,
+    filterBrands,
+    filterDeliveries,
+    filterRatings,
+    filterServices,
+    filterSuppliers,
+  } = useAppSelector((state) => state.filterProductSlice);
+
+  const [minValue, setMinValue] = useState<number>(filterPrices.min ?? 0);
+
+  const [maxValue, setMaxValue] = useState<number>(
+    filterPrices.max ?? 999999999
+  );
+
+  const [api, contextHolder] = notification.useNotification();
+
+  const services = useMemo(() => SERVICES, []);
+
+  const ratings = useMemo(() => RATINGS, []);
+
+  const prices = useMemo(() => PRICES, []);
+
+  const brands = useMemo(() => BRANDS, []);
+
+  const suppliers = useMemo(() => SUPPLIERS, []);
+
+  const deliveries = useMemo(() => DELIVERIES, []);
+
+  const handleChangeMinValue: InputNumberProps['onChange'] = useCallback(
+    (value: any) => {
+      if (value < 0) return;
+      if (value >= maxValue) {
+        api.warning({
+          message: 'Greater than max value',
+        });
+        return;
+      }
+      setMinValue(value);
+    },
+    [maxValue, api]
+  );
+
+  const handleChangeMaxValue: InputNumberProps['onChange'] = useCallback(
+    (value: any) => {
+      if (value <= minValue) {
+        api.warning({
+          message: 'Less than min value',
+        });
+        return;
+      }
+      setMaxValue(value);
+    },
+    [api, minValue]
+  );
+
   const handleClickViewMoreBrands = useCallback(() => {
     alert('View more branches');
   }, []);
@@ -114,6 +123,7 @@ const AllFilterFeaturesComponent = () => {
 
   return (
     <>
+      {contextHolder}
       <Divider>Dịch vụ</Divider>
       {renderCheckboxList(services)}
 
@@ -133,14 +143,28 @@ const AllFilterFeaturesComponent = () => {
       <Text>Tự nhập khoảng giá</Text>
       <Col span={24}>
         <Space>
-          <Input
-            type='number'
-            placeholder='₫'
+          <InputNumber
+            formatter={(value) =>
+              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            }
+            parser={(value) => value && value?.replace(/\s?đ|(,*)/g, '')}
+            style={{ width: '100%' }}
+            addonAfter='VND'
+            defaultValue={minValue}
+            onChange={handleChangeMinValue}
+            min={0}
+            formNoValidate
           />
           -
-          <Input
-            type='number'
-            placeholder='₫'
+          <InputNumber
+            formatter={(value) =>
+              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            }
+            parser={(value) => value && value?.replace(/\s?đ|(,*)/g, '')}
+            style={{ width: '100%' }}
+            addonAfter='VND'
+            defaultValue={maxValue}
+            onChange={handleChangeMaxValue}
           />
         </Space>
       </Col>
@@ -249,7 +273,17 @@ function FilterSectionComponent({}: Readonly<FilterSectionComponentProps>) {
         setIsVisible={setIsShowFilterItemModal}
         content={<AllFilterFeaturesComponent />}
         title='Tất cả bộ lọc'
-        footer={<>test</>}
+        okText='Lọc'
+        cancelText='Huỷ'
+        centered
+        footer={(_, { CancelBtn, OkBtn }) => {
+          return (
+            <>
+              <CancelBtn />
+              <OkBtn />
+            </>
+          );
+        }}
       />
     </Row>
   );

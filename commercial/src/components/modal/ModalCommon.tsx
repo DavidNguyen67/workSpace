@@ -1,13 +1,12 @@
-import { Modal } from 'antd';
-import { useCallback, useState } from 'react';
+import { Modal, ModalProps } from 'antd';
+import { FC, useCallback, useState } from 'react';
 
-interface ModalCommonProps {
+interface ModalCommonProps extends ModalProps {
   isVisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
   content: React.ReactNode;
   title?: string;
   width?: number;
-  footer?: React.ReactNode;
 }
 
 function ModalCommon({
@@ -17,6 +16,8 @@ function ModalCommon({
   title = '',
   width,
   footer = [],
+  okText,
+  cancelText,
 }: Readonly<ModalCommonProps>) {
   const hideModal = useCallback(() => {
     setIsVisible(false);
@@ -35,6 +36,8 @@ function ModalCommon({
         footer={footer}
         title={title}
         width={width}
+        okText={okText}
+        cancelText={cancelText}
       >
         {content}
       </Modal>

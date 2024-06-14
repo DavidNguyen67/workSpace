@@ -2,3 +2,8 @@ export * from './advertisement.seed';
 export * from './bookTypes.seed';
 export * from './commodity.seed';
 export * from './suppliers.seed';
+export * from './services.seed';
+export * from './ratings.seed';
+export * from './prices.seed';
+export * from './brands.seed';
+export * from './deliveries.seed';
