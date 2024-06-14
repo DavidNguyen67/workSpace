@@ -7,6 +7,7 @@ interface ModalCommonProps {
   content: React.ReactNode;
   title?: string;
   width?: number;
+  footer?: React.ReactNode;
 }
 
 function ModalCommon({
@@ -15,6 +16,7 @@ function ModalCommon({
   content,
   title = '',
   width,
+  footer = [],
 }: Readonly<ModalCommonProps>) {
   const hideModal = useCallback(() => {
     setIsVisible(false);
@@ -30,7 +32,7 @@ function ModalCommon({
         open={isVisible}
         onCancel={hideModal}
         onOk={handleSubmit}
-        footer={[]}
+        footer={footer}
         title={title}
         width={width}
       >

@@ -16,7 +16,6 @@ import CommodityComponent from '@/components/app/Commodity';
 import { truncateDescription } from '@/utilities/functions/text';
 import { LikeOutlined } from '@ant-design/icons';
 import Countdown from '@/components/time/Countdown';
-import HotCommodities from '@/components/app/hotCommodity/HotCommodities';
 
 const { Meta } = Card;
 const { Title } = Typography;

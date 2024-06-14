@@ -32,7 +32,7 @@ import {
 } from '@ant-design/icons';
 import AddressForm from '@/components/app/Form/Address';
 import SimilarCommodities from '@/components/app/Commodity/SimilarCommodities';
-import { COMMODITIES } from '@/utilities/seeds/commodity.seed';
+import { COMMODITIES } from '@/utilities/seeds';
 import DiscountComponent from '@/components/app/Discount';
 import { isNumber } from 'lodash';
 import { KEYBOARD_NUMBERS } from '@/utilities/enums';
@@ -477,9 +477,6 @@ function Item({ params }: Readonly<ItemProps>) {
               </Button>
             </Space>
           </Card>
-          <Link href={`/brand/${'other'}/item/${'other'}`}>
-            So sánh 1 nhà bán khác (Giá từ 185.000 ₫)
-          </Link>
         </Col>
       </Row>
       {/* Form login */}

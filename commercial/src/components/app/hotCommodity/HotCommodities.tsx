@@ -10,7 +10,7 @@ import {
 } from 'antd';
 import { ItemCommodity } from '../Commodity';
 import { useMemo, useState } from 'react';
-import { COMMODITIES } from '@/utilities/seeds/commodity.seed';
+import { COMMODITIES } from '@/utilities/seeds';
 import { chunkArray } from '@/utilities/functions/array';
 import Meta from 'antd/es/card/Meta';
 import Image from 'next/image';
@@ -45,8 +45,8 @@ function ItemCommodityHot({ item, onClick }: Readonly<ItemCommodityHotProps>) {
               <Image
                 alt={item.name}
                 src={item.imageUrl}
-                layout="fill"
-                objectFit="contain"
+                layout='fill'
+                objectFit='contain'
                 style={{ borderRadius: '8px', border: '2px solid #f0f0f0' }}
               />
             </div>
@@ -66,7 +66,7 @@ function ItemCommodityHot({ item, onClick }: Readonly<ItemCommodityHotProps>) {
                 </Text>
                 <Progress
                   percent={70}
-                  size="small"
+                  size='small'
                 />
               </>
             }
@@ -85,7 +85,7 @@ function HotCommodities() {
     <>
       <Button
         style={{ marginLeft: 'auto' }}
-        type="primary"
+        type='primary'
       >
         Xem tất cả
       </Button>

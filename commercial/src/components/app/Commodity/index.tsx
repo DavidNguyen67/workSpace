@@ -11,7 +11,7 @@ import {
   Tabs,
   Button,
 } from 'antd';
-import { COMMODITIES } from '@/utilities/seeds/commodity.seed';
+import { COMMODITIES } from '@/utilities/seeds';
 import { CarOutlined, FireOutlined, StarOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { truncateDescription } from '@/utilities/functions/text';
