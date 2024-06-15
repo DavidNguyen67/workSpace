@@ -1,0 +1,3 @@
+export enum REPOSITORY {
+  CATS_REPOSITORY,
+}
