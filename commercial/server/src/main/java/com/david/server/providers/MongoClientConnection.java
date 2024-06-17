@@ -1,3 +1,11 @@
+/*
+ * @file            src/main/java/com/david/server/providers/MongoClientConnection.java
+ * @author          David Nguyễn <139251794+DavidNguyen67@users.noreply.github.com>
+ * @createTime      2024-06-17 20:55:51
+ * @lastModified    2024-06-17 20:59:23
+ * Copyright ©Quân đẹp trai All rights reserved
+*/
+
 package com.david.server.providers;
 
 import com.mongodb.ConnectionString;
