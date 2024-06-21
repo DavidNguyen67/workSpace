@@ -1,13 +1,19 @@
 'use client';
-import React from 'react';
+import React, { useRef } from 'react';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { Provider } from 'react-redux';
-import { store } from '@/redux/stores';
+import { AppStore, makeStore } from '@/redux/stores';
 
 const Wrapper = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+  const storeRef = useRef<AppStore>();
+  if (!storeRef.current) {
+    // Create the store instance the first time this renders
+    storeRef.current = makeStore();
+  }
+
   return (
     <AntdRegistry>
-      <Provider store={store}>{children}</Provider>
+      <Provider store={storeRef.current}>{children}</Provider>
     </AntdRegistry>
   );
 };

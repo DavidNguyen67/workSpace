@@ -1,3 +1,11 @@
+/**
+ * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
+ * @CreatedDate    : 2024-06-21 22:55:00
+ * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
+ * @LastEditDate   : 2024-06-21 22:55:15
+ * @CopyRight      : Con chù chù 🥴🥴
+**/
+
 export * from './Advertisement.interface';
 export * from './BaseItem.interface';
 export * from './BookTypes.interface';
