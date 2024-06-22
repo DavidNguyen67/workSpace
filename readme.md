@@ -1,4 +1,4 @@
-# Project Title
+# My workspace
 
 One Paragraph of the project description
 
@@ -56,10 +56,11 @@ Add additional notes to deploy this on a live system
 
 ## Built With
 
-- [Contributor Covenant](https://www.contributor-covenant.org/) - Used
-  for the Code of Conduct
-- [Creative Commons](https://creativecommons.org/) - Used to choose
-  the license
+- [React](https://reactjs.org/)
+- [Next.js](https://nextjs.org/)
+- [React Native](https://reactnative.dev/)
+- [Java Spring Boot](https://spring.io/projects/spring-boot)
+- [NestJS](https://nestjs.com/)
 
 ## Contributing
 
@@ -74,8 +75,10 @@ repository](https://github.com/PurpleBooth/a-good-readme-template/tags).
 
 ## Authors
 
-- **Billie Thompson** - _Provided README Template_ -
-  [PurpleBooth](https://github.com/PurpleBooth)
+- **David Nguyễn** - _Initial Work_ -
+  [GitHub](https://github.com/davidnguyen67dev)
+  [Email](mailto:davidnguyen67dev@gmail.com)
+  [Facebook](https://www.facebook.com/davidNguyen67Dev)
 
 See also the list of
 [contributors](https://github.com/PurpleBooth/a-good-readme-template/contributors)
