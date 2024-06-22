@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:47:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-22 15:50:49
+ * @LastEditDate   : 2024-06-22 18:10:38
  * @CopyRight      : Con chù chù 🥴🥴
 **/
 
@@ -17,5 +17,4 @@ import com.david.server.database.repositories.mysql.RolesRepository;
 public class RolesService {
   @Autowired
   private RolesRepository rolesRepository;
-
 }

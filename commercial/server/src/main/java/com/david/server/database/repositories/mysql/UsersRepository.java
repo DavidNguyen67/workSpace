@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:40:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-22 15:55:59
+ * @LastEditDate   : 2024-06-22 18:08:09
  * @CopyRight      : Con chù chù 🥴🥴
 **/
 
@@ -15,5 +15,4 @@ import com.david.server.database.models.mysql.UsersEntity;
 
 @Repository
 public interface UsersRepository extends JpaRepository<UsersEntity, String> {
-
 }
