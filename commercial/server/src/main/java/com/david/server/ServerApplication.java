@@ -1,10 +1,10 @@
-/*
- * @file            src/main/java/com/david/server/ServerApplication.java
- * @author          David Nguyễn <139251794+DavidNguyen67@users.noreply.github.com>
- * @createTime      2024-06-17 20:55:51
- * @lastModified    2024-06-17 20:59:55
- * Copyright ©Quân đẹp trai All rights reserved
-*/
+/**
+ * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
+ * @CreatedDate    : 2024-06-22 12:28:35
+ * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
+ * @LastEditDate   : 2024-06-22 12:28:35
+ * @CopyRight      : Con chù chù 🥴🥴
+**/
 
 package com.david.server;
 
