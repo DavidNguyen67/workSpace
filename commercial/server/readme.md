@@ -1,3 +1,41 @@
+# Hướng dẫn Cài đặt Keycloak
+
+Hướng dẫn này cung cấp hướng dẫn chạy Keycloak ở cả hai môi trường dev và production tại [Docker](https://www.docker.com/).
+
+## Môi trường Dev
+
+Để chạy Keycloak ở môi trường phát triển, bạn có thể sử dụng lệnh sau:
+
+```
+docker run --name <tên container> -p 8080:8080 -e KEYCLOAK_ADMIN=<username> -e KEYCLOAK_ADMIN_PASSWORD=<password> quay.io/keycloak/<tên phiên bản> start-dev
+```
+
+- Ví dụ cụ thể:
+
+```
+docker run --name keycloak -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:25.0.1 start-dev
+```
+
+## Môi trường Production
+
+Để chạy Keycloak ở môi trường sản xuất, bạn có thể sử dụng lệnh sau:
+
+```
+docker run --name <tên container> -p 8080:8080 -e KEYCLOAK_ADMIN=<username> -e KEYCLOAK_ADMIN_PASSWORD=<password> -v /path/to/cert.pem:/etc/x509/https/tls.crt -v /path/to/key.pem:/etc/x509/https/tls.key quay.io/keycloak/<tên phiên bản>
+```
+
+- Ví dụ cụ thể:
+
+```
+docker run --name keycloak -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin -v /path/to/cert.pem:/etc/x509/https/tls.crt -v /path/to/key.pem:/etc/x509/https/tls.key quay.io/keycloak/keycloak:25.0.1
+```
+
+### Chú ý
+
+- Thay thế `<tên container>`, `<username>`, `<password>`, `<tên phiên bản>` và đường dẫn `/path/to/cert.pem` và `/path/to/key.pem` bằng các giá trị tương ứng của bạn.
+- Đảm bảo rằng các tệp chứng chỉ (cert.pem) và khóa riêng (key.pem) tồn tại ở đường dẫn bạn chỉ định.
+- Để biết thêm thông tin chi tiết, bạn có thể tham khảo tài liệu chính thức của [Docker](https://www.docker.com/).
+
 # Tổng quan về Cấu trúc Cơ sở dữ liệu
 
 ![ECommerce Database Diagram](./ECommerceDB.png)
@@ -176,3 +214,7 @@ Biểu diễn mối quan hệ giữa các sản phẩm và các danh mục chứ
 - **products** <-> **product_categories** <-> **categories**: Mối quan hệ nhiều-nhiều giữa Sản phẩm và Danh mục.
 - **products** <-> **product_statuses**: Mối quan hệ một-một giữa Sản phẩm và Trạng thái sản phẩm.
 - **categories** <-> **categories**: Mối quan hệ đệ quy giữa phân loại sản phẩm cha và phân loại sản phẩm con.
+
+```
+
+```
