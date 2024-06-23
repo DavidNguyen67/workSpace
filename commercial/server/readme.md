@@ -32,6 +32,7 @@ docker run --name keycloak -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMI
 
 ### Chú ý
 
+- Config keycloak nằm trong file ./Dockerfile
 - Thay thế `<tên container>`, `<username>`, `<password>`, `<tên phiên bản>` và đường dẫn `/path/to/cert.pem` và `/path/to/key.pem` bằng các giá trị tương ứng của bạn.
 - Đảm bảo rằng các tệp chứng chỉ (cert.pem) và khóa riêng (key.pem) tồn tại ở đường dẫn bạn chỉ định.
 - Để biết thêm thông tin chi tiết, bạn có thể tham khảo tài liệu chính thức của [Docker](https://www.docker.com/).

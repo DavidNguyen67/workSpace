@@ -19,6 +19,13 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>org.keycloak.bom</groupId>
+			<artifactId>keycloak-adapter-bom</artifactId>
+			<version>25.0.1</version>
+			<type>pom</type>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 			<version>3.3.1</version>
