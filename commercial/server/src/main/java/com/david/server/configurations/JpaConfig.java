@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 19:10:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-22 19:19:53
+ * @LastEditDate   : 2024-06-23 18:06:09
  * @CopyRight      : Con chù chù 🥴🥴
 **/
 
@@ -26,10 +26,10 @@ import jakarta.persistence.EntityManagerFactory;
  * Nó định nghĩa các bean cần thiết cho JPA và quản lý giao dịch.
  */
 @Configuration
-public class JpaConfiguration {
+public class JpaConfig {
   private final DataSource dataSource;
 
-  public JpaConfiguration(DataSource dataSource) {
+  public JpaConfig(DataSource dataSource) {
     this.dataSource = dataSource;
   }
 
