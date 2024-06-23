@@ -1,97 +1,146 @@
-# My workspace
+# Workspace README
 
-One Paragraph of the project description
+## Mô tả Workspace
+Workspace này bao gồm hai dự án chính: một là ứng dụng frontend sử dụng Next.js và hai là ứng dụng backend sử dụng Spring Boot Java. Mỗi dự án được tổ chức trong thư mục riêng biệt để dễ dàng quản lý và phát triển.
 
-Initially appeared on
-[gist](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2). But the page cannot open anymore so that is why I have moved it here.
+## Cấu trúc dự án Next.js
 
-## Getting Started
+### Thư mục `frontend`
 
-These instructions will give you a copy of the project up and running on
-your local machine for development and testing purposes. See deployment
-for notes on deploying the project on a live system.
+```
+my-nextjs-app/
+|-- public/
+|   |-- images/
+|   |-- favicon.ico
+|-- src/
+|   |-- components/
+|   |   |-- Header.tsx
+|   |   |-- Footer.tsx
+|   |   |-- Button.tsx
+|   |-- hooks/
+|   |   |-- useAuth.ts
+|   |-- pages/
+|   |   |-- api/
+|   |   |   |-- hello.ts
+|   |   |-- _app.tsx
+|   |   |-- _document.tsx
+|   |   |-- index.tsx
+|   |   |-- about.tsx
+|   |-- styles/
+|   |   |-- globals.css
+|   |   |-- Home.module.css
+|   |-- types/
+|   |   |-- index.ts
+|   |-- utils/
+|   |   |-- api.ts
+|   |   |-- validation.ts
+|   |-- context/
+|   |   |-- AuthContext.tsx
+|   |-- services/
+|   |   |-- authService.ts
+|   |-- lib/
+|       |-- db.ts
+|-- .gitignore
+|-- next-env.d.ts
+|-- tsconfig.json
+|-- package.json
+|-- README.md
+```
 
-### Prerequisites
 
-Requirements for the software and other tools to build, test and push
+### Cấu trúc dự án Spring Boot Java
 
-- [Example 1](https://www.example.com)
-- [Example 2](https://www.example.com)
+#### Thư mục `backend`
 
-### Installing
+```
+my-spring-boot-app/
+|-- src/
+|   |-- main/
+|   |   |-- java/
+|   |   |   |-- com/
+|   |   |   |   |-- myapp/
+|   |   |   |   |   |-- MySpringBootApp.java
+|   |   |   |   |   |-- config/
+|   |   |   |   |   |   |-- KeycloakConfig.java
+|   |   |   |   |   |-- controller/
+|   |   |   |   |   |   |-- UserController.java
+|   |   |   |   |   |-- dto/
+|   |   |   |   |   |   |-- UserDto.java
+|   |   |   |   |   |-- entity/
+|   |   |   |   |   |   |-- User.java
+|   |   |   |   |   |-- exception/
+|   |   |   |   |   |   |-- CustomExceptionHandler.java
+|   |   |   |   |   |-- repository/
+|   |   |   |   |   |   |-- UserRepository.java
+|   |   |   |   |   |-- service/
+|   |   |   |   |   |   |-- UserService.java
+|   |   |   |   |-- util/
+|   |   |       |   |   |-- KeycloakUtil.java
+|   |   |-- resources/
+|   |       |-- static/
+|   |       |-- templates/
+|   |       |-- application.properties
+|-- src/
+|   |-- test/
+|       |-- java/
+|           |-- com/
+|               |-- myapp/
+|                   |-- MySpringBootAppTests.java
+|-- .gitignore
+|-- pom.xml
+|-- README.md
+```
 
-A step by step series of examples that tell you how to get a development
-environment running
 
-Say what the step will be
+## Hướng dẫn cài đặt và chạy dự án
 
-    Give the example
+### Frontend (Next.js)
 
-And repeat
+1. **Cài đặt Node.js và npm:**
+   - Đảm bảo bạn đã cài đặt Node.js và npm trên máy tính của mình.
 
-    until finished
+2. **Cài đặt các dependencies:**
+   - Chạy lệnh sau để cài đặt các dependencies:
 
-End with an example of getting some data out of the system or using it
-for a little demo
+     ```
+     npm install
+     ```
 
-## Running the tests
+3. **Chạy ứng dụng:**
+   - Sau khi cài đặt xong, chạy lệnh sau để khởi động ứng dụng Next.js:
 
-Explain how to run the automated tests for this system
+     ```
+     npm run dev
+     ```
 
-### Sample Tests
+   - Mở trình duyệt và truy cập vào `http://localhost:3000` để xem ứng dụng của bạn.
 
-Explain what these tests test and why
+### Backend (Spring Boot Java)
 
-    Give an example
+1. **Cài đặt Java Development Kit (JDK):**
+   - Đảm bảo JDK đã được cài đặt và biến môi trường JAVA_HOME đã được thiết lập.
 
-### Style test
+2. **Cài đặt Maven:**
+   - Đảm bảo bạn đã cài đặt Maven trên máy tính của mình.
 
-Checks if the best practices and the right coding style has been used.
+3. **Cài đặt các dependencies:**
+   - Chạy lệnh sau để cài đặt các dependencies và biên dịch dự án:
 
-    Give an example
+     ```
+     mvn clean install
+     ```
 
-## Deployment
+4. **Chạy ứng dụng:**
+   - Sau khi cài đặt xong, chạy lệnh sau để khởi động ứng dụng Spring Boot:
 
-Add additional notes to deploy this on a live system
+     ```
+     mvn spring-boot:run
+     ```
 
-## Built With
+   - Ứng dụng sẽ được khởi động trên cổng mặc định `8080`.
 
-- [React](https://reactjs.org/)
-- [Next.js](https://nextjs.org/)
-- [React Native](https://reactnative.dev/)
-- [Java Spring Boot](https://spring.io/projects/spring-boot)
-- [NestJS](https://nestjs.com/)
+## Hướng dẫn sử dụng
 
-## Contributing
+- Frontend (Next.js): Mô tả cách sử dụng các trang và thành phần trong ứng dụng Next.js của bạn.
+- Backend (Spring Boot Java): Hướng dẫn cách sử dụng các API và endpoints được cung cấp bởi ứng dụng Spring Boot.
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code
-of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [Semantic Versioning](http://semver.org/) for versioning. For the versions
-available, see the [tags on this
-repository](https://github.com/PurpleBooth/a-good-readme-template/tags).
-
-## Authors
-
-- **David Nguyễn** - _Initial Work_ -
-  [GitHub](https://github.com/davidnguyen67dev)
-  [Email](mailto:davidnguyen67dev@gmail.com)
-  [Facebook](https://www.facebook.com/davidNguyen67Dev)
-
-See also the list of
-[contributors](https://github.com/PurpleBooth/a-good-readme-template/contributors)
-who participated in this project.
-
-## License
-
-This project is licensed under the [CC0 1.0 Universal](LICENSE.md)
-Creative Commons License - see the [LICENSE.md](LICENSE.md) file for
-details
-
-## Acknowledgments
-
-- Hat tip to anyone whose code is used
-- Inspiration
-- etc
