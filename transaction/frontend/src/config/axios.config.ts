@@ -2,9 +2,9 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-24 20:49:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-24 23:16:43
+ * @LastEditDate   : 2024-06-25 11:03:27
  * @CopyRight      : Con chù chù 🥴🥴
-**/
+ **/
 
 import axios from 'axios';
 
@@ -12,6 +12,7 @@ axios.defaults.baseURL = 'http://localhost:8000/api/v1';
 axios.defaults.headers.post = {
   'Content-Type': 'application/json',
 };
+axios.defaults.timeout = 30000;
 
 // Add a request interceptor
 axios.interceptors.request.use(

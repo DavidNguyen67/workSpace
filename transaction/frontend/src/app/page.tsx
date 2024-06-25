@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteAPhoto, getAllPhotos } from '@/service/axios.service';
 import dynamic from 'next/dynamic';
-import { Button, Popconfirm, Skeleton, message } from 'antd';
+import { Button, Popconfirm, Skeleton, Table, message } from 'antd';
 import { DeleteOutlined, LoadingOutlined } from '@ant-design/icons';
 
 const GeneratePhotoComponent = dynamic(
@@ -13,16 +13,12 @@ const GeneratePhotoComponent = dynamic(
   }
 );
 
-const TableOptimize = dynamic(() => import('@/components/TableOptimize'), {
-  loading: () => <Skeleton />,
-});
-
 const Home = () => {
   const queryClient = useQueryClient();
 
   const [currentRecord, setCurrentRecord] = useState<Photo | null>(null);
 
-  const abortControllerRef = useRef<AbortController | null>(null);
+  const abortCtrlRef = useRef<AbortController[]>([]);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['photos'],
@@ -31,8 +27,10 @@ const Home = () => {
 
   const mutation = useMutation({
     mutationFn: (id: string) => {
-      abortControllerRef.current = new AbortController();
-      return deleteAPhoto(id);
+      abortCtrlRef.current.forEach((ctrl) => ctrl.abort());
+      abortCtrlRef.current = [];
+      abortCtrlRef.current.push(new AbortController());
+      return deleteAPhoto(id, { signal: abortCtrlRef.current[0].signal });
     },
     onMutate: (...something) => {
       console.log('Đang mutate', something);
@@ -43,14 +41,26 @@ const Home = () => {
       message.success(`Xoá user với tên là: ${currentRecord?.name} thành công`);
       setCurrentRecord(null);
     },
-    // Always refetch after error or success:
-    onSettled: (...someThingWhenDone) => {
-      console.log('All', someThingWhenDone);
-    },
+
     // If the mutation fails, use the context returned from onMutate to roll back
-    onError: (someThingWhenError) => {
-      console.log('Thất bại', someThingWhenError);
-      message.error(`Xoá user với tên là: ${currentRecord?.name} thất bại`);
+    onError: (error) => {
+      if (error.name === 'CanceledError') {
+        message.warning(
+          `Xoá user với tên là: ${currentRecord?.name} bị hủy bởi người dùng`
+        );
+        return;
+      }
+      if (error.message.includes('timeout')) {
+        message.warning(
+          `Xoá user với tên là: ${currentRecord?.name} bị hủy do timeout`
+        );
+        return;
+      }
+      console.log(error);
+
+      return message.error(
+        `Xoá user với tên là: ${currentRecord?.name} thất bại`
+      );
     },
   });
 
@@ -61,14 +71,20 @@ const Home = () => {
     [mutation]
   );
 
+  const handleCancelDelete = useCallback(() => {
+    abortCtrlRef.current.forEach((ctrl) => ctrl.abort());
+    abortCtrlRef.current = [];
+  }, []);
+
   useEffect(() => {
     return () => {
-      abortControllerRef.current?.abort();
+      abortCtrlRef.current.forEach((c) => c.abort());
     };
   }, []);
 
   return (
     <>
+      {/* Button thực hiện hành đồng generate photo */}
       <GeneratePhotoComponent />
       {isLoading ? (
         <Skeleton active />
@@ -77,7 +93,7 @@ const Home = () => {
       ) : (
         data &&
         data?.length > 0 && (
-          <TableOptimize
+          <Table
             dataSource={data.map((item) => ({ ...item, key: item.id }))}
             columns={[
               {
@@ -102,25 +118,36 @@ const Home = () => {
                 render: (_, record) => {
                   return (
                     <Popconfirm
-                      title='Are you sure to delete this user?'
-                      onConfirm={() => handleDelete(record.id)}
+                      title={
+                        mutation.isPending
+                          ? 'Are you sure to cancel this action'
+                          : 'Are you sure to delete this user?'
+                      }
+                      onConfirm={() => {
+                        mutation.isPending
+                          ? handleCancelDelete()
+                          : handleDelete(record.id);
+                      }}
                       okText='Yes'
                       cancelText='No'
+                      onCancel={handleCancelDelete}
                     >
-                      <Button
-                        danger
-                        onClick={() => setCurrentRecord(record)}
-                        icon={
-                          record.id === currentRecord?.id &&
-                          mutation.isPending ? (
-                            <LoadingOutlined />
-                          ) : (
-                            <DeleteOutlined />
-                          )
-                        }
-                      >
-                        {mutation.isPending ? 'Cancel' : 'Delete'}
-                      </Button>
+                      {mutation.isPending && currentRecord?.id === record.id ? (
+                        <Button
+                          danger
+                          icon={<LoadingOutlined />}
+                        >
+                          Cancel
+                        </Button>
+                      ) : (
+                        <Button
+                          danger
+                          onClick={() => setCurrentRecord(record)}
+                          icon={<DeleteOutlined />}
+                        >
+                          Delete
+                        </Button>
+                      )}
                     </Popconfirm>
                   );
                 },

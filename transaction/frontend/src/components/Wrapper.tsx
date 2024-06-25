@@ -8,16 +8,7 @@ interface WrapperProps {
 }
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retryDelay: 1000,
-      retry: 5,
-    },
-    mutations: {
-      retry: 5,
-      retryDelay: 1000,
-    },
-  },
+  defaultOptions: {},
 });
 
 const Wrapper = ({ children }: Readonly<WrapperProps>) => {

@@ -3,12 +3,6 @@ import { ColumnType } from 'antd/es/table';
 import { RefTable } from 'antd/es/table/interface';
 import React from 'react';
 
-// interface TableColumn<Data> {
-//   key: keyof Data;
-//   title: keyof Data;
-//   dataIndex: keyof Data;
-// }
-
 interface TableOptimizeProps<Data> extends RefTable {
   columns: ColumnType<Data>[];
   dataSource: Data[];
