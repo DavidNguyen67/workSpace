@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:12:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 14:22:18
+ * @LastEditDate   : 2024-06-29 23:19:48
  * @FilePath       : BaseEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -28,11 +28,11 @@ public class BaseEntity {
   private String id;
 
   @CreationTimestamp
-  @Column(name = "inserted_at", updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "inserted_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp insertedAt;
 
   @UpdateTimestamp
-  @Column(name = "updated_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp updatedAt;
 
 }

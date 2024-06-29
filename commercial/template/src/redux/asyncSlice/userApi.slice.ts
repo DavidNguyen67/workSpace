@@ -2,26 +2,53 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 17:44:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 17:54:45
+ * @LastEditDate   : 2024-06-29 22:33:41
  * @FilePath       : userApi.slice.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
+import userService from '@/service/user';
+import { UserEntity } from '@/utility/class';
+import { CreateUserDto } from '@/utility/dto';
+import { ListUserDto } from '@/utility/dto/listUser.dto';
+import { QUERY_TAG } from '@/utility/enum/queryTag.enum';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 // Define a service using a base URL and expected endpoints
 export const userApi = createApi({
-  reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BASE_URL_SPRING_BOOT,
   }),
-  endpoints: (builder) => ({
-    getPokemonByName: builder.query<any, string>({
-      query: (name) => `pokemon/${name}`,
+  tagTypes: [QUERY_TAG.USER],
+  endpoints: (build) => ({
+    // query<ReturnType, ArgType>
+    getUsers: build.query<UserEntity[] | null, ListUserDto>({
+      queryFn: async (payload, _queryApi, _extraOptions, baseQuery) => {
+        const response = await userService.listUsers(payload);
+        return { data: response };
+      },
+      providesTags: (result, error, arg) =>
+        result && result?.length > 0
+          ? [
+              ...result.map(({ id }) => ({
+                type: QUERY_TAG.USER as const,
+                id,
+              })),
+              QUERY_TAG.USER,
+            ]
+          : [QUERY_TAG.USER],
+    }),
+    // mutation<ResultType, QueryArg>
+    registerUses: build.mutation<string | null, CreateUserDto>({
+      queryFn: async (payload, _queryApi, _extraOptions, baseQuery) => {
+        const response = await userService.generateUser(payload);
+        return { data: response };
+      },
+      invalidatesTags: [QUERY_TAG.USER],
     }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetPokemonByNameQuery } = userApi;
+export const { useGetUsersQuery, useRegisterUsesMutation } = userApi;

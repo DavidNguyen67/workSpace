@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 14:56:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 14:24:03
+ * @LastEditDate   : 2024-06-29 22:52:00
  * @FilePath       : UsersEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -32,10 +32,10 @@ public class UsersEntity extends BaseEntity {
   @Column(unique = true)
   private String email;
 
-  @Column(nullable = false, unique = false)
+  @Column(name = "first_name", nullable = false, unique = false)
   private String firstName;
 
-  @Column(nullable = false, unique = false)
+  @Column(name = "last_name", nullable = false, unique = false)
   private String lastName;
 
   @Column(columnDefinition = "boolean default true")

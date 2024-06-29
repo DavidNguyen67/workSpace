@@ -2,20 +2,25 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 10:40:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 11:49:24
+ * @LastEditDate   : 2024-06-29 22:36:51
  * @FilePath       : UsersController.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
 package com.david.server.controllers.mysql;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.david.server.database.models.mysql.UsersEntity;
 import com.david.server.database.services.mysql.UsersService;
 import com.david.server.dtos.request.CreateUserRequestDto;
+import com.david.server.dtos.request.ListUserRequestDto;
 import com.david.server.dtos.request.LoginUserRequestDto;
 import com.david.server.dtos.response.CreateUserResponseDto;
 
@@ -51,4 +56,12 @@ public class UsersController {
   public CreateUserResponseDto loginUser(@Valid @RequestBody LoginUserRequestDto loginUserRequestDto) {
     return this.usersService.loginUser(loginUserRequestDto);
   }
+
+  @GetMapping("list")
+  public List<UsersEntity> getMethodName(@RequestParam("offset") Integer offset,
+      @RequestParam("skip") Integer skip) {
+    ListUserRequestDto listUserRequestDto = new ListUserRequestDto(skip, offset);
+    return this.usersService.listUser(listUserRequestDto);
+  }
+
 }

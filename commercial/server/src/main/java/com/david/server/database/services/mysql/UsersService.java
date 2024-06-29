@@ -2,23 +2,24 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:42:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 17:39:31
+ * @LastEditDate   : 2024-06-29 22:31:41
  * @FilePath       : UsersService.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
 package com.david.server.database.services.mysql;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.david.server.database.models.mysql.UsersEntity;
 import com.david.server.database.repositories.mysql.UsersRepository;
 import com.david.server.dtos.request.CreateUserRequestDto;
+import com.david.server.dtos.request.ListUserRequestDto;
 import com.david.server.dtos.request.LoginUserRequestDto;
 import com.david.server.dtos.response.CreateUserResponseDto;
 
@@ -56,5 +57,19 @@ public class UsersService {
     response.setRefreshToken(user.getEmail());
 
     return response;
+  }
+
+  public List<UsersEntity> listUser(ListUserRequestDto listUserRequestDto) {
+    try {
+      List<UsersEntity> users = usersRepository.listUsers(listUserRequestDto.getSkip(), listUserRequestDto.getOffset());
+
+      if (users.size() < 1) {
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+            "Users not found");
+      }
+      return users;
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
   }
 }
