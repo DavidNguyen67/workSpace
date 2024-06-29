@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:42:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 14:54:26
+ * @LastEditDate   : 2024-06-29 17:39:31
  * @FilePath       : UsersService.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -12,6 +12,7 @@ package com.david.server.database.services.mysql;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -30,8 +31,14 @@ public class UsersService {
   private UsersRepository usersRepository;
 
   public String registerUser(CreateUserRequestDto createUserRequestDto) {
-    usersRepository.registerUser(createUserRequestDto.getId(), createUserRequestDto.getEmail(),
-        createUserRequestDto.getFirstName(), createUserRequestDto.getLastName());
+    try {
+      usersRepository.registerUser(createUserRequestDto.getId(), createUserRequestDto.getEmail(),
+          createUserRequestDto.getFirstName(), createUserRequestDto.getLastName());
+    } catch (Exception e) {
+      // TODO: handle exception
+      log.error("We got an error: {}", e.getMessage());
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
 
     return "User registered successfully";
   }
