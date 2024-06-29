@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:40:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 11:25:48
+ * @LastEditDate   : 2024-06-29 14:51:43
  * @FilePath       : UsersRepository.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -29,6 +29,6 @@ public interface UsersRepository extends JpaRepository<UsersEntity, String> {
       @Param("lastName") String lastName);
 
   @Query(value = "SELECT * FROM users WHERE email LIKE :email", nativeQuery = true)
-  UsersEntity loginUser(@Param("email") String email);
+  UsersEntity findUserByEmail(@Param("email") String email);
 
 }

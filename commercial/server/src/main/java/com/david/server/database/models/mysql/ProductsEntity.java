@@ -2,9 +2,10 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 23:05:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-22 23:55:18
+ * @LastEditDate   : 2024-06-29 14:25:38
+ * @FilePath       : ProductsEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
-**/
+ **/
 
 package com.david.server.database.models.mysql;
 
@@ -42,17 +43,17 @@ public class ProductsEntity extends BaseEntity {
   @JoinColumn(name = "product_status_id", nullable = false) // Liên kết với nhau qua khóa ngoại product_status_id
   private ProductStatusesEntity productStatus;
 
-  @Column(name = "regular_price")
-  private double regularPrice = 0.0;
+  @Column(name = "regular_price", columnDefinition = "double default 0.0")
+  private Double regularPrice;
+  
+  @Column(name = "discount_price", columnDefinition = "double default 0.0")
+  private Double discountPrice;
 
-  @Column(name = "discount_price")
-  private double discountPrice = 0.0;
+  @Column(columnDefinition = "int default 0")
+  private Integer quantity;
 
-  @Column
-  private int quantity = 0;
-
-  @Column
-  private boolean taxable = false;
+  @Column(columnDefinition = "boolean default false")
+  private Boolean taxable;
 
   /**
    * Thiết lập mối quan hệ nhiều-nhiều giữa ProductsEntity và TagsEntity.

@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 09:57:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 09:58:00
+ * @LastEditDate   : 2024-06-29 14:43:54
  * @FilePath       : CreateUserResponseDto.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/

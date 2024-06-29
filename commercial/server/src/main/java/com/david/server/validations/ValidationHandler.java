@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 10:27:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 11:39:40
+ * @LastEditDate   : 2024-06-29 14:57:41
  * @FilePath       : ValidationHandler.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -34,8 +34,8 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
       HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-    log.error("Gặp lỗi body gửi lên", ex);
-    
+    log.error("Body is bad", ex);
+
     Map<String, String> errors = new HashMap<>();
     ex.getBindingResult().getAllErrors().forEach((error) -> {
 
@@ -45,4 +45,5 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
     });
     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
   }
+
 }

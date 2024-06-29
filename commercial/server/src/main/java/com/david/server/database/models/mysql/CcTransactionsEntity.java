@@ -2,9 +2,10 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 22:09:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-22 23:53:39
+ * @LastEditDate   : 2024-06-29 13:19:05
+ * @FilePath       : CcTransactionsEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
-**/
+ **/
 
 package com.david.server.database.models.mysql;
 
@@ -45,7 +46,7 @@ public class CcTransactionsEntity extends BaseEntity {
   private String processorTransId;
 
   @Column(nullable = false)
-  private double amount;
+  private Double amount;
 
   @Column(name = "cc_num")
   private String ccNum;

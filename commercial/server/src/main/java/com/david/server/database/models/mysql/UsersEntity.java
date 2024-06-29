@@ -2,9 +2,10 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 14:56:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-22 23:49:03
+ * @LastEditDate   : 2024-06-29 14:24:03
+ * @FilePath       : UsersEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
-**/
+ **/
 
 package com.david.server.database.models.mysql;
 
@@ -31,14 +32,14 @@ public class UsersEntity extends BaseEntity {
   @Column(unique = true)
   private String email;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = false)
   private String firstName;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = false)
   private String lastName;
 
-  @Column()
-  private boolean active = true;
+  @Column(columnDefinition = "boolean default true")
+  private Boolean active;
 
   /**
    * Thiết lập mối quan hệ nhiều-nhiều giữa UsersEntity và RolesEntity.

@@ -2,9 +2,10 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 22:03:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-22 23:53:22
+ * @LastEditDate   : 2024-06-29 13:19:10
+ * @FilePath       : CouponsEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
-**/
+ **/
 
 package com.david.server.database.models.mysql;
 
@@ -33,14 +34,14 @@ public class CouponsEntity extends BaseEntity {
   @Column
   private String description;
 
-  @Column
-  private boolean active = true;
+  @Column(columnDefinition = "boolean default true")
+  private Boolean active = true;
 
   @Column
-  private double value;
+  private Double value;
 
-  @Column
-  private boolean multiple = false;
+  @Column(columnDefinition = "boolean default false")
+  private Boolean multiple = false;
 
   @Column(name = "start_date")
   private Timestamp startDate;

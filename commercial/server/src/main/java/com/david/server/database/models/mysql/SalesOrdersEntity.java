@@ -2,9 +2,10 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 22:18:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-22 23:52:52
+ * @LastEditDate   : 2024-06-29 13:19:42
+ * @FilePath       : SalesOrdersEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
-**/
+ **/
 
 package com.david.server.database.models.mysql;
 
@@ -33,7 +34,7 @@ public class SalesOrdersEntity extends BaseEntity {
   private Timestamp orderDate;
 
   @Column(nullable = false)
-  private double total;
+  private Double total;
 
   /**
    * @CascadeType.ALL được sử dụng để áp dụng các thao tác (persist, merge,

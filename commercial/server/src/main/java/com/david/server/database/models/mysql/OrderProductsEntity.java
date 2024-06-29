@@ -2,9 +2,10 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 22:15:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-22 23:54:10
+ * @LastEditDate   : 2024-06-29 13:18:46
+ * @FilePath       : OrderProductsEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
-**/
+ **/
 
 package com.david.server.database.models.mysql;
 
@@ -40,11 +41,11 @@ public class OrderProductsEntity extends BaseEntity {
   private String description;
 
   @Column(nullable = false)
-  private double price;
+  private Double price;
 
   @Column(nullable = false)
-  private int quantity;
+  private Integer quantity;
 
   @Column(nullable = false)
-  private int subtotal;
+  private Integer subtotal;
 }
