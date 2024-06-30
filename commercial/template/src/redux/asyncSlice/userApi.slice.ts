@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 17:44:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-30 14:48:48
+ * @LastEditDate   : 2024-06-30 21:34:15
  * @FilePath       : userApi.slice.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -10,8 +10,9 @@
 import axiosBaseQuery from '@/config/axiosBaseQuery.config';
 import userService from '@/service/user';
 import { UserEntity } from '@/utility/class';
-import { CreateUserDto } from '@/utility/dto';
+import { CreateUserDto, DeleteUserDto } from '@/utility/dto';
 import { ListUserDto } from '@/utility/dto/listUser.dto';
+import { UpdateUserDto } from '@/utility/dto/updateUser.dto';
 import { QUERY_TAG } from '@/utility/enum/queryTag.enum';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
@@ -66,10 +67,41 @@ export const userApi = createApi({
       },
       invalidatesTags: [QUERY_TAG.USER, QUERY_TAG.COUNT_USER],
     }),
+    deleteUser: build.mutation<string | null, DeleteUserDto>({
+      queryFn: async (payload, _queryApi, _extraOptions, baseQuery) => {
+        const { signal } = _queryApi;
+
+        try {
+          const data = await userService.deleteUser(payload, { signal });
+          return { data };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: [QUERY_TAG.USER, QUERY_TAG.COUNT_USER],
+    }),
+    updateUser: build.mutation<string | null, UpdateUserDto>({
+      queryFn: async (payload, _queryApi, _extraOptions, baseQuery) => {
+        const { signal } = _queryApi;
+
+        try {
+          const data = await userService.updateUser(payload, { signal });
+          return { data };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: [QUERY_TAG.USER, QUERY_TAG.COUNT_USER],
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetUsersQuery, useRegisterUsesMutation, useCountUsersQuery } =
-  userApi;
+export const {
+  useGetUsersQuery,
+  useRegisterUsesMutation,
+  useCountUsersQuery,
+  useDeleteUserMutation,
+  useUpdateUserMutation,
+} = userApi;

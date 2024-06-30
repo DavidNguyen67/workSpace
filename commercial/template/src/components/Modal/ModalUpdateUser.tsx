@@ -1,27 +1,64 @@
 'use client';
+import { useUpdateUserMutation } from '@/redux/asyncSlice/userApi.slice';
 import { UserEntity } from '@/utility/class';
+import { UpdateUserDto } from '@/utility/dto/updateUser.dto';
 import { Button, Checkbox, Form, Input, Modal, Space } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 
 interface ModalUpdateUserProps {
   isModalVisible: boolean;
-  handleConfirmUpdateUser: (values: any) => void;
   setIsModalVisible: (value: React.SetStateAction<boolean>) => void;
   data: UserEntity | null;
 }
 
+let promise: any;
+
 function ModalUpdateUser({
   isModalVisible = false,
-  handleConfirmUpdateUser = () => {},
   setIsModalVisible = () => {},
   data,
 }: ModalUpdateUserProps) {
   const [mounted, setMounted] = useState<boolean>(false);
+  const [form] = Form.useForm();
+
+  const [updateUser, { isLoading, error }] = useUpdateUserMutation();
+
+  const handleCloseModal = useCallback(() => {
+    setIsModalVisible(false);
+  }, [setIsModalVisible]);
+
+  const handleUpdateUser = useCallback(
+    async (payload: UpdateUserDto) => {
+      try {
+        if (promise) {
+          promise.abort();
+          promise = null;
+        }
+
+        promise = updateUser(payload);
+        await promise.unwrap();
+
+        console.log('User updated:', promise);
+        handleCloseModal();
+      } catch (error) {
+        console.error('Failed to update user:', error);
+      }
+    },
+    [handleCloseModal, updateUser]
+  );
+
+  const onFinish = useCallback(
+    async (values: UserEntity) => {
+      if (data?.id) {
+        await handleUpdateUser({ ...values, id: data.id });
+      }
+    },
+    [data?.id, handleUpdateUser]
+  );
+
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const [form] = Form.useForm();
 
   useEffect(() => {
     if (data) {
@@ -38,13 +75,6 @@ function ModalUpdateUser({
       form.resetFields();
     }
   }, [data, form]);
-
-  const onFinish = useCallback(
-    (values: UserEntity) => {
-      handleConfirmUpdateUser(values);
-    },
-    [handleConfirmUpdateUser]
-  );
 
   if (!mounted) return <></>;
 
@@ -98,7 +128,7 @@ function ModalUpdateUser({
           style={{ width: '100%' }}
         >
           <Button
-            onClick={() => setIsModalVisible(false)}
+            onClick={handleCloseModal}
             style={{ marginLeft: 'auto' }}
           >
             Cancel

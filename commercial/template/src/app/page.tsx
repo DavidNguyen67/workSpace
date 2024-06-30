@@ -1,6 +1,7 @@
 'use client';
 import {
   useCountUsersQuery,
+  useDeleteUserMutation,
   useGetUsersQuery,
   useRegisterUsesMutation,
 } from '@/redux/asyncSlice/userApi.slice';
@@ -28,24 +29,34 @@ const Home = () => {
     offset: 0,
     limit: 30,
   });
-
-  const { data: count } = useCountUsersQuery(undefined, {
-    pollingInterval: API_TIME_POLLING,
-  });
+  const [deleteUser, {}] = useDeleteUserMutation();
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<UserEntity | null>(null);
 
-  const handleDeleteUser = useCallback((record: UserEntity) => {
-    console.log('Check ', record);
-  }, []);
+  const handleDeleteUser = useCallback(
+    async (record: UserEntity) => {
+      try {
+        if (promise) {
+          promise.abort();
+          promise = null;
+        }
+
+        promise = deleteUser({ id: record.id });
+        await promise.unwrap();
+
+        console.log('User delete:', promise);
+      } catch (error) {
+        console.error('Failed to delete user:', error);
+      }
+    },
+    [deleteUser]
+  );
 
   const handleSelectUpdateUser = useCallback((record: UserEntity) => {
     setSelectedUser(record);
     setIsModalVisible(true);
   }, []);
-
-  const handleConfirmUpdateUser = useCallback(() => {}, []);
 
   const columns: TableProps<UserEntity>['columns'] = useMemo(
     () => [
@@ -168,7 +179,6 @@ const Home = () => {
       )}
       <ModalUpdateUser
         data={selectedUser}
-        handleConfirmUpdateUser={handleConfirmUpdateUser}
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
       />

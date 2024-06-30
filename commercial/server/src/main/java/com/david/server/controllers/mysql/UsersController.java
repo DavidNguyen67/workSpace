@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 10:40:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-30 13:11:21
+ * @LastEditDate   : 2024-06-30 22:44:32
  * @FilePath       : UsersController.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -10,8 +10,10 @@
 package com.david.server.controllers.mysql;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,16 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.david.server.database.models.mysql.UsersEntity;
 import com.david.server.database.services.mysql.UsersService;
 import com.david.server.dtos.request.CreateUserRequestDto;
+import com.david.server.dtos.request.DeleteUserRequestDto;
 import com.david.server.dtos.request.ListUserRequestDto;
 import com.david.server.dtos.request.LoginUserRequestDto;
+import com.david.server.dtos.request.UpdateUserRequestDto;
 import com.david.server.dtos.response.CreateUserResponseDto;
-import com.david.server.dtos.response.ListUserResponseDto;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @Slf4j
@@ -50,11 +54,6 @@ public class UsersController {
 
   @PostMapping("register")
   public String registerUser(@Valid @RequestBody CreateUserRequestDto createUserRequestDto) {
-    try {
-      Thread.sleep(5 * 1000);
-    } catch (InterruptedException ie) {
-      Thread.currentThread().interrupt();
-    }
     return this.usersService.registerUser(createUserRequestDto);
   }
 
@@ -73,5 +72,18 @@ public class UsersController {
   @GetMapping("count")
   public Integer countUsers() {
     return this.usersService.countUsers();
+  }
+
+  @DeleteMapping("delete")
+  public String deleteUser(@RequestParam("id") UUID _id) {
+    DeleteUserRequestDto deleteUserRequestDto = new DeleteUserRequestDto(_id);
+    this.usersService.deleteUser(deleteUserRequestDto);
+    return "Delete user successfully";
+  }
+
+  @PutMapping("update")
+  public String updateUser(@Valid @RequestBody UpdateUserRequestDto updateUserRequestDto) {
+    this.usersService.updateUser(updateUserRequestDto);
+    return "Update user successfully";
   }
 }

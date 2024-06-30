@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:42:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-30 11:26:56
+ * @LastEditDate   : 2024-06-30 22:42:08
  * @FilePath       : UsersService.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -19,8 +19,10 @@ import org.springframework.web.server.ResponseStatusException;
 import com.david.server.database.models.mysql.UsersEntity;
 import com.david.server.database.repositories.mysql.UsersRepository;
 import com.david.server.dtos.request.CreateUserRequestDto;
+import com.david.server.dtos.request.DeleteUserRequestDto;
 import com.david.server.dtos.request.ListUserRequestDto;
 import com.david.server.dtos.request.LoginUserRequestDto;
+import com.david.server.dtos.request.UpdateUserRequestDto;
 import com.david.server.dtos.response.CreateUserResponseDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,14 +34,14 @@ public class UsersService {
   private UsersRepository usersRepository;
 
   public String registerUser(CreateUserRequestDto createUserRequestDto) {
-    usersRepository.registerUser(createUserRequestDto.getId(), createUserRequestDto.getEmail(),
+    this.usersRepository.registerUser(createUserRequestDto.getId(), createUserRequestDto.getEmail(),
         createUserRequestDto.getFirstName(), createUserRequestDto.getLastName());
 
     return "User registered successfully";
   }
 
   public CreateUserResponseDto loginUser(LoginUserRequestDto loginUserRequestDto) {
-    UsersEntity user = usersRepository.findUserByEmail(loginUserRequestDto.getEmail());
+    UsersEntity user = this.usersRepository.findUserByEmail(loginUserRequestDto.getEmail());
 
     if (user == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -54,7 +56,7 @@ public class UsersService {
   }
 
   public List<UsersEntity> listUser(ListUserRequestDto listUserRequestDto) {
-    List<UsersEntity> users = usersRepository.listUsers(listUserRequestDto.getLimit(),
+    List<UsersEntity> users = this.usersRepository.listUsers(listUserRequestDto.getLimit(),
         listUserRequestDto.getOffset());
 
     if (users.isEmpty()) {
@@ -65,8 +67,23 @@ public class UsersService {
   }
 
   public Integer countUsers() {
-    Integer total = usersRepository.countUsers();
-
+    Integer total = this.usersRepository.countUsers();
     return total;
+  }
+
+  public void deleteUser(DeleteUserRequestDto deleteUserRequestDto) {
+    this.usersRepository.deleteUser(deleteUserRequestDto.getId());
+    log.info("Check id: {}", deleteUserRequestDto.getId());
+  }
+
+  public void updateUser(UpdateUserRequestDto updateUserRequestDto) {
+    this.usersRepository.updateUser(updateUserRequestDto.getEmail(), updateUserRequestDto.getFirstName(),
+        updateUserRequestDto.getLastName(), updateUserRequestDto.getActive(), updateUserRequestDto.getId());
+    log.info("Check getId: {}", updateUserRequestDto.getId());
+    log.info("Check getEmail: {}", updateUserRequestDto.getEmail());
+    log.info("Check getFirstName: {}", updateUserRequestDto.getFirstName());
+    log.info("Check getLastName: {}", updateUserRequestDto.getLastName());
+    log.info("Check getActive: {}", updateUserRequestDto.getActive());
+
   }
 }

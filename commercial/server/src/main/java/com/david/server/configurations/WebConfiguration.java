@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 21:16:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 21:16:21
+ * @LastEditDate   : 2024-06-30 22:14:31
  * @FilePath       : WebConfiguration.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -19,6 +19,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfiguration implements WebMvcConfigurer {
   @Override
   public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/**");
+    registry.addMapping("/**").allowedMethods("*");
   }
 }
