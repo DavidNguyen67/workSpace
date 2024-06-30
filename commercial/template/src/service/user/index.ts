@@ -2,11 +2,12 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 19:30:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 21:26:34
+ * @LastEditDate   : 2024-06-30 11:39:43
  * @FilePath       : index.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
+import { countUser } from './countUser.service';
 import { generateUser } from './generateUser.service';
 import { listUsers } from './listUsers.service';
 
@@ -14,6 +15,8 @@ export class UserService {
   public readonly generateUser = generateUser;
 
   public readonly listUsers = listUsers;
+
+  public readonly countUser = countUser;
 }
 
 const userService = new UserService();

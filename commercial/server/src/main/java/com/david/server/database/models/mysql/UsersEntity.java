@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 14:56:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 22:52:00
+ * @LastEditDate   : 2024-06-30 11:21:46
  * @FilePath       : UsersEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -22,13 +22,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "users")
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class UsersEntity extends BaseEntity {
+
   @Column(unique = true)
   private String email;
 

@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 10:40:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 22:36:51
+ * @LastEditDate   : 2024-06-30 11:27:38
  * @FilePath       : UsersController.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -23,6 +23,7 @@ import com.david.server.dtos.request.CreateUserRequestDto;
 import com.david.server.dtos.request.ListUserRequestDto;
 import com.david.server.dtos.request.LoginUserRequestDto;
 import com.david.server.dtos.response.CreateUserResponseDto;
+import com.david.server.dtos.response.ListUserResponseDto;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -59,9 +60,13 @@ public class UsersController {
 
   @GetMapping("list")
   public List<UsersEntity> getMethodName(@RequestParam("offset") Integer offset,
-      @RequestParam("skip") Integer skip) {
-    ListUserRequestDto listUserRequestDto = new ListUserRequestDto(skip, offset);
+      @RequestParam("limit") Integer limit) {
+    ListUserRequestDto listUserRequestDto = new ListUserRequestDto(limit, offset);
     return this.usersService.listUser(listUserRequestDto);
   }
 
+  @GetMapping("count")
+  public Integer countUsers() {
+    return this.usersService.countUsers();
+  }
 }

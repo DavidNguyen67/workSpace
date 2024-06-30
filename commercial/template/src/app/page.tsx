@@ -1,32 +1,45 @@
 'use client';
 import {
+  useCountUsersQuery,
   useGetUsersQuery,
   useRegisterUsesMutation,
 } from '@/redux/asyncSlice/userApi.slice';
 import { CreateUserDto } from '@/utility/dto';
-import { Button, Pagination, Table, TableProps } from 'antd';
+import { Button, Table, TableColumnsType, TableProps } from 'antd';
 import React, { useCallback, useMemo } from 'react';
 import { faker } from '@faker-js/faker';
 import { UserEntity } from '@/utility/class';
 
 const Home = () => {
   const { data } = useGetUsersQuery({
-    offset: 20,
-    skip: 0,
+    offset: 0,
+    limit: 30,
   });
+  const { data: count } = useCountUsersQuery(undefined, {
+    pollingInterval: 3000,
+  });
+
+  // Define the columns for the table
   const columns: TableProps<UserEntity>['columns'] = useMemo(
     () => [
       {
-        title: 'email',
+        title: '#',
+        dataIndex: 'index',
+        render: (text, record, index) => index + 1,
+        width: 15, // Thiết lập chiều rộng cho cột số thứ tự
+        align: 'center',
+        fixed: 'left',
+      },
+      {
+        title: 'Email',
         dataIndex: 'email',
+        width: 200, // Thiết lập chiều rộng cho cột email
       },
       {
-        title: 'firstName',
-        dataIndex: 'firstName',
-      },
-      {
-        title: 'lastName',
-        dataIndex: 'lastName',
+        title: 'Name',
+        dataIndex: 'name',
+        render: (text, record) => `${record.firstName} ${record.lastName}`,
+        width: 150, // Thiết lập chiều rộng cho cột tên
       },
     ],
     []
@@ -50,7 +63,7 @@ const Home = () => {
     }
   }, [addUser]);
 
-  console.log('data:', data);
+  console.log(count);
 
   return (
     <>
@@ -66,14 +79,15 @@ const Home = () => {
           <Table
             columns={columns}
             dataSource={data}
-            rowKey={'email'}
+            rowKey={'id'}
             loading={isLoading}
             size='small'
             sticky
-            pagination={{
-              defaultPageSize: 5,
-              pageSizeOptions: [10, 20, 50, 100],
-            }}
+            // pagination={{
+            //   defaultPageSize: 5,
+            //   pageSizeOptions: [10, 20, 50, 100],
+            // }}
+            bordered
           />
         </>
       )}

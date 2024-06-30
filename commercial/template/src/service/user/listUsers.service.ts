@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 21:07:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 22:33:34
+ * @LastEditDate   : 2024-06-30 10:41:04
  * @FilePath       : listUsers.service.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -20,7 +20,7 @@ export async function listUsers(
   config?: AxiosRequestConfig<any>
 ): Promise<UserEntity[] | null> {
   return instance.get(
-    `${API_LIST_USER}?offset=${payload.offset}&skip=${payload.skip}`,
+    `${API_LIST_USER}?offset=${payload.offset}&limit=${payload.limit}`,
     config
   );
 }

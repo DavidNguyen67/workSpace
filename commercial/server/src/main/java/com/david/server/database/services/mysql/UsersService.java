@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:42:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 22:31:41
+ * @LastEditDate   : 2024-06-30 11:26:56
  * @FilePath       : UsersService.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -32,14 +32,8 @@ public class UsersService {
   private UsersRepository usersRepository;
 
   public String registerUser(CreateUserRequestDto createUserRequestDto) {
-    try {
-      usersRepository.registerUser(createUserRequestDto.getId(), createUserRequestDto.getEmail(),
-          createUserRequestDto.getFirstName(), createUserRequestDto.getLastName());
-    } catch (Exception e) {
-      // TODO: handle exception
-      log.error("We got an error: {}", e.getMessage());
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-    }
+    usersRepository.registerUser(createUserRequestDto.getId(), createUserRequestDto.getEmail(),
+        createUserRequestDto.getFirstName(), createUserRequestDto.getLastName());
 
     return "User registered successfully";
   }
@@ -60,16 +54,19 @@ public class UsersService {
   }
 
   public List<UsersEntity> listUser(ListUserRequestDto listUserRequestDto) {
-    try {
-      List<UsersEntity> users = usersRepository.listUsers(listUserRequestDto.getSkip(), listUserRequestDto.getOffset());
+    List<UsersEntity> users = usersRepository.listUsers(listUserRequestDto.getLimit(),
+        listUserRequestDto.getOffset());
 
-      if (users.size() < 1) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-            "Users not found");
-      }
-      return users;
-    } catch (Exception e) {
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    if (users.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+          "Users not found");
     }
+    return users;
+  }
+
+  public Integer countUsers() {
+    Integer total = usersRepository.countUsers();
+
+    return total;
   }
 }
