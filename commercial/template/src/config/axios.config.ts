@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 19:36:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 21:26:27
+ * @LastEditDate   : 2024-06-30 13:43:14
  * @FilePath       : axios.config.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -38,9 +38,27 @@ instance.interceptors.response.use(
     return response.data ?? response;
   },
   function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
-    return Promise.reject(error);
+    const { request, response } = error;
+    console.log(error);
+
+    if (response) {
+      const { message } = response.data;
+      const status = response.status;
+      return Promise.reject({
+        message,
+        status,
+      });
+    } else if (request) {
+      // Request sent but no response received
+      return Promise.reject({
+        message: error.message,
+      });
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      return Promise.reject({
+        message: 'Oops! Something went wrong while setting up the request',
+      });
+    }
   }
 );
 

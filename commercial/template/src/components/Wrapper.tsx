@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import Link from 'next/link';
 
 const { Header, Content, Sider } = Layout;
 
@@ -20,7 +21,7 @@ interface ContainerProps {
 
 const items1: MenuProps['items'] = ['1', '2', '3'].map((key) => ({
   key,
-  label: `nav ${key}`,
+  label: <Link href='/'>option${key}</Link>,
 }));
 
 const items2: MenuProps['items'] = [
@@ -39,7 +40,7 @@ const items2: MenuProps['items'] = [
       const subKey = index * 4 + j + 1;
       return {
         key: subKey,
-        label: `option${subKey}`,
+        label: <Link href='/vip'>option${subKey}</Link>,
       };
     }),
   };
@@ -76,11 +77,11 @@ const Container = ({ children }: ContainerProps) => {
           />
         </Sider>
         <Layout style={{ padding: '0 24px 24px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
+          {/* <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>Home</Breadcrumb.Item>
             <Breadcrumb.Item>List</Breadcrumb.Item>
             <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb>
+          </Breadcrumb> */}
           <Content
             style={{
               padding: 24,

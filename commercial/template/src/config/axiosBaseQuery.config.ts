@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-30 00:22:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-30 10:06:12
+ * @LastEditDate   : 2024-06-30 13:28:34
  * @FilePath       : axiosBaseQuery.config.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -34,6 +34,7 @@ const axiosBaseQuery =
         params,
         headers,
       });
+
       return { data: result.data };
     } catch (axiosError) {
       const err = axiosError as AxiosError;

@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 10:40:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-30 11:27:38
+ * @LastEditDate   : 2024-06-30 13:11:21
  * @FilePath       : UsersController.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -50,6 +50,11 @@ public class UsersController {
 
   @PostMapping("register")
   public String registerUser(@Valid @RequestBody CreateUserRequestDto createUserRequestDto) {
+    try {
+      Thread.sleep(5 * 1000);
+    } catch (InterruptedException ie) {
+      Thread.currentThread().interrupt();
+    }
     return this.usersService.registerUser(createUserRequestDto);
   }
 
