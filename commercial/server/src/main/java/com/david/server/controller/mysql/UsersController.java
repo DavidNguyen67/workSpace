@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 10:40:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 09:28:29
+ * @LastEditDate   : 2024-07-01 23:42:11
  * @FilePath       : UsersController.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -10,12 +10,11 @@
 package com.david.server.controller.mysql;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,9 +33,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@RestController
 @Slf4j
+@RestController
 @RequestMapping("users")
 public class UsersController {
   @Autowired
@@ -53,7 +53,7 @@ public class UsersController {
   }
 
   @PostMapping("register")
-  public String registerUser(@Valid @RequestBody CreateUserRequestDto createUserRequestDto) {
+  public Integer registerUser(@Valid @RequestBody CreateUserRequestDto createUserRequestDto) {
     return this.usersService.registerUser(createUserRequestDto);
   }
 
@@ -75,15 +75,14 @@ public class UsersController {
   }
 
   @DeleteMapping("delete")
-  public String deleteUser(@RequestParam("id") UUID _id) {
+  public Integer deleteUser(@RequestParam("id") String _id) {
     DeleteUserRequestDto deleteUserRequestDto = new DeleteUserRequestDto(_id);
-    this.usersService.deleteUser(deleteUserRequestDto);
-    return "Delete user successfully";
+    return this.usersService.deleteUser(deleteUserRequestDto);
   }
 
-  @PutMapping("update")
-  public String updateUser(@Valid @RequestBody UpdateUserRequestDto updateUserRequestDto) {
-    this.usersService.updateUser(updateUserRequestDto);
-    return "Update user successfully";
+  @PutMapping("update/{id}")
+  public Integer updateUser(@PathVariable("id") String _id,
+      @Valid @RequestBody UpdateUserRequestDto updateUserRequestDto) {
+    return this.usersService.updateUser(_id, updateUserRequestDto);
   }
 }

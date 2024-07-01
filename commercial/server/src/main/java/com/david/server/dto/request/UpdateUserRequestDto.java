@@ -2,14 +2,12 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-30 21:35:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-30 22:48:15
+ * @LastEditDate   : 2024-07-01 22:22:47
  * @FilePath       : UpdateUserRequestDto.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
 package com.david.server.dto.request;
-
-import org.hibernate.validator.constraints.UUID;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -18,10 +16,6 @@ import lombok.Data;
 
 @Data
 public class UpdateUserRequestDto {
-  @NotEmpty
-  @UUID
-  private String id;
-
   @NotEmpty
   @Email
   private String email;

@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 17:44:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-30 21:34:15
+ * @LastEditDate   : 2024-07-01 23:48:13
  * @FilePath       : userApi.slice.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -54,7 +54,7 @@ export const userApi = createApi({
       },
       providesTags: (result, error, arg) => [QUERY_TAG.COUNT_USER],
     }),
-    registerUses: build.mutation<string | null, CreateUserDto>({
+    registerUses: build.mutation<number | null, CreateUserDto>({
       queryFn: async (payload, _queryApi, _extraOptions, baseQuery) => {
         const { signal } = _queryApi;
 
@@ -67,7 +67,7 @@ export const userApi = createApi({
       },
       invalidatesTags: [QUERY_TAG.USER, QUERY_TAG.COUNT_USER],
     }),
-    deleteUser: build.mutation<string | null, DeleteUserDto>({
+    deleteUser: build.mutation<number | null, DeleteUserDto>({
       queryFn: async (payload, _queryApi, _extraOptions, baseQuery) => {
         const { signal } = _queryApi;
 
@@ -80,7 +80,7 @@ export const userApi = createApi({
       },
       invalidatesTags: [QUERY_TAG.USER, QUERY_TAG.COUNT_USER],
     }),
-    updateUser: build.mutation<string | null, UpdateUserDto>({
+    updateUser: build.mutation<number | null, UpdateUserDto>({
       queryFn: async (payload, _queryApi, _extraOptions, baseQuery) => {
         const { signal } = _queryApi;
 

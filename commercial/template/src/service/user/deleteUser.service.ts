@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 19:32:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-30 22:19:10
+ * @LastEditDate   : 2024-07-01 23:48:32
  * @FilePath       : deleteUser.service.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -17,6 +17,6 @@ export async function deleteUser(
   this: UserService,
   payload: DeleteUserDto,
   config?: AxiosRequestConfig<any>
-): Promise<string | null> {
+): Promise<number | null> {
   return await instance.delete(`${API_DELETE_USER}?id=${payload.id}`, config);
 }

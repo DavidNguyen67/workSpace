@@ -9,7 +9,6 @@
 
 package com.david.server.database.model.mysql;
 
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,8 +22,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class UserRoles extends BaseEntity {
   @Column(name = "user_id")
-  private UUID userId;
+  private String userId;
 
   @Column(name = "role_id")
-  private UUID roleId;
+  private String roleId;
 }

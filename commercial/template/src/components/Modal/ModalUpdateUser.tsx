@@ -2,8 +2,15 @@
 import { useUpdateUserMutation } from '@/redux/asyncSlice/userApi.slice';
 import { UserEntity } from '@/utility/class';
 import { UpdateUserDto } from '@/utility/dto/updateUser.dto';
-import { Button, Checkbox, Form, Input, Modal, Space } from 'antd';
+import { Button, Checkbox, Form, Input, Modal, Space, message } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
+import { QUERY_TAG } from '@/utility/enum/queryTag.enum';
+import { AxiosHeaders } from 'axios';
+import {
+  BaseQueryFn,
+  MutationActionCreatorResult,
+  MutationDefinition,
+} from '@reduxjs/toolkit/query';
 
 interface ModalUpdateUserProps {
   isModalVisible: boolean;
@@ -11,7 +18,25 @@ interface ModalUpdateUserProps {
   data: UserEntity | null;
 }
 
-let promise: any;
+let promise: MutationActionCreatorResult<
+  MutationDefinition<
+    UpdateUserDto,
+    BaseQueryFn<
+      {
+        url: string;
+        method?: string | undefined;
+        data?: any;
+        params?: any;
+        headers?: AxiosHeaders;
+      },
+      unknown,
+      unknown
+    >,
+    QUERY_TAG,
+    number | null,
+    'api'
+  >
+> | null;
 
 function ModalUpdateUser({
   isModalVisible = false,
@@ -36,9 +61,8 @@ function ModalUpdateUser({
         }
 
         promise = updateUser(payload);
-        await promise.unwrap();
-
-        console.log('User updated:', promise);
+        const result = await promise.unwrap();
+        message.success(result);
         handleCloseModal();
       } catch (error) {
         console.error('Failed to update user:', error);

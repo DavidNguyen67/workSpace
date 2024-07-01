@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 14:56:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 09:39:51
+ * @LastEditDate   : 2024-07-01 23:23:31
  * @FilePath       : UsersEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/

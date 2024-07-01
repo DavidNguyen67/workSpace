@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 22:18:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 09:41:39
+ * @LastEditDate   : 2024-07-01 23:17:18
  * @FilePath       : SalesOrdersEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -10,7 +10,6 @@
 package com.david.server.database.model.mysql;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,12 +29,12 @@ public class SalesOrdersEntity extends BaseEntity {
   private Double total;
 
   @Column(name = "user_id", nullable = false)
-  private UUID userId;
+  private String userId;
 
   @Column(name = "session_id", nullable = false)
-  private UUID sessionId;
+  private String sessionId;
 
   @Column(name = "coupon_id", nullable = false)
-  private UUID couponId;
+  private String couponId;
 
 }

@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 19:32:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-30 22:19:16
+ * @LastEditDate   : 2024-07-01 23:48:36
  * @FilePath       : updateUser.service.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -17,6 +17,10 @@ export async function updateUser(
   this: UserService,
   payload: UpdateUserDto,
   config?: AxiosRequestConfig<any>
-): Promise<string | null> {
-  return await instance.put(API_UPDATE_USER, payload, config);
+): Promise<number | null> {
+  return await instance.put(
+    `${API_UPDATE_USER}/${payload.id}`,
+    payload,
+    config
+  );
 }

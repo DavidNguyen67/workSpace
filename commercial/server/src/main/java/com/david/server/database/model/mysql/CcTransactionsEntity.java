@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 22:09:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 09:42:15
+ * @LastEditDate   : 2024-07-01 23:16:44
  * @FilePath       : CcTransactionsEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -10,7 +10,6 @@
 package com.david.server.database.model.mysql;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +26,7 @@ public class CcTransactionsEntity extends BaseEntity {
   private String code;
 
   @Column(name = "order_id", nullable = false) // thông qua khóa ngoại order_id
-  private UUID orderId;
+  private String orderId;
 
   @Column
   private Timestamp transdate;

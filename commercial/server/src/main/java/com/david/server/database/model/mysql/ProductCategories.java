@@ -2,14 +2,13 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-07-01 09:49:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 09:50:06
+ * @LastEditDate   : 2024-07-01 23:16:57
  * @FilePath       : ProductCategories.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
 package com.david.server.database.model.mysql;
 
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,8 +22,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ProductCategories extends BaseEntity {
   @Column(name = "product_id")
-  private UUID productId;
+  private String productId;
 
   @Column(name = "category_id")
-  private UUID categoryId;
+  private String categoryId;
 }

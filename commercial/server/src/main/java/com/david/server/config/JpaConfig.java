@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 19:10:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 09:28:00
+ * @LastEditDate   : 2024-07-01 23:09:09
  * @FilePath       : JpaConfig.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -17,6 +17,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import jakarta.persistence.EntityManagerFactory;
 
@@ -27,6 +28,7 @@ import jakarta.persistence.EntityManagerFactory;
  * Nó định nghĩa các bean cần thiết cho JPA và quản lý giao dịch.
  */
 @Configuration
+@EnableTransactionManagement
 public class JpaConfig {
   private final DataSource dataSource;
 
@@ -41,7 +43,8 @@ public class JpaConfig {
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
     factory.setJpaVendorAdapter(vendorAdapter);
-    factory.setPackagesToScan("com.david.server.database.models.*");
+    factory.setPackagesToScan("com.david.server.database.model", "com.david.server.controller",
+        "com.david.server.database.service", "com.david.server.database.repository");
     factory.setDataSource(dataSource);
     factory.afterPropertiesSet();
 
@@ -50,8 +53,9 @@ public class JpaConfig {
 
   @Bean
   public PlatformTransactionManager transactionManager() {
-    JpaTransactionManager txManager = new JpaTransactionManager();
-    txManager.setEntityManagerFactory(entityManagerFactory());
-    return txManager;
+    JpaTransactionManager transactionManager = new JpaTransactionManager();
+    transactionManager.setEntityManagerFactory(entityManagerFactory());
+    return transactionManager;
   }
+
 }

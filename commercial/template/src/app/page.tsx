@@ -5,7 +5,7 @@ import {
   useGetUsersQuery,
   useRegisterUsesMutation,
 } from '@/redux/asyncSlice/userApi.slice';
-import { CreateUserDto } from '@/utility/dto';
+import { CreateUserDto, DeleteUserDto } from '@/utility/dto';
 import {
   Button,
   Form,
@@ -15,14 +15,40 @@ import {
   Table,
   TableProps,
   Checkbox,
+  message,
 } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { faker } from '@faker-js/faker';
 import { UserEntity } from '@/utility/class';
 import { API_TIME_POLLING } from '@/utility/constant';
 import ModalUpdateUser from '@/components/Modal/ModalUpdateUser';
+import { QUERY_TAG } from '@/utility/enum/queryTag.enum';
+import { AxiosHeaders } from 'axios';
+import {
+  BaseQueryFn,
+  MutationActionCreatorResult,
+  MutationDefinition,
+} from '@reduxjs/toolkit/query';
 
-let promise: any;
+let promise: MutationActionCreatorResult<
+  MutationDefinition<
+    DeleteUserDto,
+    BaseQueryFn<
+      {
+        url: string;
+        method?: string | undefined;
+        data?: any;
+        params?: any;
+        headers?: AxiosHeaders;
+      },
+      unknown,
+      unknown
+    >,
+    QUERY_TAG,
+    number | null,
+    'api'
+  >
+> | null;
 
 const Home = () => {
   const { data } = useGetUsersQuery({
@@ -43,9 +69,8 @@ const Home = () => {
         }
 
         promise = deleteUser({ id: record.id });
-        await promise.unwrap();
-
-        console.log('User delete:', promise);
+        const number = await promise.unwrap();
+        message.success(number);
       } catch (error) {
         console.error('Failed to delete user:', error);
       }
@@ -131,8 +156,10 @@ const Home = () => {
   }, [addUser]);
 
   const handleAbortQuery = useCallback(() => {
-    promise.abort();
-    promise = null;
+    if (promise) {
+      promise.abort();
+      promise = null;
+    }
   }, []);
 
   useEffect(() => {
