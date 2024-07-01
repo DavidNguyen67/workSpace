@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 22:03:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 13:19:10
+ * @LastEditDate   : 2024-07-01 09:52:10
  * @FilePath       : CouponsEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -11,17 +11,12 @@ package com.david.server.database.model.mysql;
 
 import java.sql.Timestamp;
 
-import java.util.Set;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @Entity
 @Table(name = "coupons")
@@ -48,10 +43,4 @@ public class CouponsEntity extends BaseEntity {
 
   @Column(name = "end_date")
   private Timestamp endDate;
-
-  @OneToMany(mappedBy = "coupon", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  // MappedBy trỏ tới tên biến coupon ở trong SalesOrders.
-  @EqualsAndHashCode.Exclude
-  @ToString.Exclude
-  private Set<SalesOrdersEntity> salesOrders;
 }

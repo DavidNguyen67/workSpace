@@ -1,27 +1,30 @@
 /**
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
- * @CreatedDate    : 2024-06-22 15:07:00
+ * @CreatedDate    : 2024-07-01 09:44:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 09:38:16
- * @FilePath       : RolesEntity.java
+ * @LastEditDate   : 2024-07-01 09:46:28
+ * @FilePath       : ProductTagsEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
 package com.david.server.database.model.mysql;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "product_tags")
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RolesEntity extends BaseEntity {
-  @Column(nullable = false)
-  private String name;
+public class ProductTagsEntity extends BaseEntity {
+  @Column(name = "product_id")
+  private UUID productId;
 
+  @Column(name = "tag_id")
+  private UUID tagId;
 }

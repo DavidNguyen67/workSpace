@@ -2,6 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "ServerApplication",
+      "request": "launch",
+      "mainClass": "com.david.server.ServerApplication",
+      "projectName": "server"
+    },
+    {
       "name": "Debug Windows",
       "cwd": "${workspaceFolder}",
       "type": "reactnative",

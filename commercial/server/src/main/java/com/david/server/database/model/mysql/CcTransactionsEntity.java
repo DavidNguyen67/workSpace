@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 22:09:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-06-29 13:19:05
+ * @LastEditDate   : 2024-07-01 09:42:15
  * @FilePath       : CcTransactionsEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -10,17 +10,13 @@
 package com.david.server.database.model.mysql;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @Entity
 @Table(name = "cc_transactions")
@@ -30,11 +26,8 @@ public class CcTransactionsEntity extends BaseEntity {
   @Column
   private String code;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  @JoinColumn(name = "order_id", nullable = false) // thông qua khóa ngoại order_id
-  @EqualsAndHashCode.Exclude
-  @ToString.Exclude
-  private SalesOrdersEntity salesOrders;
+  @Column(name = "order_id", nullable = false) // thông qua khóa ngoại order_id
+  private UUID orderId;
 
   @Column
   private Timestamp transdate;

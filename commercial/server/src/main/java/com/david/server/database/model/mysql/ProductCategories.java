@@ -1,9 +1,9 @@
 /**
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
- * @CreatedDate    : 2024-06-22 23:15:00
+ * @CreatedDate    : 2024-07-01 09:49:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 09:52:53
- * @FilePath       : CategoriesEntity.java
+ * @LastEditDate   : 2024-07-01 09:50:06
+ * @FilePath       : ProductCategories.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
@@ -18,13 +18,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "product_categories")
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class CategoriesEntity extends BaseEntity {
-  @Column(nullable = false)
-  private String name;
+public class ProductCategories extends BaseEntity {
+  @Column(name = "product_id")
+  private UUID productId;
 
-  @Column(name = "parent_id")
-  private UUID parent;
+  @Column(name = "category_id")
+  private UUID categoryId;
 }
