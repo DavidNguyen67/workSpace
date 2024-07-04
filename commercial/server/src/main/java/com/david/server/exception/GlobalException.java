@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 10:58:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 09:29:10
+ * @LastEditDate   : 2024-07-02 20:11:05
  * @FilePath       : GlobalException.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/

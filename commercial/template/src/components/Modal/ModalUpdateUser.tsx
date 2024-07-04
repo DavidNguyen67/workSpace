@@ -77,7 +77,7 @@ function ModalUpdateUser({
         await handleUpdateUser({ ...values, id: data.id });
       }
     },
-    [data?.id, handleUpdateUser]
+    [data, handleUpdateUser]
   );
 
   useEffect(() => {
@@ -85,6 +85,10 @@ function ModalUpdateUser({
   }, []);
 
   useEffect(() => {
+    if (!isModalVisible) {
+      form.resetFields();
+      return;
+    }
     if (data) {
       form.setFieldsValue({
         email: data.email,
@@ -98,7 +102,10 @@ function ModalUpdateUser({
     } else {
       form.resetFields();
     }
-  }, [data, form]);
+    return () => {
+      form.resetFields();
+    };
+  }, [data, isModalVisible, form]);
 
   if (!mounted) return <></>;
 

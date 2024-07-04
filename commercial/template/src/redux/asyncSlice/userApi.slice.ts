@@ -2,23 +2,45 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 17:44:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 23:48:13
+ * @LastEditDate   : 2024-07-02 21:38:48
  * @FilePath       : userApi.slice.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
-import axiosBaseQuery from '@/config/axiosBaseQuery.config';
 import userService from '@/service/user';
 import { UserEntity } from '@/utility/class';
 import { CreateUserDto, DeleteUserDto } from '@/utility/dto';
 import { ListUserDto } from '@/utility/dto/listUser.dto';
 import { UpdateUserDto } from '@/utility/dto/updateUser.dto';
 import { QUERY_TAG } from '@/utility/enum/queryTag.enum';
-import { createApi } from '@reduxjs/toolkit/query/react';
+import {
+  FetchArgs,
+  createApi,
+  fetchBaseQuery,
+  retry,
+} from '@reduxjs/toolkit/query/react';
+
+const staggeredBaseQueryWithBailOut = retry(
+  async (args: string | FetchArgs, api, extraOptions) => {
+    const result = await fetchBaseQuery()(args, api, extraOptions);
+
+    // bail out of re-tries immediately if unauthorized,
+    // because we know successive re-retries would be redundant
+    if (result.error?.status === 401) {
+      retry.fail(result.error);
+    }
+
+    return result;
+  },
+  {
+    maxRetries: 5,
+  }
+);
 
 // Define a service using a base URL and expected endpoints
 export const userApi = createApi({
-  baseQuery: axiosBaseQuery(),
+  reducerPath: 'userApi',
+  baseQuery: staggeredBaseQueryWithBailOut,
   tagTypes: [QUERY_TAG.USER, QUERY_TAG.COUNT_USER],
   endpoints: (build) => ({
     getUsers: build.query<UserEntity[] | null, ListUserDto>({
@@ -94,6 +116,7 @@ export const userApi = createApi({
       invalidatesTags: [QUERY_TAG.USER, QUERY_TAG.COUNT_USER],
     }),
   }),
+  keepUnusedDataFor: 5,
 });
 
 // Export hooks for usage in functional components, which are

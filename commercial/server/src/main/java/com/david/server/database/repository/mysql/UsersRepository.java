@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:40:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 23:40:55
+ * @LastEditDate   : 2024-07-02 21:02:05
  * @FilePath       : UsersRepository.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -25,7 +25,7 @@ import jakarta.transaction.Transactional;
 public interface UsersRepository extends JpaRepository<UsersEntity, String> {
 
         @Transactional
-        @Modifying(clearAutomatically = true, flushAutomatically = true)
+        @Modifying(flushAutomatically = true, clearAutomatically = true)
         @Query(value = "INSERT INTO users (id, email, first_name, last_name) VALUES (:id, :email, :first_name, :last_name)", nativeQuery = true)
         Integer registerUser(@Param("id") String id, @Param("email") String email,
                         @Param("first_name") String first_name,
@@ -41,15 +41,18 @@ public interface UsersRepository extends JpaRepository<UsersEntity, String> {
         Integer countUsers();
 
         @Transactional
-        @Modifying(clearAutomatically = true, flushAutomatically = true)
-        @Query(value = "DELETE FROM users WHERE id = \":_id\"", nativeQuery = true)
+        @Modifying(flushAutomatically = true, clearAutomatically = true)
+        @Query(value = "DELETE FROM users WHERE id = :_id", nativeQuery = true)
         Integer deleteUser(@Param("_id") String _id);
 
         @Transactional
-        @Modifying(clearAutomatically = true, flushAutomatically = true)
-        @Query(value = "UPDATE users u SET u.email = :_email, u.first_name = :_first_name, u.last_name = :_last_name, u.active = :_active WHERE id = \":_id\"", nativeQuery = true)
+        @Modifying(flushAutomatically = true, clearAutomatically = true)
+        @Query(value = "UPDATE users u SET u.email = :_email, u.first_name = :_first_name, u.last_name = :_last_name, u.active = :_active WHERE id = :_id", nativeQuery = true)
         Integer updateUser(@Param("_email") String _email, @Param("_first_name") String _first_name,
                         @Param("_last_name") String _last_name,
                         @Param("_active") Boolean _active, @Param("_id") String _id);
+
+        @Query(value = "SELECT * FROM users WHERE id = :_id", nativeQuery = true)
+        UsersEntity findByUUID(@Param("_id") String _id);
 
 }

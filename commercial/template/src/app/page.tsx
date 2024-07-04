@@ -1,26 +1,14 @@
 'use client';
 import {
-  useCountUsersQuery,
   useDeleteUserMutation,
   useGetUsersQuery,
   useRegisterUsesMutation,
 } from '@/redux/asyncSlice/userApi.slice';
 import { CreateUserDto, DeleteUserDto } from '@/utility/dto';
-import {
-  Button,
-  Form,
-  Input,
-  Modal,
-  Popconfirm,
-  Table,
-  TableProps,
-  Checkbox,
-  message,
-} from 'antd';
+import { Button, Popconfirm, Table, TableProps, message } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { faker } from '@faker-js/faker';
 import { UserEntity } from '@/utility/class';
-import { API_TIME_POLLING } from '@/utility/constant';
 import ModalUpdateUser from '@/components/Modal/ModalUpdateUser';
 import { QUERY_TAG } from '@/utility/enum/queryTag.enum';
 import { AxiosHeaders } from 'axios';
@@ -51,10 +39,11 @@ let promise: MutationActionCreatorResult<
 > | null;
 
 const Home = () => {
-  const { data } = useGetUsersQuery({
+  const { data, error, isLoading, isError, isFetching } = useGetUsersQuery({
     offset: 0,
     limit: 30,
   });
+
   const [deleteUser, {}] = useDeleteUserMutation();
 
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -130,7 +119,7 @@ const Home = () => {
     []
   );
 
-  const [addUser, { isLoading, error }] = useRegisterUsesMutation();
+  const [addUser, {}] = useRegisterUsesMutation();
 
   const handleGenerateAnUser = useCallback(async () => {
     try {
@@ -170,6 +159,9 @@ const Home = () => {
       }
     };
   }, []);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error: {JSON.stringify(error)}</div>;
 
   return (
     <>
