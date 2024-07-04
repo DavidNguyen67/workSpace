@@ -1,14 +1,14 @@
 'use client';
-import { useGetUsersQuery } from '@/redux/asyncSlice/userApi.slice';
+import useUser from '@/hook/useUser';
 import React from 'react';
 
 const Vip = () => {
-  const { data } = useGetUsersQuery({
-    offset: 0,
+  const { users } = useUser({
     limit: 30,
+    offset: 0,
   });
 
-  return <div>{JSON.stringify(data)}</div>;
+  return <>{JSON.stringify(users)}</>;
 };
 
 export default Vip;

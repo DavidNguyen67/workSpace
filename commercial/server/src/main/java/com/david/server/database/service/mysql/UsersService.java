@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:42:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-02 21:17:25
+ * @LastEditDate   : 2024-07-04 23:35:34
  * @FilePath       : UsersService.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -55,10 +55,6 @@ public class UsersService {
   }
 
   public List<UsersEntity> listUser(ListUserRequestDto listUserRequestDto) {
-    if (true) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-          "Users not found");
-    }
     List<UsersEntity> users = this.usersRepository.listUsers(listUserRequestDto.getLimit(),
         listUserRequestDto.getOffset());
 

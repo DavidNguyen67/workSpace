@@ -1,42 +1,15 @@
 'use client';
-import { useUpdateUserMutation } from '@/redux/asyncSlice/userApi.slice';
+import useUser from '@/hook/useUser';
 import { UserEntity } from '@/utility/class';
 import { UpdateUserDto } from '@/utility/dto/updateUser.dto';
-import { Button, Checkbox, Form, Input, Modal, Space, message } from 'antd';
+import { Button, Checkbox, Form, Input, Modal, Space } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
-import { QUERY_TAG } from '@/utility/enum/queryTag.enum';
-import { AxiosHeaders } from 'axios';
-import {
-  BaseQueryFn,
-  MutationActionCreatorResult,
-  MutationDefinition,
-} from '@reduxjs/toolkit/query';
 
 interface ModalUpdateUserProps {
   isModalVisible: boolean;
   setIsModalVisible: (value: React.SetStateAction<boolean>) => void;
   data: UserEntity | null;
 }
-
-let promise: MutationActionCreatorResult<
-  MutationDefinition<
-    UpdateUserDto,
-    BaseQueryFn<
-      {
-        url: string;
-        method?: string | undefined;
-        data?: any;
-        params?: any;
-        headers?: AxiosHeaders;
-      },
-      unknown,
-      unknown
-    >,
-    QUERY_TAG,
-    number | null,
-    'api'
-  >
-> | null;
 
 function ModalUpdateUser({
   isModalVisible = false,
@@ -46,7 +19,10 @@ function ModalUpdateUser({
   const [mounted, setMounted] = useState<boolean>(false);
   const [form] = Form.useForm();
 
-  const [updateUser, { isLoading, error }] = useUpdateUserMutation();
+  const { updateUser, isUpdatingUser } = useUser({
+    limit: 30,
+    offset: 0,
+  });
 
   const handleCloseModal = useCallback(() => {
     setIsModalVisible(false);
@@ -55,14 +31,7 @@ function ModalUpdateUser({
   const handleUpdateUser = useCallback(
     async (payload: UpdateUserDto) => {
       try {
-        if (promise) {
-          promise.abort();
-          promise = null;
-        }
-
-        promise = updateUser(payload);
-        const result = await promise.unwrap();
-        message.success(result);
+        updateUser(payload);
         handleCloseModal();
       } catch (error) {
         console.error('Failed to update user:', error);
@@ -167,6 +136,7 @@ function ModalUpdateUser({
           <Button
             type='primary'
             htmlType='submit'
+            loading={isUpdatingUser}
           >
             Submit
           </Button>

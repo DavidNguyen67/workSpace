@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 10:40:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 23:42:11
+ * @LastEditDate   : 2024-07-04 22:59:58
  * @FilePath       : UsersController.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -65,6 +65,7 @@ public class UsersController {
   @GetMapping("list")
   public List<UsersEntity> getMethodName(@RequestParam("offset") Integer offset,
       @RequestParam("limit") Integer limit) {
+
     ListUserRequestDto listUserRequestDto = new ListUserRequestDto(limit, offset);
     return this.usersService.listUser(listUserRequestDto);
   }

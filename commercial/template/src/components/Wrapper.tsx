@@ -1,8 +1,6 @@
 'use client';
-import { AppStore, makeStore } from '@/redux';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { useRef } from 'react';
-import { Provider } from 'react-redux';
+import { useMemo, useRef } from 'react';
 import React from 'react';
 import {
   LaptopOutlined,
@@ -10,8 +8,9 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Layout, Menu, message, theme } from 'antd';
 import Link from 'next/link';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const { Header, Content, Sider } = Layout;
 
@@ -104,17 +103,32 @@ interface WrapperProps {
 }
 
 export default function Wrapper({ children }: WrapperProps) {
-  const storeRef = useRef<AppStore>();
-  if (!storeRef.current) {
-    // Create the store instance the first time this renders
-    storeRef.current = makeStore();
-  }
+  const queryClient = useMemo(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 5000,
+            gcTime: 5000,
+            retry: (failureCount, error) => {
+              return failureCount < 5;
+            },
+          },
+          mutations: {
+            retry(failureCount, error) {
+              return failureCount < 3;
+            },
+          },
+        },
+      }),
+    []
+  );
 
   return (
-    <Provider store={storeRef.current}>
+    <QueryClientProvider client={queryClient}>
       <AntdRegistry>
         <Container>{children}</Container>
       </AntdRegistry>
-    </Provider>
+    </QueryClientProvider>
   );
 }

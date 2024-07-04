@@ -1,76 +1,45 @@
 'use client';
-import {
-  useDeleteUserMutation,
-  useGetUsersQuery,
-  useRegisterUsesMutation,
-} from '@/redux/asyncSlice/userApi.slice';
-import { CreateUserDto, DeleteUserDto } from '@/utility/dto';
-import { Button, Popconfirm, Table, TableProps, message } from 'antd';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { faker } from '@faker-js/faker';
+import { Button, Popconfirm, Table, TableProps } from 'antd';
+import React, { useCallback, useMemo, useState } from 'react';
 import { UserEntity } from '@/utility/class';
 import ModalUpdateUser from '@/components/Modal/ModalUpdateUser';
-import { QUERY_TAG } from '@/utility/enum/queryTag.enum';
-import { AxiosHeaders } from 'axios';
-import {
-  BaseQueryFn,
-  MutationActionCreatorResult,
-  MutationDefinition,
-} from '@reduxjs/toolkit/query';
-
-let promise: MutationActionCreatorResult<
-  MutationDefinition<
-    DeleteUserDto,
-    BaseQueryFn<
-      {
-        url: string;
-        method?: string | undefined;
-        data?: any;
-        params?: any;
-        headers?: AxiosHeaders;
-      },
-      unknown,
-      unknown
-    >,
-    QUERY_TAG,
-    number | null,
-    'api'
-  >
-> | null;
+import useUser from '@/hook/useUser';
+import { CreateUserDto } from '@/utility/dto';
+import { faker } from '@faker-js/faker';
 
 const Home = () => {
-  const { data, error, isLoading, isError, isFetching } = useGetUsersQuery({
-    offset: 0,
-    limit: 30,
-  });
-
-  const [deleteUser, {}] = useDeleteUserMutation();
-
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<UserEntity | null>(null);
+
+  const {
+    users,
+    isFetchingUsers,
+    createUser,
+    isCreatingUser,
+    deleteUser,
+    isDeletingUser,
+    isAbortAble,
+    handleAbortQueriesMutation,
+  } = useUser({
+    limit: 30,
+    offset: 0,
+  });
+
+  const handleSelectUpdateUser = useCallback((record: UserEntity) => {
+    setSelectedUser(record);
+    setIsModalVisible(true);
+  }, []);
 
   const handleDeleteUser = useCallback(
     async (record: UserEntity) => {
       try {
-        if (promise) {
-          promise.abort();
-          promise = null;
-        }
-
-        promise = deleteUser({ id: record.id });
-        const number = await promise.unwrap();
-        message.success(number);
+        deleteUser(record);
       } catch (error) {
         console.error('Failed to delete user:', error);
       }
     },
     [deleteUser]
   );
-
-  const handleSelectUpdateUser = useCallback((record: UserEntity) => {
-    setSelectedUser(record);
-    setIsModalVisible(true);
-  }, []);
 
   const columns: TableProps<UserEntity>['columns'] = useMemo(
     () => [
@@ -110,7 +79,12 @@ const Home = () => {
               okText='Yes'
               cancelText='No'
             >
-              <Button danger>Delete</Button>
+              <Button
+                loading={isDeletingUser}
+                danger
+              >
+                Delete
+              </Button>
             </Popconfirm>
           </>
         ),
@@ -118,8 +92,6 @@ const Home = () => {
     ],
     []
   );
-
-  const [addUser, {}] = useRegisterUsesMutation();
 
   const handleGenerateAnUser = useCallback(async () => {
     try {
@@ -129,69 +101,38 @@ const Home = () => {
         id: faker.string.uuid(),
         lastName: faker.person.lastName(),
       };
-
-      if (promise) {
-        promise.abort();
-        promise = null;
-      }
-
-      promise = addUser(payload);
-      await promise.unwrap();
-
-      console.log('User added:', promise);
+      const response = createUser(payload);
+      console.log(response);
     } catch (error) {
       console.error('Failed to add user:', error);
     }
-  }, [addUser]);
-
-  const handleAbortQuery = useCallback(() => {
-    if (promise) {
-      promise.abort();
-      promise = null;
-    }
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (promise) {
-        promise.abort();
-        promise = null;
-      }
-    };
-  }, []);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error: {JSON.stringify(error)}</div>;
+  }, [createUser]);
 
   return (
     <>
       <Button
         type='primary'
         onClick={handleGenerateAnUser}
-        // loading={isLoading}
+        loading={isCreatingUser}
       >
         Generate a user
       </Button>
       <Button
         danger
-        disabled={!promise}
-        onClick={handleAbortQuery}
+        disabled={!isAbortAble}
+        onClick={handleAbortQueriesMutation}
       >
         Abort query
       </Button>
-      {data && data?.length > 0 && (
+      {users && users?.length > 0 && (
         <>
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={users}
             rowKey={'id'}
-            loading={isLoading}
+            loading={isFetchingUsers || isCreatingUser}
             size='small'
             sticky
-            // pagination={{
-            //   defaultPageSize: 5,
-            //   pageSizeOptions: [10, 20, 50, 100],
-            // }}
             bordered
           />
         </>
