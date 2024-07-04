@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:12:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-01 23:29:37
+ * @LastEditDate   : 2024-07-04 10:24:02
  * @FilePath       : BaseEntity.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -37,4 +37,6 @@ public class BaseEntity {
   @Column(name = "updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp updatedAt;
 
+  @Column(name = "deleted_at", nullable = true)
+  private Timestamp deletedAt;
 }
