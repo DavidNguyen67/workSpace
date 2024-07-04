@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 19:38:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-02 21:04:43
+ * @LastEditDate   : 2024-07-04 23:45:14
  * @FilePath       : axios.constant.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -18,3 +18,4 @@ export const API_LIST_USER = '/users/list';
 export const API_COUNT_USER = '/users/count';
 export const API_DELETE_USER = '/users/delete';
 export const API_UPDATE_USER = '/users/update';
+export const API_LOGIN_USER = '/users/login';

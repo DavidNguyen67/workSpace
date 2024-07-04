@@ -1,5 +1,5 @@
 'use client';
-import useUser from '@/hook/useUser';
+import userService from '@/service/user';
 import { UserEntity } from '@/utility/class';
 import { UpdateUserDto } from '@/utility/dto/updateUser.dto';
 import { Button, Checkbox, Form, Input, Modal, Space } from 'antd';
@@ -19,7 +19,7 @@ function ModalUpdateUser({
   const [mounted, setMounted] = useState<boolean>(false);
   const [form] = Form.useForm();
 
-  const { updateUser, isUpdatingUser } = useUser({
+  const { updateUser, isUpdatingUser } = userService.useUsers({
     limit: 30,
     offset: 0,
   });

@@ -3,12 +3,15 @@ import { Button, Popconfirm, Table, TableProps } from 'antd';
 import React, { useCallback, useMemo, useState } from 'react';
 import { UserEntity } from '@/utility/class';
 import ModalUpdateUser from '@/components/Modal/ModalUpdateUser';
-import useUser from '@/hook/useUser';
 import { CreateUserDto } from '@/utility/dto';
 import { faker } from '@faker-js/faker';
+import ModalLogin from '@/components/Modal/ModalLogin';
+import userService from '@/service/user';
 
 const Home = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isLoginModalVisible, setIsLoginModalVisible] =
+    useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<UserEntity | null>(null);
 
   const {
@@ -20,7 +23,7 @@ const Home = () => {
     isDeletingUser,
     isAbortAble,
     handleAbortQueriesMutation,
-  } = useUser({
+  } = userService.useUsers({
     limit: 30,
     offset: 0,
   });
@@ -108,6 +111,14 @@ const Home = () => {
     }
   }, [createUser]);
 
+  const openLoginModal = useCallback(() => {
+    setIsLoginModalVisible(true);
+  }, []);
+
+  const closeLoginModal = useCallback(() => {
+    setIsLoginModalVisible(false);
+  }, []);
+
   return (
     <>
       <Button
@@ -124,6 +135,13 @@ const Home = () => {
       >
         Abort query
       </Button>
+      <Button
+        type='default'
+        onClick={openLoginModal}
+      >
+        Đăng nhập
+      </Button>
+
       {users && users?.length > 0 && (
         <>
           <Table
@@ -141,6 +159,10 @@ const Home = () => {
         data={selectedUser}
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
+      />
+      <ModalLogin
+        isVisible={isLoginModalVisible}
+        onClose={closeLoginModal}
       />
     </>
   );

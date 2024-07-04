@@ -2,19 +2,18 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-07-04 23:09:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-04 23:37:43
- * @FilePath       : useUser.ts
+ * @LastEditDate   : 2024-07-04 23:57:32
+ * @FilePath       : useUsers.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
 import { useCallback, useEffect, useRef } from 'react';
-import userService from '@/service/user';
 import { CreateUserDto, DeleteUserDto, ListUserDto } from '@/utility/dto';
 import { QUERY_TAG } from '@/utility/enum/queryTag.enum';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
 import { UpdateUserDto } from '@/utility/dto/updateUser.dto';
-import { UserEntity } from '@/utility/class';
+import { UserService } from '@/service/user';
 
 /**
  * Custom hook để quản lý các thao tác CRUD cho người dùng.
@@ -22,14 +21,15 @@ import { UserEntity } from '@/utility/class';
  * @param {ListUserDto} agrListUser - Tham số truyền vào để lấy danh sách người dùng.
  * @returns {Object} - Trả về các trạng thái và hàm liên quan đến CRUD người dùng.
  */
-const useUser = (agrListUser: ListUserDto) => {
+export function useUsers(this: UserService, agrListUser: ListUserDto) {
   const abortCtrlRef = useRef<AbortController[]>([]);
 
   /**
    * @Note Abort tất cả các query hoặc mutation đang chạy để ngăn chặn chúng hoàn thành.
    */
   const handleAbortQueriesMutation = useCallback(() => {
-    abortCtrlRef.current.forEach((ctrl) => ctrl.abort());
+    abortCtrlRef.current?.length > 0 &&
+      abortCtrlRef.current.forEach((ctrl) => ctrl.abort());
   }, [abortCtrlRef]);
 
   /**
@@ -41,20 +41,23 @@ const useUser = (agrListUser: ListUserDto) => {
     abortCtrlRef.current.push(new AbortController());
   }, [handleAbortQueriesMutation]);
 
-  // Truy cập vào queryClient để thao tác invalidate query khi cần.
+  /**
+   * @Note Truy cập vào queryClient để thao tác invalidate query khi cần.
+   */
   const queryClient = useQueryClient();
 
   /**
    * @Note Lấy danh sách người dùng từ server.
    * @returns {Object} - Trả về danh sách người dùng.
    */
+
   const {
     data: users,
     isLoading: isFetchingUsers,
     isError: isErrorFetchingUsers,
   } = useQuery({
     queryKey: [QUERY_TAG.USER],
-    queryFn: () => userService.listUsers(agrListUser),
+    queryFn: () => this.listUsers(agrListUser),
   });
 
   /**
@@ -63,7 +66,7 @@ const useUser = (agrListUser: ListUserDto) => {
    */
   const { data: totalUsers } = useQuery({
     queryKey: [QUERY_TAG.COUNT_USER],
-    queryFn: userService.countUser,
+    queryFn: this.countUser,
     refetchInterval: 2000,
   });
 
@@ -75,7 +78,7 @@ const useUser = (agrListUser: ListUserDto) => {
     mutationFn: (payload: CreateUserDto) => {
       handleCreateNewSignal();
 
-      return userService.generateUser(payload, {
+      return this.generateUser(payload, {
         signal: abortCtrlRef.current[0].signal,
       });
     },
@@ -99,7 +102,7 @@ const useUser = (agrListUser: ListUserDto) => {
     mutationFn: (payload: UpdateUserDto) => {
       handleCreateNewSignal();
 
-      return userService.updateUser(payload, {
+      return this.updateUser(payload, {
         signal: abortCtrlRef.current[0].signal,
       });
     },
@@ -122,7 +125,7 @@ const useUser = (agrListUser: ListUserDto) => {
     mutationFn: (payload: DeleteUserDto) => {
       handleCreateNewSignal();
 
-      return userService.deleteUser(payload, {
+      return this.deleteUser(payload, {
         signal: abortCtrlRef.current[0].signal,
       });
     },
@@ -143,7 +146,8 @@ const useUser = (agrListUser: ListUserDto) => {
    */
   useEffect(() => {
     return () => {
-      abortCtrlRef.current.forEach((ctrl) => ctrl.abort());
+      abortCtrlRef.current?.length > 0 &&
+        abortCtrlRef.current.forEach((ctrl) => ctrl.abort());
     };
   }, []);
 
@@ -152,15 +156,13 @@ const useUser = (agrListUser: ListUserDto) => {
     isFetchingUsers,
     isErrorFetchingUsers,
     totalUsers,
-    createUser,
     isCreatingUser,
-    deleteUser,
-    updateUser,
     isUpdatingUser,
     isDeletingUser,
+    createUser,
+    updateUser,
+    deleteUser,
     handleAbortQueriesMutation,
     isAbortAble: abortCtrlRef.current?.length > 0,
   };
-};
-
-export default useUser;
+}

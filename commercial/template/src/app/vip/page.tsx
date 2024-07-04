@@ -1,5 +1,5 @@
 'use client';
-import useUser from '@/hook/useUser';
+import useUser from '@/hook/useUsers';
 import React from 'react';
 
 const Vip = () => {
