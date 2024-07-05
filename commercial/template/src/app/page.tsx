@@ -1,17 +1,19 @@
 'use client';
 import { Button, Popconfirm, Table, TableProps } from 'antd';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { UserEntity } from '@/utility/class';
 import ModalUpdateUser from '@/components/Modal/ModalUpdateUser';
 import { CreateUserDto } from '@/utility/dto';
 import { faker } from '@faker-js/faker';
-import ModalLogin from '@/components/Modal/ModalLogin';
 import userService from '@/service/user';
+import ModalLogin from '@/components/Modal/ModalLogin';
 
 const Home = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
   const [isLoginModalVisible, setIsLoginModalVisible] =
     useState<boolean>(false);
+
   const [selectedUser, setSelectedUser] = useState<UserEntity | null>(null);
 
   const {

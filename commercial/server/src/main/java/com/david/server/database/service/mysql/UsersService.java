@@ -25,10 +25,7 @@ import com.david.server.dto.request.LoginUserRequestDto;
 import com.david.server.dto.request.UpdateUserRequestDto;
 import com.david.server.dto.response.CreateUserResponseDto;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-@Slf4j
 public class UsersService {
   @Autowired
   private UsersRepository usersRepository;

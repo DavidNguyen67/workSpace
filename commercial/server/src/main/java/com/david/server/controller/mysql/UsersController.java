@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 10:40:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-04 22:59:58
+ * @LastEditDate   : 2024-07-05 20:13:11
  * @FilePath       : UsersController.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -28,14 +28,12 @@ import com.david.server.dto.request.UpdateUserRequestDto;
 import com.david.server.dto.response.CreateUserResponseDto;
 
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Slf4j
 @RestController
 @RequestMapping("users")
 public class UsersController {
@@ -44,11 +42,6 @@ public class UsersController {
 
   @GetMapping
   public String list() {
-    log.trace("A TRACE Message");
-    log.debug("A DEBUG Message");
-    log.info("An INFO Message");
-    log.warn("A WARN Message");
-    log.error("An ERROR Message");
     return "[\"Joe\", \"Peter\"]";
   }
 
