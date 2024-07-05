@@ -11,7 +11,7 @@ import { API_TIME_OUT } from '@/utility/constant';
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL_SPRING_BOOT,
+  baseURL: process.env.NEXT_PUBLIC_SPRING_BOOT_BASE_URL,
   timeout: API_TIME_OUT,
   headers: {
     'Content-Type': 'application/json',
