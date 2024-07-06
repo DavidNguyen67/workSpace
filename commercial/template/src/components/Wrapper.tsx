@@ -4,8 +4,6 @@ import { useMemo } from 'react';
 import React from 'react';
 import Container from './Container';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactKeycloakProvider } from '@react-keycloak/web';
-import keycloak from '@/lib/keycloak.lib';
 
 interface WrapperProps {
   children: React.ReactNode;

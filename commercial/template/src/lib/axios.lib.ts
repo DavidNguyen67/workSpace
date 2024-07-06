@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-07-05 22:26:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-05 22:30:49
+ * @LastEditDate   : 2024-07-06 11:04:35
  * @FilePath       : axios.lib.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -16,6 +16,7 @@ const instance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 export default instance;

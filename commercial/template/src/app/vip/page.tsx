@@ -1,9 +1,9 @@
 'use client';
-import useUser from '@/hook/useUsers';
+import userService from '@/service/user';
 import React from 'react';
 
 const Vip = () => {
-  const { users } = useUser({
+  const { users } = userService.useUsers({
     limit: 30,
     offset: 0,
   });

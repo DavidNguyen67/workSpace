@@ -1,54 +1,42 @@
 /**
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
- * @CreatedDate    : 2024-07-05 18:19:00
+ * @CreatedDate    : 2024-07-06 18:55:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-05 23:12:42
+ * @LastEditDate   : 2024-07-06 21:57:29
  * @FilePath       : SecurityConfig.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
 package com.david.server.config;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-@Configuration
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig {
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .authorizeHttpRequests((authorize) -> authorize
+            .requestMatchers("/api/v1/*").permitAll()
+            .anyRequest().authenticated())
+        .csrf(csrf -> csrf.disable())
+        .cors(cors -> cors.disable())
+        .httpBasic(basic -> basic.disable())
+        .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .exceptionHandling((exceptions) -> exceptions
+            .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+            .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
 
-                httpSecurity
-                                .authorizeHttpRequests()
-                                .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
-                                .anyRequest().authenticated()
-                                .and()
-                                .oauth2Login();
+    return http.build();
+  }
 
-                return httpSecurity.build();
-        }
-
-        @Bean
-        public CorsConfigurationSource corsConfigurationSource() {
-                CorsConfiguration config = new CorsConfiguration();
-                config.setAllowCredentials(true);
-                config.setAllowedOrigins(List.of("https://localhost:3000"));
-                config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-
-                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                source.registerCorsConfiguration("/**", config);
-
-                return source;
-        }
 }

@@ -2,12 +2,19 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 19:36:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-05 22:26:41
+ * @LastEditDate   : 2024-07-06 21:11:27
  * @FilePath       : axios.config.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
 import instance from '@/lib/axios.lib';
+import { AxiosError } from 'axios';
+
+interface IResponseError {
+  data: unknown;
+  status: number;
+  headers: any;
+}
 
 // Add a request interceptor
 instance.interceptors.request.use(
@@ -28,28 +35,32 @@ instance.interceptors.response.use(
     // Do something with response data
     return response.data ?? response;
   },
-  function (error) {
+  function (error: AxiosError) {
     const { request, response } = error;
+
     console.log(error);
 
-    if (response) {
-      const { message } = response.data;
-      const status = response.status;
-      return Promise.reject({
-        message,
-        status,
-      });
-    } else if (request) {
-      // Request sent but no response received
-      return Promise.reject({
-        message: error.message,
-      });
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      return Promise.reject({
-        message: 'Oops! Something went wrong while setting up the request',
-      });
-    }
+    return Promise.reject({
+      message: 'Oops! Something went wrong while setting up the request',
+    });
+    // if (response) {
+    //   const { message } = response.data;
+    //   const status = response.status;
+    //   return Promise.reject({
+    //     message,
+    //     status,
+    //   });
+    // } else if (request) {
+    //   // Request sent but no response received
+    //   return Promise.reject({
+    //     message: error.message,
+    //   });
+    // } else {
+    //   // Something happened in setting up the request that triggered an Error
+    //   return Promise.reject({
+    //     message: 'Oops! Something went wrong while setting up the request',
+    //   });
+    // }
   }
 );
 
