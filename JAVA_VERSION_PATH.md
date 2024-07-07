@@ -3,7 +3,7 @@
 JAVA_HOME:
 
 ```
-
+C:\Program Files\Java\jdk-11
 ```
 
 ### OPEN_JDK_17
