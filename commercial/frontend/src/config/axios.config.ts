@@ -2,13 +2,13 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 19:36:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-07 17:56:47
+ * @LastEditDate   : 2024-07-11 22:27:52
  * @FilePath       : axios.config.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
 
 import { AxiosError } from 'axios';
-import instance from '../lib/axios.lib';
+import instance from '../lib/axios/axios.lib';
 
 // Add a request interceptor
 instance.interceptors.request.use(
@@ -55,5 +55,3 @@ instance.interceptors.response.use(
     // }
   }
 );
-
-export default instance;

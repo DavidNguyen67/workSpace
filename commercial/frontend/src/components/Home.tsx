@@ -35,8 +35,8 @@ const Home = () => {
     [deleteUser]
   );
 
-  const closeLoginModal = useCallback(() => {
-    setIsLoginModalVisible(false);
+  const handleShowLoginModal = useCallback(() => {
+    setIsLoginModalVisible(true);
   }, []);
 
   const columns: TableProps<UserEntity>['columns'] = useMemo(
@@ -112,9 +112,10 @@ const Home = () => {
         setIsModalVisible={setIsModalVisible}
       />
       <ModalLogin
-        isVisible={isLoginModalVisible}
-        onClose={closeLoginModal}
+        isModalVisible={isLoginModalVisible}
+        setIsModalVisible={setIsLoginModalVisible}
       />
+      <Button onClick={handleShowLoginModal}>Login</Button>
     </>
   );
 };

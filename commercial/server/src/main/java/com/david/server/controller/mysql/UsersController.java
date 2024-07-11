@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 10:40:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-06 20:53:39
+ * @LastEditDate   : 2024-07-11 21:14:16
  * @FilePath       : UsersController.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -11,6 +11,7 @@ package com.david.server.controller.mysql;
 
 import java.util.List;
 
+import org.keycloak.representations.AccessTokenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,15 +20,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.david.server.database.model.mysql.UsersEntity;
+import com.david.server.database.service.KeycloakService;
 import com.david.server.database.service.mysql.UsersService;
 import com.david.server.dto.request.CreateUserRequestDto;
 import com.david.server.dto.request.DeleteUserRequestDto;
 import com.david.server.dto.request.ListUserRequestDto;
 import com.david.server.dto.request.LoginUserRequestDto;
 import com.david.server.dto.request.UpdateUserRequestDto;
-import com.david.server.dto.response.CreateUserResponseDto;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,23 +38,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequestMapping("users")
+@Slf4j
 public class UsersController {
   @Autowired
   private UsersService usersService;
+
+  @Autowired
+  private KeycloakService keycloakService;
 
   @GetMapping
   public String list() {
     return "[\"Joe\", \"Peter\"]";
   }
 
+  @PostMapping("login")
+  public AccessTokenResponse login(@Valid @RequestBody LoginUserRequestDto loginUserRequestDto) {
+    return keycloakService.login(loginUserRequestDto.getEmail(), loginUserRequestDto.getPassword());
+  }
+
   @PostMapping("register")
   public Integer registerUser(@Valid @RequestBody CreateUserRequestDto createUserRequestDto) {
     return this.usersService.registerUser(createUserRequestDto);
-  }
-
-  @PostMapping("login")
-  public CreateUserResponseDto loginUser(@Valid @RequestBody LoginUserRequestDto loginUserRequestDto) {
-    return this.usersService.loginUser(loginUserRequestDto);
   }
 
   @GetMapping("list")

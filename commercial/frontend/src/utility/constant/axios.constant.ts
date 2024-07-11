@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 19:38:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-04 23:45:14
+ * @LastEditDate   : 2024-07-07 21:08:03
  * @FilePath       : axios.constant.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/

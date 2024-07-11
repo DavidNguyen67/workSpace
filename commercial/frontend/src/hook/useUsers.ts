@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-07-04 23:09:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-07 17:58:00
+ * @LastEditDate   : 2024-07-11 22:36:40
  * @FilePath       : useUsers.ts
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -15,9 +15,11 @@ import {
   CreateUserDto,
   DeleteUserDto,
   ListUserDto,
+  LoginUserDto,
   UpdateUserDto,
 } from '../utility/dto';
 import { QUERY_TAG } from '../utility/enum/queryTag.enum';
+import { useAppSelector } from '../lib/redux';
 
 /**
  * Custom hook để quản lý các thao tác CRUD cho người dùng.
@@ -26,6 +28,8 @@ import { QUERY_TAG } from '../utility/enum/queryTag.enum';
  * @returns {Object} - Trả về các trạng thái và hàm liên quan đến CRUD người dùng.
  */
 export function useUsers(this: UserService, agrListUser: ListUserDto) {
+  const { access_token } = useAppSelector((state) => state.user);
+
   const abortCtrlRef = useRef<AbortController[]>([]);
 
   /**
@@ -61,7 +65,12 @@ export function useUsers(this: UserService, agrListUser: ListUserDto) {
     isError: isErrorFetchingUsers,
   } = useQuery({
     queryKey: [QUERY_TAG.USER],
-    queryFn: () => this.listUsers(agrListUser),
+    queryFn: () =>
+      this.listUsers(agrListUser, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }),
   });
 
   /**
@@ -84,6 +93,9 @@ export function useUsers(this: UserService, agrListUser: ListUserDto) {
 
       return this.generateUser(payload, {
         signal: abortCtrlRef.current[0].signal,
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
       });
     },
     onSuccess: (_, body) => {
@@ -99,6 +111,28 @@ export function useUsers(this: UserService, agrListUser: ListUserDto) {
   });
 
   /**
+   * @Note Login người dùng.
+   * @param {LoginUserDto} payload - Thông tin người dùng cần thêm.
+   */
+  const { mutate: loginUser, isPending: isLoggingUser } = useMutation({
+    mutationFn: (payload: LoginUserDto) => {
+      handleCreateNewSignal();
+
+      return this.loginUser(payload, {
+        signal: abortCtrlRef.current[0].signal,
+      });
+    },
+    onSuccess: (_, body) => {
+      // Invalidate và fetch lại query để cập nhật dữ liệu mới.
+      message.success(`Login ${body.username} thành công`);
+    },
+    onError: (error, body) => {
+      console.log('Check error', error);
+      message.error(`Login ${body.username} thất bại`);
+    },
+  });
+
+  /**
    * @Note Cập nhật thông tin người dùng.
    * @param {UpdateUserDto} payload - Thông tin người dùng cần cập nhật.
    */
@@ -108,6 +142,9 @@ export function useUsers(this: UserService, agrListUser: ListUserDto) {
 
       return this.updateUser(payload, {
         signal: abortCtrlRef.current[0].signal,
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
       });
     },
     onSuccess: (_, body) => {
@@ -131,6 +168,9 @@ export function useUsers(this: UserService, agrListUser: ListUserDto) {
 
       return this.deleteUser(payload, {
         signal: abortCtrlRef.current[0].signal,
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
       });
     },
     onSuccess: (_, body) => {
@@ -163,9 +203,11 @@ export function useUsers(this: UserService, agrListUser: ListUserDto) {
     isCreatingUser,
     isUpdatingUser,
     isDeletingUser,
+    isLoggingUser,
     createUser,
     updateUser,
     deleteUser,
+    loginUser,
     handleAbortQueriesMutation,
     isAbortAble: abortCtrlRef.current?.length > 0,
   };
