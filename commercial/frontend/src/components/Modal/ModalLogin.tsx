@@ -23,11 +23,7 @@ const ModalLogin: React.FC<ModalLoginProps> = ({
     async (values: LoginUserDto) => {
       setLoading(true);
       try {
-        const response = await userService.loginUser({
-          ...values,
-          client_id: 'david',
-          grant_type: 'password',
-        });
+        const response = await userService.loginUser(values);
 
         dispatch(
           setUserToken({

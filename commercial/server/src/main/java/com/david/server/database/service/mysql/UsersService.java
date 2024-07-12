@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:42:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-11 20:59:53
+ * @LastEditDate   : 2024-07-12 22:46:18
  * @FilePath       : UsersService.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -18,6 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.david.server.database.model.mysql.UsersEntity;
 import com.david.server.database.repository.mysql.UsersRepository;
+import com.david.server.database.service.KeycloakService;
+import com.david.server.dto.request.CreateUserKeycloakDto;
 import com.david.server.dto.request.CreateUserRequestDto;
 import com.david.server.dto.request.DeleteUserRequestDto;
 import com.david.server.dto.request.ListUserRequestDto;
@@ -30,9 +32,15 @@ public class UsersService {
   @Autowired
   private UsersRepository usersRepository;
 
-  public Integer registerUser(CreateUserRequestDto createUserRequestDto) {
-    return this.usersRepository.registerUser(createUserRequestDto.getId(), createUserRequestDto.getEmail(),
-        createUserRequestDto.getFirstName(), createUserRequestDto.getLastName());
+  @Autowired
+  private KeycloakService keycloakService;
+
+  public Integer registerUser(CreateUserKeycloakDto createUserKeycloakDto) {
+    CreateUserKeycloakDto user = new CreateUserKeycloakDto(createUserKeycloakDto.getId(),
+        createUserKeycloakDto.getEmail(), createUserKeycloakDto.getEmail(), createUserKeycloakDto.getFirstName(),
+        createUserKeycloakDto.getLastName(), createUserKeycloakDto.getPhoneNumber(),
+        createUserKeycloakDto.getPassword());
+    return this.keycloakService.registerUser(user);
 
   }
 

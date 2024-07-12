@@ -4,20 +4,31 @@ import { useCallback, useMemo, useState } from 'react';
 import userService from '../service/user';
 import ModalUpdateUser from './Modal/ModalUpdateUser';
 import ModalLogin from './Modal/ModalLogin';
+import { useAppSelector } from '../lib/redux';
+import { CreateUserDto } from '../utility/dto';
+import { faker } from '@faker-js/faker';
 
 const Home = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const { access_token } = useAppSelector((state) => state.user);
 
   const [isLoginModalVisible, setIsLoginModalVisible] =
     useState<boolean>(false);
 
   const [selectedUser, setSelectedUser] = useState<UserEntity | null>(null);
 
-  const { users, isFetchingUsers, isCreatingUser, deleteUser, isDeletingUser } =
-    userService.useUsers({
-      limit: 30,
-      offset: 0,
-    });
+  const {
+    users,
+    isFetchingUsers,
+    isCreatingUser,
+    deleteUser,
+    isDeletingUser,
+    createUser,
+  } = userService.useUsers({
+    limit: 30,
+    offset: 0,
+  });
 
   const handleSelectUpdateUser = useCallback((record: UserEntity) => {
     setSelectedUser(record);
@@ -34,6 +45,23 @@ const Home = () => {
     },
     [deleteUser]
   );
+
+  const handleCreateUser = useCallback(async () => {
+    try {
+      const payload: CreateUserDto = {
+        id: faker.string.uuid(),
+        username: faker.internet.userName(),
+        email: faker.internet.email(),
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        phoneNumber: faker.phone.number(),
+        password: faker.internet.password(),
+      };
+      createUser(payload);
+    } catch (error) {
+      console.error('Failed to create user:', error);
+    }
+  }, [createUser]);
 
   const handleShowLoginModal = useCallback(() => {
     setIsLoginModalVisible(true);
@@ -111,11 +139,19 @@ const Home = () => {
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
       />
-      <ModalLogin
-        isModalVisible={isLoginModalVisible}
-        setIsModalVisible={setIsLoginModalVisible}
-      />
-      <Button onClick={handleShowLoginModal}>Login</Button>
+      {access_token ? (
+        <>
+          <Button onClick={handleCreateUser}>Generate user</Button>
+        </>
+      ) : (
+        <>
+          <ModalLogin
+            isModalVisible={isLoginModalVisible}
+            setIsModalVisible={setIsLoginModalVisible}
+          />
+          <Button onClick={handleShowLoginModal}>Login</Button>
+        </>
+      )}
     </>
   );
 };

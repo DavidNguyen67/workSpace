@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-07-06 18:55:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-11 21:06:53
+ * @LastEditDate   : 2024-07-12 10:10:51
  * @FilePath       : SecurityConfig.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -16,14 +16,18 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.david.server.handler.KeycloakLogoutHandler;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @EnableWebSecurity
+@EnableWebMvc
 @Configuration
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
 
   private final KeycloakLogoutHandler keycloakLogoutHandler;
 
@@ -31,13 +35,22 @@ public class SecurityConfig {
     this.keycloakLogoutHandler = keycloakLogoutHandler;
   }
 
+  @Bean
+  public WebMvcConfigurer corsConfigurer() {
+    return new WebMvcConfigurer() {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedMethods("*").allowedOrigins("*");
+      }
+    };
+  }
+
   @SuppressWarnings({ "deprecation" })
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-        .cors(withDefaults())
+        .cors((cor -> cor.disable()))
         .csrf(csrf -> csrf.disable())
-
         .authorizeRequests(requests -> requests
             .requestMatchers(HttpMethod.OPTIONS, "/users/count").permitAll()
             .requestMatchers(HttpMethod.OPTIONS, "/users/list").permitAll()
