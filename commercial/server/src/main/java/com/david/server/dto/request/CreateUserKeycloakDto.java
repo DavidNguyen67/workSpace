@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-07-12 22:22:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-12 22:35:54
+ * @LastEditDate   : 2024-07-13 13:50:22
  * @FilePath       : CreateUserKeycloakDto.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -10,15 +10,13 @@
 package com.david.server.dto.request;
 
 import org.hibernate.validator.constraints.UUID;
-import org.keycloak.admin.client.resource.UsersResource;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
-@AllArgsConstructor
+@Getter
 public class CreateUserKeycloakDto {
   @NotEmpty
   @UUID
@@ -42,10 +40,4 @@ public class CreateUserKeycloakDto {
 
   @NotEmpty
   private String password;
-
-  public UsersResource getKeycloakRoleAsList() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getKeycloakRoleAsList'");
-  }
-
 }

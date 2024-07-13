@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-29 10:40:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-12 23:10:00
+ * @LastEditDate   : 2024-07-13 13:43:25
  * @FilePath       : UsersController.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -14,6 +14,7 @@ import java.util.List;
 import javax.annotation.security.RolesAllowed;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,17 +48,10 @@ public class UsersController {
     return "[\"Joe\", \"Peter\"]";
   }
 
-  // @PostMapping("login")
-  // public AccessTokenResponse login(@Valid @RequestBody LoginUserRequestDto
-  // loginUserRequestDto) {
-  // return keycloakService.login(loginUserRequestDto.getEmail(),
-  // loginUserRequestDto.getPassword());
-  // }
-
   @RolesAllowed("*")
   @PostMapping("register")
-  public Integer registerUser(@Valid @RequestBody CreateUserKeycloakDto createUserKeycloakDto) {
-    return this.usersService.registerUser(createUserKeycloakDto);
+  public ResponseEntity<String> registerUser(@Valid @RequestBody CreateUserKeycloakDto createUserKeycloakDto) {
+    return this.usersService.createUser(createUserKeycloakDto);
   }
 
   @GetMapping("list")
