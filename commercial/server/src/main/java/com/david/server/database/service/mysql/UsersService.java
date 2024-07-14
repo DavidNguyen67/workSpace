@@ -2,7 +2,7 @@
  * @Author         : David Nguyễn <davidnguyen67dev@gmail.com>
  * @CreatedDate    : 2024-06-22 15:42:00
  * @LastEditors    : David Nguyễn <davidnguyen67dev@gmail.com>
- * @LastEditDate   : 2024-07-13 13:40:15
+ * @LastEditDate   : 2024-07-14 11:33:48
  * @FilePath       : UsersService.java
  * @CopyRight      : Con chù chù 🥴🥴
  **/
@@ -38,7 +38,7 @@ public class UsersService {
 
   public ResponseEntity<String> createUser(@RequestBody CreateUserKeycloakDto createUserKeycloakDto) {
     try {
-      keycloakService.createUser(createUserKeycloakDto);
+      this.keycloakService.createUser(createUserKeycloakDto);
       return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully");
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
